@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CópiaFácil — Solicitação de Matrizes</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #fffdf8;
+    --primary: #1a3a2a;
+    --accent: #e8a020;
+    --accent2: #c94f2a;
+    --text: #1a1a1a;
+    --muted: #6b6b5a;
+    --border: #d8d0c0;
+    --success: #2a7a4a;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* AUTH */
+  .auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  .auth-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 440px; box-shadow: 0 8px 32px rgba(0,0,0,.08); }
+  .auth-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--primary); text-align: center; margin-bottom: .3rem; }
+  .auth-logo em { background: var(--accent); color: var(--primary); border-radius: 6px; padding: 0 7px; font-style: normal; font-size: 1.1rem; }
+  .auth-sub { color: var(--muted); font-size: .88rem; text-align: center; margin-bottom: 2rem; }
+  .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: 1.5rem; }
+  .auth-tab { padding: .6rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600; cursor: pointer; transition: all .2s; color: var(--muted); }
+  .auth-tab.active { border-color: var(--primary); background: #e8f0eb; color: var(--primary); }
+  .fg { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+  .fgi { display: flex; flex-direction: column; gap: .4rem; }
+  .fg label, .fgi label { font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .fg input, .fg select, .fgi input, .fgi select, .fgi textarea {
+    font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem;
+    border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg);
+    color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; width: 100%;
+  }
+  .fgi textarea { resize: vertical; min-height: 90px; }
+  .fg input:focus, .fg select:focus, .fgi input:focus, .fgi select:focus, .fgi textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
+  .senha-hint { font-size: .78rem; color: var(--muted); background: #f0ede6; border-radius: 8px; padding: .6rem .9rem; margin-bottom: 1rem; line-height: 1.5; }
+  .senha-hint strong { color: var(--primary); }
+  .auth-erro { font-size: .82rem; color: var(--accent2); margin-bottom: .8rem; display: none; padding: .5rem .8rem; background: #fce4de; border-radius: 8px; }
+  .auth-info { font-size: .82rem; color: var(--success); margin-bottom: .8rem; display: none; padding: .5rem .8rem; background: #d6f0e0; border-radius: 8px; }
+
+  /* PENDING */
+  .pending-screen { min-height: 100vh; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
+  .pending-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,.08); }
+  .pending-box .big-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+  .pending-box h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--primary); margin-bottom: .5rem; }
+  .pending-box p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+
+  /* HEADER */
+  header { background: var(--primary); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.25); }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.35rem; color: #fff; letter-spacing: -.02em; display: flex; align-items: center; gap: .5rem; }
+  .logo span { background: var(--accent); color: var(--primary); border-radius: 6px; padding: 1px 7px; font-size: 1rem; }
+  .header-right { display: flex; align-items: center; gap: .8rem; }
+  .perfil-badge { font-size: .78rem; font-weight: 600; padding: .3rem .8rem; border-radius: 99px; letter-spacing: .04em; }
+  .perfil-badge.coord { background: var(--accent); color: var(--primary); }
+  .perfil-badge.prof { background: rgba(255,255,255,.15); color: #fff; }
+  nav { display: flex; gap: .5rem; }
+  nav button { background: transparent; border: 1.5px solid rgba(255,255,255,.25); color: #fff; font-family: 'DM Sans', sans-serif; font-size: .85rem; padding: .4rem 1rem; border-radius: 8px; cursor: pointer; transition: all .2s; }
+  nav button:hover, nav button.active { background: var(--accent); border-color: var(--accent); color: var(--primary); font-weight: 600; }
+  .btn-sair { background: transparent; border: 1.5px solid rgba(255,255,255,.2); color: rgba(255,255,255,.7); font-family: 'DM Sans', sans-serif; font-size: .8rem; padding: .35rem .8rem; border-radius: 8px; cursor: pointer; transition: all .2s; }
+  .btn-sair:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* APP */
+  #telaApp { display: none; }
+  main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  .page { display: none; animation: fadeIn .3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .page-header { margin-bottom: 2rem; }
+  .page-header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--primary); line-height: 1.1; }
+  .page-header p { color: var(--muted); margin-top: .4rem; font-size: .95rem; }
+
+  .card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .fg-grid { display: flex; flex-direction: column; gap: .45rem; }
+  .fg-grid label { font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .fg-grid.full { grid-column: 1 / -1; }
+  .fg-grid input, .fg-grid select, .fg-grid textarea {
+    font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem;
+    border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg);
+    color: var(--text); transition: border-color .2s, box-shadow .2s; outline: none;
+  }
+  .fg-grid textarea { resize: vertical; min-height: 90px; }
+  .fg-grid input:focus, .fg-grid select:focus, .fg-grid textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
+  .fg-grid input[readonly] { opacity: .65; cursor: not-allowed; }
+
+  /* Solicitante switcher */
+  .solicitante-box {
+    background: #e8f0eb;
+    border: 1.5px solid #b8d4bf;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .solicitante-box .sb-label { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--primary); white-space: nowrap; }
+  .solicitante-box select { font-family: 'DM Sans', sans-serif; font-size: .9rem; padding: .5rem .9rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); outline: none; cursor: pointer; flex: 1; min-width: 200px; }
+
+  .file-drop { border: 2px dashed var(--border); border-radius: 10px; padding: 2rem 1.5rem; text-align: center; cursor: pointer; transition: all .2s; background: var(--bg); position: relative; }
+  .file-drop:hover, .file-drop.drag-over { border-color: var(--accent); background: #fef8ec; }
+  .file-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .file-drop .file-icon { font-size: 2rem; margin-bottom: .5rem; }
+  .file-drop p { font-size: .88rem; color: var(--muted); }
+  .file-drop strong { color: var(--primary); font-weight: 600; }
+  .file-name { display: none; margin-top: .5rem; font-size: .85rem; color: var(--success); font-weight: 500; }
+  .upload-progress { display: none; margin-top: .8rem; }
+  .upload-progress-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .upload-progress-fill { height: 100%; background: var(--accent); border-radius: 99px; width: 0%; transition: width .3s ease; }
+  .upload-progress-label { font-size: .78rem; color: var(--muted); margin-top: .3rem; text-align: center; }
+
+  .deadline-box { background: linear-gradient(135deg, var(--primary) 0%, #2a5a3a 100%); border-radius: 10px; padding: 1rem 1.4rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+  .deadline-box .icon { font-size: 1.8rem; }
+  .deadline-box p { font-size: .85rem; color: rgba(255,255,255,.7); }
+  .deadline-box strong { font-family: 'Syne', sans-serif; color: var(--accent); font-size: 1rem; display: block; }
+
+  .btn-primary { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; padding: .85rem 2rem; background: var(--accent); color: var(--primary); border: none; border-radius: 10px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; width: 100%; justify-content: center; }
+  .btn-primary:hover { background: #d49018; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(232,160,32,.35); }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-action { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; padding: .85rem 2rem; background: var(--accent); color: var(--primary); border: none; border-radius: 10px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; }
+  .btn-action:hover { background: #d49018; transform: translateY(-1px); }
+  .btn-action:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+  .btn-secondary { font-family: 'DM Sans', sans-serif; font-size: .88rem; padding: .55rem 1.2rem; background: transparent; color: var(--primary); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all .2s; }
+  .btn-secondary:hover { border-color: var(--primary); background: rgba(26,58,42,.04); }
+  .btn-danger { font-family: 'DM Sans', sans-serif; font-size: .82rem; padding: .35rem .8rem; background: transparent; color: var(--accent2); border: 1.5px solid var(--accent2); border-radius: 6px; cursor: pointer; transition: all .2s; }
+  .btn-danger:hover { background: var(--accent2); color: #fff; }
+  .btn-approve { font-family: 'DM Sans', sans-serif; font-size: .82rem; padding: .35rem .8rem; background: transparent; color: var(--success); border: 1.5px solid var(--success); border-radius: 6px; cursor: pointer; transition: all .2s; }
+  .btn-approve:hover { background: var(--success); color: #fff; }
+  .btn-download { display: inline-flex; align-items: center; gap: .4rem; font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600; padding: .45rem 1rem; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: all .2s; white-space: nowrap; }
+  .btn-download:hover { background: #2a5a3a; transform: translateY(-1px); }
+
+  /* MINHA CARD */
+  .minha-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.4rem 1.6rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
+  .mc-titulo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--primary); margin-bottom: .25rem; }
+  .mc-meta { font-size: .83rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; }
+  .mc-prazo { font-size: .82rem; font-weight: 600; color: var(--accent2); margin-top: .3rem; }
+  .mc-right { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; }
+
+  /* STATS */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.5rem; display: flex; flex-direction: column; gap: .2rem; }
+  .stat-card .num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1; }
+  .stat-card .slabel { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .stat-card .accent-dot { width: 8px; height: 8px; border-radius: 50%; margin-bottom: .3rem; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  thead th { text-align: left; padding: .7rem 1rem; font-size: .75rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-bottom: 2px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #f9f6ef; }
+  tbody td { padding: .8rem 1rem; vertical-align: middle; }
+
+  .badge { display: inline-block; padding: .2rem .7rem; border-radius: 99px; font-size: .75rem; font-weight: 600; letter-spacing: .02em; }
+  .badge-pending   { background: #fff3d6; color: #a06000; }
+  .badge-progress  { background: #ddeeff; color: #0055aa; }
+  .badge-done      { background: #d6f0e0; color: #1a6a3a; }
+  .badge-cancelled { background: #fce4de; color: #a02a10; }
+  .badge-waiting   { background: #f0e8ff; color: #6600cc; }
+  .badge-coord     { background: #e8f0eb; color: var(--primary); }
+
+  .empty-state { text-align: center; padding: 3.5rem 2rem; color: var(--muted); }
+  .empty-state .emoji { font-size: 2.8rem; margin-bottom: .8rem; }
+  .empty-state p { font-size: .95rem; }
+
+  .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(26,58,42,.2); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: .4rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--primary); color: #fff; padding: 1rem 1.5rem; border-radius: 12px; font-size: .9rem; display: flex; align-items: center; gap: .6rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 340px; }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--surface); border-radius: 16px; padding: 2rem; max-width: 540px; width: 90%; transform: scale(.95); transition: transform .25s; max-height: 90vh; overflow-y: auto; }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); margin-bottom: 1rem; }
+  .modal-detail { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1.2rem; }
+  .modal-detail .d-item { background: var(--bg); border-radius: 8px; padding: .6rem .9rem; }
+  .modal-detail .d-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: .2rem; }
+  .modal-detail .d-value { font-size: .9rem; font-weight: 500; color: var(--text); }
+  .modal-actions { display: flex; gap: .7rem; justify-content: flex-end; flex-wrap: wrap; }
+  .status-select { padding: .5rem .8rem; border-radius: 8px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: .88rem; background: var(--bg); cursor: pointer; }
+  .arquivo-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+  .arquivo-info { display: flex; align-items: center; gap: .6rem; font-size: .9rem; font-weight: 500; }
+
+  /* COORD TABS */
+  .coord-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+  .coord-tab { font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 600; padding: .6rem 1.2rem; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; color: var(--muted); margin-bottom: -2px; transition: all .2s; }
+  .coord-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    header { padding: 0 1rem; }
+    main { padding: 1.5rem 1rem; }
+    .page-header h1 { font-size: 1.5rem; }
+    .modal-detail { grid-template-columns: 1fr; }
+    .minha-card { grid-template-columns: 1fr; }
+    .mc-right { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div class="auth-screen" id="telaAuth">
+  <div class="auth-box">
+    <div class="auth-logo">📋 <em>CópiaFácil</em></div>
+    <p class="auth-sub">Sistema de Solicitação de Matrizes</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
+      <button class="auth-tab" onclick="switchTab('cadastro')">Primeiro acesso</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="painelLogin">
+      <div class="fg"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
+      <div class="fg"><label>Senha</label><input type="password" id="loginSenha" placeholder="Sua senha" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
+      <p class="auth-erro" id="loginErro"></p>
+      <button class="btn-primary" id="btnLogin" onclick="fazerLogin()">Entrar</button>
+    </div>
+
+    <!-- CADASTRO -->
+    <div id="painelCadastro" style="display:none">
+      <div class="fg"><label>Nome completo *</label><input type="text" id="cadNome" placeholder="Ex.: Maria da Silva" /></div>
+      <div class="fg"><label>E-mail *</label><input type="email" id="cadEmail" placeholder="seu@email.com" /></div>
+      <div class="fg">
+        <label>Disciplina *</label>
+        <select id="cadDisciplina">
+          <option value="">— Selecione —</option>
+          <option value="portugues">Português</option>
+          <option value="matematica">Matemática</option>
+          <option value="ciencias">Ciências</option>
+          <option value="historia">História</option>
+          <option value="geografia">Geografia</option>
+          <option value="ingles">Inglês</option>
+          <option value="arte">Arte</option>
+          <option value="educacao fisica">Educação Física</option>
+          <option value="ensino religioso">Ensino Religioso</option>
+          <option value="outra">Outra</option>
+        </select>
+      </div>
+      <div class="senha-hint">🔑 Sua senha será o nome da sua disciplina em minúsculas e sem acentos.<br>Ex.: Matemática → <strong>matematica</strong> | Educação Física → <strong>educacao fisica</strong></div>
+      <p class="auth-erro" id="cadErro"></p>
+      <p class="auth-info" id="cadInfo"></p>
+      <button class="btn-primary" id="btnCadastro" onclick="fazerCadastro()">Criar conta</button>
+    </div>
+  </div>
+</div>
+
+<!-- PENDENTE -->
+<div class="pending-screen" id="telaPendente">
+  <div class="pending-box">
+    <div class="big-icon">⏳</div>
+    <h2>Cadastro em análise</h2>
+    <p>Seu cadastro foi enviado com sucesso!<br>Aguarde a aprovação da coordenação para acessar a plataforma.</p>
+    <br>
+    <button class="btn-secondary" onclick="sair()">Voltar ao login</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="telaApp">
+  <header>
+    <div class="logo">📋 <span>CópiaFácil</span></div>
+    <div class="header-right">
+      <span class="perfil-badge" id="perfilBadge"></span>
+      <nav id="navBar"></nav>
+      <button class="btn-sair" onclick="sair()">Sair</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- PAGE: SOLICITAR (professor) -->
+    <div id="page-solicitar" class="page">
+      <div class="page-header">
+        <h1>Nova Solicitação de Cópias</h1>
+        <p>Preencha os dados abaixo para solicitar a reprodução de sua matriz.</p>
+      </div>
+      <div class="deadline-box">
+        <div class="icon">📅</div>
+        <div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div>
+      </div>
+      <div class="card">
+        <div class="form-grid">
+          <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
+          <div class="fg-grid"><label>Disciplina</label><input type="text" id="f-disciplina-ro" readonly /></div>
+          <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
+          <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
+          <div class="fg-grid"><label>Quantidade de Cópias *</label><input type="number" id="f-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
+          <div class="fg-grid full">
+            <label>Arquivo da Matriz</label>
+            <div class="file-drop" id="fileDrop">
+              <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName','uploadProgress','uploadFill','uploadLabel')" />
+              <div class="file-icon">📄</div>
+              <p><strong>Clique aqui</strong> ou arraste o arquivo</p>
+              <p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
+              <div class="file-name" id="fileName"></div>
+            </div>
+            <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div><div class="upload-progress-label" id="uploadLabel"></div></div>
+          </div>
+          <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+        </div>
+        <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+          <button class="btn-action" id="btnEnviar" onclick="submitForm('prof')">✔ Enviar Solicitação</button>
+          <button class="btn-secondary" onclick="clearProfForm()">Limpar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: MINHAS SOLICITAÇÕES -->
+    <div id="page-minhas" class="page">
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+        <div><h1>Minhas Solicitações</h1><p>Acompanhe o status dos seus pedidos.</p></div>
+        <button class="btn-secondary" onclick="showPage('solicitar')">+ Nova Solicitação</button>
+      </div>
+      <div id="minhasContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+    </div>
+
+    <!-- PAGE: COORD -->
+    <div id="page-coord" class="page">
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+        <div><h1>Painel da Coordenação</h1><p>Gerencie professores e solicitações.</p></div>
+        <button class="btn-secondary" onclick="loadCoord()">↻ Atualizar</button>
+      </div>
+
+      <div class="coord-tabs">
+        <button class="coord-tab active" onclick="switchCoordTab('nova',this)">➕ Nova Solicitação</button>
+        <button class="coord-tab" onclick="switchCoordTab('solicitacoes',this)">📋 Solicitações</button>
+        <button class="coord-tab" onclick="switchCoordTab('professores',this)">👩‍🏫 Professores</button>
+      </div>
+
+      <!-- TAB: NOVA SOLICITAÇÃO (coord) -->
+      <div class="tab-panel active" id="tab-nova">
+        <div class="deadline-box">
+          <div class="icon">📅</div>
+          <div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div>
+        </div>
+        <div class="card">
+          <!-- Seletor de solicitante -->
+          <div class="solicitante-box">
+            <span class="sb-label">🧑‍💼 Solicitante:</span>
+            <select id="coordSolicitante" onchange="onSolicitanteChange()">
+              <option value="coord">Coordenação (em nome próprio)</option>
+            </select>
+          </div>
+          <div class="form-grid">
+            <div class="fg-grid"><label>Professor(a)</label><input type="text" id="cf-professor" readonly /></div>
+            <div class="fg-grid"><label>Disciplina</label><input type="text" id="cf-disciplina" readonly /></div>
+            <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
+            <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
+            <div class="fg-grid"><label>Quantidade de Cópias *</label><input type="number" id="cf-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
+            <div class="fg-grid full">
+              <label>Arquivo da Matriz</label>
+              <div class="file-drop" id="cfileDrop">
+                <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName','cuploadProgress','cuploadFill','cuploadLabel')" />
+                <div class="file-icon">📄</div>
+                <p><strong>Clique aqui</strong> ou arraste o arquivo</p>
+                <p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
+                <div class="file-name" id="cfileName"></div>
+              </div>
+              <div class="upload-progress" id="cuploadProgress"><div class="upload-progress-bar"><div class="upload-progress-fill" id="cuploadFill"></div></div><div class="upload-progress-label" id="cuploadLabel"></div></div>
+            </div>
+            <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+          </div>
+          <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+            <button class="btn-action" id="btnEnviarCoord" onclick="submitForm('coord')">✔ Enviar Solicitação</button>
+            <button class="btn-secondary" onclick="clearCoordForm()">Limpar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: SOLICITAÇÕES -->
+      <div class="tab-panel" id="tab-solicitacoes">
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">—</div><div class="slabel">Aguardando</div></div>
+          <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">—</div><div class="slabel">Em Produção</div></div>
+          <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">—</div><div class="slabel">Entregues</div></div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div style="padding:1rem 1.5rem;border-bottom:1.5px solid var(--border);display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+            <input type="text" id="filterText" placeholder="🔍  Buscar por professor, disciplina ou título…" style="flex:1;min-width:200px;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderSolicitacoes()" />
+            <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
+              <option value="">Todos os status</option>
+              <option value="Aguardando">Aguardando</option>
+              <option value="Em produção">Em produção</option>
+              <option value="Entregue">Entregue</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
+          </div>
+          <div id="coordContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+        </div>
+      </div>
+
+      <!-- TAB: PROFESSORES -->
+      <div class="tab-panel" id="tab-professores">
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div id="profContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <h2 id="modalTitle"></h2>
+    <div class="modal-detail" id="modalDetail"></div>
+    <div id="modalArquivo"></div>
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">Atualizar Status</label>
+      <select class="status-select" id="modalStatus" onchange="updateStatus()">
+        <option value="Aguardando">Aguardando</option>
+        <option value="Em produção">Em produção</option>
+        <option value="Entregue">Entregue</option>
+        <option value="Cancelado">Cancelado</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-danger" onclick="deleteItem()">🗑 Excluir</button>
+      <button class="btn-secondary" onclick="closeModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://uaedrqrnexcktjynecja.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZWRycXJuZXhja3RqeW5lY2phIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NDY1MTAsImV4cCI6MjA5MDIyMjUxMH0.uNS6boM5ksPEzThO0B8za4FvqsxCP2IEENFO_BGM7Dw';
+const BUCKET      = 'matrizes';
+const SENHA_COORD = 'galodoido';
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser    = null;
+let perfilAtual    = null;
+let professorData  = null;
+let allSolic       = [];
+let allProfs       = [];
+let currentSolicId = null;
+
+const disciplinaDisplay = {
+  'portugues':'Português','matematica':'Matemática','ciencias':'Ciências',
+  'historia':'História','geografia':'Geografia','ingles':'Inglês',
+  'arte':'Arte','educacao fisica':'Educação Física',
+  'ensino religioso':'Ensino Religioso','outra':'Outra'
+};
+
+// ── AUTH TABS ──
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((b,i) => b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='cadastro')));
+  document.getElementById('painelLogin').style.display    = tab==='login'    ? 'block' : 'none';
+  document.getElementById('painelCadastro').style.display = tab==='cadastro' ? 'block' : 'none';
+}
+
+// ── CADASTRO ──
+async function fazerCadastro() {
+  const nome       = document.getElementById('cadNome').value.trim();
+  const email      = document.getElementById('cadEmail').value.trim();
+  const disciplina = document.getElementById('cadDisciplina').value;
+  const erroEl     = document.getElementById('cadErro');
+  const infoEl     = document.getElementById('cadInfo');
+  const btn        = document.getElementById('btnCadastro');
+  erroEl.style.display = 'none'; infoEl.style.display = 'none';
+  if (!nome||!email||!disciplina) { erroEl.textContent='⚠️ Preencha todos os campos.'; erroEl.style.display='block'; return; }
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Criando conta…';
+  try {
+    const { data, error } = await db.auth.signUp({ email, password: disciplina });
+    if (error) throw error;
+    const { error: profError } = await db.from('professores').insert([{ id: data.user.id, nome, email, disciplina, aprovado: false }]);
+    if (profError) throw profError;
+    await db.auth.signOut();
+    infoEl.textContent='✅ Cadastro enviado! Aguarde a aprovação da coordenação.';
+    infoEl.style.display='block';
+    document.getElementById('cadNome').value='';
+    document.getElementById('cadEmail').value='';
+    document.getElementById('cadDisciplina').value='';
+  } catch(err) {
+    erroEl.textContent = err.message.includes('already registered') ? '⚠️ Este e-mail já está cadastrado.' : '❌ Erro: '+err.message;
+    erroEl.style.display='block';
+  } finally { btn.disabled=false; btn.innerHTML='Criar conta'; }
+}
+
+// ── LOGIN ──
+async function fazerLogin() {
+  const email  = document.getElementById('loginEmail').value.trim();
+  const senha  = document.getElementById('loginSenha').value;
+  const erroEl = document.getElementById('loginErro');
+  const btn    = document.getElementById('btnLogin');
+  erroEl.style.display='none';
+  if (!email||!senha) { erroEl.textContent='⚠️ Preencha e-mail e senha.'; erroEl.style.display='block'; return; }
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Entrando…';
+  try {
+    const { data, error } = await db.auth.signInWithPassword({ email, password: senha });
+    if (error) throw error;
+    currentUser = data.user;
+    if (senha === SENHA_COORD) { perfilAtual='coordenacao'; await iniciarApp(); return; }
+    const { data: prof, error: profErr } = await db.from('professores').select('*').eq('id', currentUser.id).single();
+    if (profErr||!prof) throw new Error('Perfil não encontrado.');
+    if (!prof.aprovado) {
+      await db.auth.signOut();
+      document.getElementById('telaAuth').style.display='none';
+      document.getElementById('telaPendente').style.display='flex';
+      return;
+    }
+    professorData=prof; perfilAtual='professor'; await iniciarApp();
+  } catch(err) {
+    erroEl.textContent = err.message.includes('Invalid login') ? '❌ E-mail ou senha incorretos.' : '❌ '+err.message;
+    erroEl.style.display='block';
+  } finally { btn.disabled=false; btn.innerHTML='Entrar'; }
+}
+
+// ── INICIAR APP ──
+async function iniciarApp() {
+  document.getElementById('telaAuth').style.display    ='none';
+  document.getElementById('telaPendente').style.display='none';
+  document.getElementById('telaApp').style.display     ='block';
+  const badge = document.getElementById('perfilBadge');
+  const nav   = document.getElementById('navBar');
+
+  if (perfilAtual==='professor') {
+    badge.textContent = '👩‍🏫 '+professorData.nome.split(' ')[0];
+    badge.className   = 'perfil-badge prof';
+    nav.innerHTML = `
+      <button onclick="showPage('solicitar',this)" class="active">Nova Solicitação</button>
+      <button onclick="showPage('minhas',this)">Minhas Solicitações</button>`;
+    document.getElementById('f-professor').value     = professorData.nome;
+    document.getElementById('f-disciplina-ro').value = disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
+    showPage('solicitar');
+  } else {
+    badge.textContent = '🗂️ Coordenação';
+    badge.className   = 'perfil-badge coord';
+    nav.innerHTML = `<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
+    // Preenche campos fixos da coord
+    document.getElementById('cf-professor').value  = 'Coordenação';
+    document.getElementById('cf-disciplina').value = '—';
+    await loadCoord();
+    showPage('coord');
+  }
+}
+
+// ── SAIR ──
+async function sair() {
+  await db.auth.signOut();
+  currentUser=null; perfilAtual=null; professorData=null; allSolic=[]; allProfs=[]; currentSolicId=null;
+  document.getElementById('telaApp').style.display      ='none';
+  document.getElementById('telaPendente').style.display ='none';
+  document.getElementById('telaAuth').style.display     ='flex';
+  document.getElementById('loginEmail').value='';
+  document.getElementById('loginSenha').value='';
+  document.getElementById('loginErro').style.display='none';
+}
+
+// ── PAGES ──
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id==='minhas') loadMinhas();
+}
+
+// ── COORD TABS ──
+function switchCoordTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.coord-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── SOLICITANTE CHANGE (coord) ──
+function onSolicitanteChange() {
+  const val = document.getElementById('coordSolicitante').value;
+  if (val === 'coord') {
+    document.getElementById('cf-professor').value  = 'Coordenação';
+    document.getElementById('cf-disciplina').value = '—';
+  } else {
+    const prof = allProfs.find(p => p.id === val);
+    if (prof) {
+      document.getElementById('cf-professor').value  = prof.nome;
+      document.getElementById('cf-disciplina').value = disciplinaDisplay[prof.disciplina]||prof.disciplina;
+    }
+  }
+}
+
+// ── POPULAR SELETOR DE SOLICITANTE ──
+function populateSolicitante() {
+  const sel = document.getElementById('coordSolicitante');
+  const current = sel.value;
+  sel.innerHTML = '<option value="coord">Coordenação (em nome próprio)</option>';
+  allProfs.filter(p=>p.aprovado).forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.nome + ' — ' + (disciplinaDisplay[p.disciplina]||p.disciplina);
+    sel.appendChild(opt);
+  });
+  sel.value = current;
+  onSolicitanteChange();
+}
+
+// ── FILE ──
+function handleFile(input, fnId, progId, fillId, labelId) {
+  if (input.files[0]) { document.getElementById(fnId).textContent='✔ '+input.files[0].name; document.getElementById(fnId).style.display='block'; }
+}
+
+['fileDrop','cfileDrop'].forEach((id,i) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('dragover', e=>{e.preventDefault();el.classList.add('drag-over');});
+  el.addEventListener('dragleave', ()=>el.classList.remove('drag-over'));
+  el.addEventListener('drop', e=>{
+    e.preventDefault(); el.classList.remove('drag-over');
+    const fileInput = el.querySelector('input[type="file"]');
+    if (e.dataTransfer.files[0] && fileInput) { fileInput.files=e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
+  });
+});
+
+// ── UTILS ──
+function addWorkdays(date,days) { let d=new Date(date),added=0; while(added<days){d.setDate(d.getDate()+1);const dow=d.getDay();if(dow!==0&&dow!==6)added++;} return d; }
+function fmtDate(d) { return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function sanitizeFileName(n) { return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_'); }
+const statusClass={'Aguardando':'badge-pending','Em produção':'badge-progress','Entregue':'badge-done','Cancelado':'badge-cancelled'};
+
+// ── CLEAR FORMS ──
+function clearProfForm() {
+  ['f-titulo','f-turmas','f-copias','f-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-arquivo').value='';
+  document.getElementById('fileName').style.display='none';
+  document.getElementById('uploadProgress').style.display='none';
+}
+function clearCoordForm() {
+  ['cf-titulo','cf-turmas','cf-copias','cf-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cf-arquivo').value='';
+  document.getElementById('cfileName').style.display='none';
+  document.getElementById('cuploadProgress').style.display='none';
+}
+
+// ── UPLOAD ──
+async function uploadFile(file, fillId, labelId, progId) {
+  const ext=file.name.split('.').pop();
+  const base=sanitizeFileName(file.name.replace('.'+ext,''));
+  const path=`${Date.now()}_${base}.${ext}`;
+  document.getElementById(progId).style.display='block';
+  document.getElementById(fillId).style.width='0%';
+  document.getElementById(labelId).textContent='Enviando arquivo…';
+  let pct=0;
+  const iv=setInterval(()=>{pct=Math.min(pct+8,85);document.getElementById(fillId).style.width=pct+'%';},150);
+  const {data,error}=await db.storage.from(BUCKET).upload(path,file,{cacheControl:'3600',upsert:false});
+  clearInterval(iv);
+  if (error){document.getElementById(progId).style.display='none';throw new Error('Falha no upload: '+error.message);}
+  document.getElementById(fillId).style.width='100%';
+  document.getElementById(labelId).textContent='✔ Arquivo enviado!';
+  setTimeout(()=>{document.getElementById(progId).style.display='none';},1500);
+  const {data:urlData}=db.storage.from(BUCKET).getPublicUrl(path);
+  return {path,publicUrl:urlData.publicUrl,originalName:file.name};
+}
+
+// ── SUBMIT ──
+async function submitForm(modo) {
+  const isCoord = modo==='coord';
+  const titulo   = document.getElementById(isCoord?'cf-titulo':'f-titulo').value.trim();
+  const turmas   = document.getElementById(isCoord?'cf-turmas':'f-turmas').value.trim();
+  const copias   = document.getElementById(isCoord?'cf-copias':'f-copias').value;
+  const obs      = document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
+  const professor  = document.getElementById(isCoord?'cf-professor':'f-professor').value;
+  const disciplina = document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
+  const arquivoInput = document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
+  const btnId = isCoord?'btnEnviarCoord':'btnEnviar';
+
+  if (!titulo||!turmas||!copias) { showToast('⚠️ Preencha todos os campos obrigatórios.',true); return; }
+
+  const btn=document.getElementById(btnId);
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Enviando…';
+
+  try {
+    let arquivoPath=null,arquivoUrl=null,arquivoNome=null;
+    if (arquivoInput.files[0]) {
+      btn.innerHTML='<span class="spinner"></span> Enviando arquivo…';
+      const fillId=isCoord?'cuploadFill':'uploadFill';
+      const labelId=isCoord?'cuploadLabel':'uploadLabel';
+      const progId=isCoord?'cuploadProgress':'uploadProgress';
+      const result=await uploadFile(arquivoInput.files[0],fillId,labelId,progId);
+      arquivoPath=result.path; arquivoUrl=result.publicUrl; arquivoNome=result.originalName;
+    }
+    btn.innerHTML='<span class="spinner"></span> Salvando…';
+    const now=new Date(); const prazo=addWorkdays(now,5);
+    const {error}=await db.from('solicitacoes').insert([{
+      professor, disciplina, titulo, turmas, copias:parseInt(copias),
+      obs:obs||null, arquivo:arquivoNome, arquivo_path:arquivoPath, arquivo_url:arquivoUrl,
+      data_solicitacao:now.toISOString(), prazo_entrega:prazo.toISOString(), status:'Aguardando'
+    }]);
+    if (error) throw new Error(error.message);
+    isCoord ? clearCoordForm() : clearProfForm();
+    showToast('✅ Solicitação enviada! Prazo: '+fmtDate(prazo));
+    if (!isCoord) setTimeout(()=>showPage('minhas',null),1800);
+    else { await loadCoord(); setTimeout(()=>switchCoordTab('solicitacoes',document.querySelectorAll('.coord-tab')[1]),1800); }
+  } catch(err) {
+    console.error(err); showToast('❌ Erro: '+err.message,true);
+  } finally { btn.disabled=false; btn.innerHTML='✔ Enviar Solicitação'; }
+}
+
+// ── MINHAS SOLICITAÇÕES ──
+async function loadMinhas() {
+  const container=document.getElementById('minhasContainer');
+  container.innerHTML='<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
+  const {data,error}=await db.from('solicitacoes').select('*').ilike('professor',professorData.nome).order('data_solicitacao',{ascending:false});
+  if (error||!data||data.length===0) { container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Você ainda não tem solicitações.</p></div>'; return; }
+  container.innerHTML=data.map(d=>`
+    <div class="minha-card">
+      <div>
+        <div class="mc-titulo">${esc(d.titulo)}</div>
+        <div class="mc-meta"><span>👥 ${esc(d.turmas)}</span><span>📄 ${d.copias} cópia${d.copias>1?'s':''}</span><span>🗓 ${fmtDate(d.data_solicitacao)}</span></div>
+        <div class="mc-prazo">⏰ Prazo: ${fmtDate(d.prazo_entrega)}</div>
+        ${d.obs?`<div style="margin-top:.3rem;font-size:.82rem;color:var(--muted);">💬 ${esc(d.obs)}</div>`:''}
+      </div>
+      <div class="mc-right">
+        <span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>
+        ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo</a>`:''}
+      </div>
+    </div>`).join('');
+}
+
+// ── COORD LOAD ──
+async function loadCoord() {
+  const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
+  allSolic=solic||[]; renderStats(); renderSolicitacoes();
+  const {data:profs}=await db.from('professores').select('*').order('criado_em',{ascending:false});
+  allProfs=profs||[]; renderProfessores(); populateSolicitante();
+}
+
+// ── STATS ──
+function renderStats() {
+  const p=allSolic.filter(d=>d.status==='Aguardando').length;
+  const r=allSolic.filter(d=>d.status==='Em produção').length;
+  const e=allSolic.filter(d=>d.status==='Entregue').length;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">${p}</div><div class="slabel">Aguardando</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${r}</div><div class="slabel">Em Produção</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
+}
+
+// ── RENDER SOLICITAÇÕES ──
+function renderSolicitacoes() {
+  const txt=(document.getElementById('filterText').value||'').toLowerCase();
+  const st=document.getElementById('filterStatus').value;
+  const filtered=allSolic.filter(d=>{
+    const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
+    return m&&(!st||d.status===st);
+  });
+  const container=document.getElementById('coordContainer');
+  if (filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
+  container.innerHTML=`
+    <table>
+      <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Prazo</th><th>Arquivo</th><th>Status</th></tr></thead>
+      <tbody>${filtered.map(d=>`
+        <tr onclick="openModal(${d.id})" style="cursor:pointer">
+          <td><strong>${esc(d.professor)}</strong>${d.professor==='Coordenação'?` <span class="badge badge-coord" style="font-size:.65rem;padding:.1rem .4rem;">coord</span>`:''}</td>
+          <td>${esc(d.disciplina)}</td>
+          <td style="max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
+          <td>${esc(d.turmas)}</td>
+          <td style="text-align:center;">${d.copias}</td>
+          <td>${fmtDate(d.prazo_entrega)}</td>
+          <td>${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download">⬇ Baixar</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}</td>
+          <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+// ── RENDER PROFESSORES ──
+function renderProfessores() {
+  const container=document.getElementById('profContainer');
+  if (allProfs.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">👥</div><p>Nenhum professor cadastrado.</p></div>';return;}
+  const pendentes=allProfs.filter(p=>!p.aprovado);
+  const aprovados=allProfs.filter(p=>p.aprovado);
+  container.innerHTML=`
+    <table>
+      <thead><tr><th>Nome</th><th>E-mail</th><th>Disciplina</th><th>Cadastrado em</th><th>Status</th><th>Ação</th></tr></thead>
+      <tbody>
+        ${pendentes.map(p=>`
+          <tr>
+            <td><strong>${esc(p.nome)}</strong></td><td>${esc(p.email)}</td>
+            <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td>
+            <td>${fmtDate(p.criado_em)}</td>
+            <td><span class="badge badge-waiting">⏳ Pendente</span></td>
+            <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
+              <button class="btn-approve" onclick="aprovarProfessor('${p.id}',true)">✔ Aprovar</button>
+              <button class="btn-danger" onclick="aprovarProfessor('${p.id}',false)">✖ Rejeitar</button>
+            </td>
+          </tr>`).join('')}
+        ${aprovados.map(p=>`
+          <tr>
+            <td><strong>${esc(p.nome)}</strong></td><td>${esc(p.email)}</td>
+            <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td>
+            <td>${fmtDate(p.criado_em)}</td>
+            <td><span class="badge badge-done">✔ Aprovado</span></td>
+            <td><button class="btn-danger" onclick="aprovarProfessor('${p.id}',false)">Revogar</button></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+// ── APROVAR PROFESSOR ──
+async function aprovarProfessor(id, aprovar) {
+  if (aprovar) {
+    const {error}=await db.from('professores').update({aprovado:true}).eq('id',id);
+    if (error){showToast('❌ Erro ao aprovar.',true);return;}
+    showToast('✔ Professor aprovado!');
+  } else {
+    if (!confirm('Remover este professor?')) return;
+    await db.from('professores').delete().eq('id',id);
+    showToast('🗑 Professor removido.');
+  }
+  await loadCoord();
+}
+
+// ── MODAL ──
+function openModal(id) {
+  const item=allSolic.find(d=>d.id===id);
+  if (!item) return;
+  currentSolicId=id;
+  document.getElementById('modalTitle').textContent=item.titulo;
+  document.getElementById('modalStatus').value=item.status;
+  document.getElementById('modalDetail').innerHTML=`
+    <div class="d-item"><div class="d-label">Professor(a)</div><div class="d-value">${esc(item.professor)}</div></div>
+    <div class="d-item"><div class="d-label">Disciplina</div><div class="d-value">${esc(item.disciplina)}</div></div>
+    <div class="d-item"><div class="d-label">Turmas</div><div class="d-value">${esc(item.turmas)}</div></div>
+    <div class="d-item"><div class="d-label">Qtd. de Cópias</div><div class="d-value">${item.copias}</div></div>
+    <div class="d-item"><div class="d-label">Data da Solicitação</div><div class="d-value">${fmtDate(item.data_solicitacao)}</div></div>
+    <div class="d-item"><div class="d-label">Prazo de Entrega</div><div class="d-value" style="color:var(--accent2);font-weight:600;">${fmtDate(item.prazo_entrega)}</div></div>
+    ${item.obs?`<div class="d-item" style="grid-column:1/-1"><div class="d-label">Observações</div><div class="d-value">${esc(item.obs)}</div></div>`:''}`;
+  document.getElementById('modalArquivo').innerHTML=item.arquivo_url?`
+    <div class="arquivo-box">
+      <div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo||'Arquivo')}</span></div>
+      <a href="${esc(item.arquivo_url)}" target="_blank" class="btn-download">⬇ Baixar arquivo</a>
+    </div>`:'';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e||e.target===document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open'); currentSolicId=null;
+  }
+}
+
+async function updateStatus() {
+  if (!currentSolicId) return;
+  const newStatus=document.getElementById('modalStatus').value;
+  const {error}=await db.from('solicitacoes').update({status:newStatus}).eq('id',currentSolicId);
+  if (error){showToast('❌ Erro ao atualizar.',true);return;}
+  const idx=allSolic.findIndex(d=>d.id===currentSolicId);
+  if (idx!==-1) allSolic[idx].status=newStatus;
+  renderStats(); renderSolicitacoes();
+  showToast('✔ Status atualizado para "'+newStatus+'"');
+}
+
+async function deleteItem() {
+  if (!currentSolicId) return;
+  if (!confirm('Excluir esta solicitação?')) return;
+  const item=allSolic.find(d=>d.id===currentSolicId);
+  if (item&&item.arquivo_path) await db.storage.from(BUCKET).remove([item.arquivo_path]);
+  const {error}=await db.from('solicitacoes').delete().eq('id',currentSolicId);
+  if (error){showToast('❌ Erro ao excluir.',true);return;}
+  allSolic=allSolic.filter(d=>d.id!==currentSolicId);
+  closeModal(); renderStats(); renderSolicitacoes();
+  showToast('🗑 Solicitação removida.');
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg,isWarn) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.background=isWarn?'#c94f2a':'#1a3a2a';
+  t.classList.add('show'); clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ── AUTO LOGIN ──
+db.auth.getSession().then(async({data:{session}})=>{
+  if (!session) return;
+  currentUser=session.user;
+  const {data:prof}=await db.from('professores').select('*').eq('id',currentUser.id).single();
+  if (prof) {
+    if (!prof.aprovado){document.getElementById('telaAuth').style.display='none';document.getElementById('telaPendente').style.display='flex';return;}
+    professorData=prof; perfilAtual='professor';
+  } else { perfilAtual='coordenacao'; }
+  iniciarApp();
+});
+</script>
+</body>
+</html>
