@@ -50,6 +50,7 @@
   .perfil-badge { font-size: .78rem; font-weight: 600; padding: .3rem .8rem; border-radius: 99px; letter-spacing: .04em; }
   .perfil-badge.coord { background: var(--accent); color: var(--primary); }
   .perfil-badge.prof { background: rgba(255,255,255,.15); color: #fff; }
+  .perfil-badge.meca { background: #5533aa; color: #fff; }
   nav { display: flex; gap: .5rem; }
   nav button { background: transparent; border: 1.5px solid rgba(255,255,255,.25); color: #fff; font-family: 'DM Sans', sans-serif; font-size: .85rem; padding: .4rem 1rem; border-radius: 8px; cursor: pointer; transition: all .2s; }
   nav button:hover, nav button.active { background: var(--accent); border-color: var(--accent); color: var(--primary); font-weight: 600; }
@@ -292,7 +293,33 @@
       <div id="minhasContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
     </div>
 
-    <!-- PAGE COORD -->
+    <!-- PAGE MECANOGRAFIA -->
+    <div id="page-meca" class="page">
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+        <div><h1>Painel da Mecanografia</h1><p>Gerencie as solicitações de cópias recebidas.</p></div>
+        <button class="btn-secondary" onclick="loadMeca()">↻ Atualizar</button>
+      </div>
+      <div class="stats-row" id="mecaStatsRow">
+        <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">—</div><div class="slabel">Aguardando</div></div>
+        <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">—</div><div class="slabel">Em Produção</div></div>
+        <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">—</div><div class="slabel">Entregues</div></div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div style="padding:1rem 1.5rem;border-bottom:1.5px solid var(--border);display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+          <input type="text" id="mecaFilterText" placeholder="🔍  Buscar…" style="flex:1;min-width:180px;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderMeca()" />
+          <select id="mecaFilterStatus" style="font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderMeca()">
+            <option value="">Todos os status</option>
+            <option value="Aguardando">Aguardando</option>
+            <option value="Em produção">Em produção</option>
+            <option value="Entregue">Entregue</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+        <div id="mecaContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+      </div>
+    </div>
+
+
     <div id="page-coord" class="page">
       <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
         <div><h1>Painel da Coordenação</h1><p>Gerencie professores e solicitações.</p></div>
@@ -302,6 +329,7 @@
         <button class="coord-tab active" onclick="switchCoordTab('nova',this)">➕ Nova Solicitação</button>
         <button class="coord-tab" onclick="switchCoordTab('solicitacoes',this)">📋 Solicitações</button>
         <button class="coord-tab" onclick="switchCoordTab('professores',this)">👩‍🏫 Professores</button>
+        <button class="coord-tab" onclick="switchCoordTab('mecanografia',this)">🖨️ Mecanografia</button>
       </div>
 
       <!-- TAB NOVA -->
@@ -365,6 +393,15 @@
           <div id="profContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
+
+      <!-- TAB MECANOGRAFIA -->
+      <div class="tab-panel" id="tab-mecanografia">
+        <div class="card" style="padding:1.5rem 2rem;">
+          <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">🖨️ Acesso da Mecanografia</h3>
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.5rem;">Este perfil permite visualizar solicitações, baixar arquivos, imprimir e atualizar o status das cópias.</p>
+          <div id="mecaGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -420,13 +457,31 @@
   </div>
 </div>
 
+<!-- MODAL MECANOGRAFIA -->
+<div class="modal-overlay" id="modalMecaOverlay" onclick="closeModalMeca(event)">
+  <div class="modal">
+    <h2>🖨️ Criar Acesso da Mecanografia</h2>
+    <div class="mfg"><label>E-mail *</label><input type="email" id="mecaEmail" placeholder="mecanografia@escola.com" /></div>
+    <div class="mfg">
+      <label>Senha inicial *</label>
+      <input type="password" id="mecaSenha" placeholder="Mínimo 6 caracteres" />
+      <span class="hint">A senha poderá ser alterada pelo usuário depois.</span>
+    </div>
+    <p class="auth-erro" id="modalMecaErro"></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModalMeca()">Cancelar</button>
+      <button class="btn-action" id="btnSalvarMeca" onclick="salvarMeca()">Criar acesso</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
 const SUPABASE_URL = 'https://uaedrqrnexcktjynecja.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZWRycXJuZXhja3RqeW5lY2phIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NDY1MTAsImV4cCI6MjA5MDIyMjUxMH0.uNS6boM5ksPEzThO0B8za4FvqsxCP2IEENFO_BGM7Dw';
 const BUCKET      = 'matrizes';
-const SENHA_COORD = 'galodoido';
+const SENHA_COORD  = 'galodoido';
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -498,6 +553,9 @@ async function fazerLogin() {
     if (error) throw error;
     currentUser=data.user;
     if (senha===SENHA_COORD){perfilAtual='coordenacao';await iniciarApp();return;}
+    // Verifica se é mecanografia
+    const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
+    if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
     const {data:prof,error:profErr}=await db.from('professores').select('*').eq('id',currentUser.id).single();
     if (profErr||!prof) throw new Error('Perfil não encontrado.');
     if (!prof.aprovado){
@@ -527,6 +585,12 @@ async function iniciarApp() {
     document.getElementById('f-professor').value=professorData.nome;
     document.getElementById('f-disciplina-ro').value=disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
     showPage('solicitar');
+  } else if (perfilAtual==='mecanografia') {
+    badge.textContent='🖨️ Mecanografia';
+    badge.className='perfil-badge meca';
+    nav.innerHTML=`<button onclick="showPage('meca',this)" class="active">Solicitações</button>`;
+    await loadMeca();
+    showPage('meca');
   } else {
     badge.textContent='🗂️ Coordenação';
     badge.className='perfil-badge coord';
@@ -564,7 +628,8 @@ function switchCoordTab(tab,btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.coord-tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
-  if (btn) btn.classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(tab==='mecanografia')renderMecaGerenciar();
 }
 
 // ── SOLICITANTE ──
@@ -689,6 +754,7 @@ async function loadCoord(){
   allSolic=solic||[];renderStats();renderSolicitacoes();
   const {data:profs}=await db.from('professores').select('*').order('criado_em',{ascending:false});
   allProfs=profs||[];renderProfessores();populateSolicitante();
+  await renderMecaGerenciar();
 }
 
 // ── STATS ──
@@ -928,10 +994,194 @@ function showToast(msg,isWarn){
   toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
+// ── GERENCIAR MECANOGRAFIA (coord) ──
+async function renderMecaGerenciar(){
+  const container=document.getElementById('mecaGerenciar');
+  if(!container)return;
+  const {data:lista}=await db.from('mecanografia').select('id,email,criado_em');
+  if(!lista||lista.length===0){
+    container.innerHTML=`
+      <div style="text-align:center;padding:2rem 1rem;">
+        <div style="font-size:2.5rem;margin-bottom:.8rem;">🖨️</div>
+        <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.2rem;">Nenhum acesso criado ainda.</p>
+        <button class="btn-action" onclick="abrirModalMeca()">+ Criar acesso</button>
+      </div>`;
+    return;
+  }
+  container.innerHTML=`
+    <table>
+      <thead><tr><th>E-mail</th><th>Criado em</th><th>Ações</th></tr></thead>
+      <tbody>${lista.map(m=>`
+        <tr>
+          <td><strong>${esc(m.email||'—')}</strong></td>
+          <td>${m.criado_em?fmtDate(m.criado_em):'—'}</td>
+          <td><button class="btn-danger" onclick="excluirMeca('${m.id}')">🗑 Remover acesso</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div style="margin-top:1.2rem;display:flex;justify-content:flex-end;">
+      <button class="btn-action" onclick="abrirModalMeca()">+ Criar outro acesso</button>
+    </div>`;
+}
+
+function abrirModalMeca(){
+  document.getElementById('mecaEmail').value='';
+  document.getElementById('mecaSenha').value='';
+  document.getElementById('modalMecaErro').style.display='none';
+  document.getElementById('modalMecaOverlay').classList.add('open');
+}
+
+function closeModalMeca(e){
+  if(!e||e.target===document.getElementById('modalMecaOverlay'))
+    document.getElementById('modalMecaOverlay').classList.remove('open');
+}
+
+async function salvarMeca(){
+  const email=document.getElementById('mecaEmail').value.trim();
+  const senha=document.getElementById('mecaSenha').value;
+  const erroEl=document.getElementById('modalMecaErro');
+  const btn=document.getElementById('btnSalvarMeca');
+  erroEl.style.display='none';
+  if(!email||!senha){erroEl.textContent='⚠️ Preencha e-mail e senha.';erroEl.style.display='block';return;}
+  if(senha.length<6){erroEl.textContent='⚠️ A senha deve ter no mínimo 6 caracteres.';erroEl.style.display='block';return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
+  try {
+    // Cria usuário no Auth
+    const {data,error}=await db.auth.signUp({email,password:senha});
+    if(error)throw error;
+    const uid=data.user.id;
+    // Insere na tabela mecanografia
+    const {error:insErr}=await db.from('mecanografia').insert([{id:uid,email}]);
+    if(insErr)throw insErr;
+    // Reloga como coordenação
+    await db.auth.signOut();
+    const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+    if(!loginErr)currentUser=sessao.user;
+    closeModalMeca();
+    await renderMecaGerenciar();
+    showToast('✅ Acesso da Mecanografia criado!');
+  } catch(err){
+    erroEl.textContent=err.message.includes('already registered')?'⚠️ Este e-mail já está cadastrado.':'❌ Erro: '+err.message;
+    erroEl.style.display='block';
+  } finally{btn.disabled=false;btn.innerHTML='Criar acesso';}
+}
+
+async function excluirMeca(id){
+  if(!confirm('Remover o acesso da Mecanografia? O usuário perderá o acesso à plataforma.'))return;
+  const {error}=await db.from('mecanografia').delete().eq('id',id);
+  if(error){showToast('❌ Erro ao remover.',true);return;}
+  await renderMecaGerenciar();
+  showToast('🗑 Acesso removido.');
+}
+
+// ── MECANOGRAFIA LOAD ──
+async function loadMeca(){
+  const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
+  allSolic=solic||[];
+  renderMecaStats();renderMeca();
+}
+
+function renderMecaStats(){
+  const p=allSolic.filter(d=>d.status==='Aguardando').length;
+  const r=allSolic.filter(d=>d.status==='Em produção').length;
+  const e=allSolic.filter(d=>d.status==='Entregue').length;
+  document.getElementById('mecaStatsRow').innerHTML=`
+    <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">${p}</div><div class="slabel">Aguardando</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${r}</div><div class="slabel">Em Produção</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
+}
+
+function renderMeca(){
+  const txt=(document.getElementById('mecaFilterText').value||'').toLowerCase();
+  const st=document.getElementById('mecaFilterStatus').value;
+  const filtered=allSolic.filter(d=>{
+    const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
+    return m&&(!st||d.status===st);
+  });
+  const container=document.getElementById('mecaContainer');
+  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
+  container.innerHTML=`
+    <table>
+      <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Prazo</th><th>Arquivo</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody>${filtered.map(d=>`
+        <tr>
+          <td><strong>${esc(d.professor)}</strong></td>
+          <td>${esc(d.disciplina)}</td>
+          <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
+          <td>${esc(d.turmas)}</td>
+          <td style="text-align:center;">${d.copias}</td>
+          <td>${fmtDate(d.prazo_entrega)}</td>
+          <td>${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download">⬇ Baixar</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}</td>
+          <td>
+            <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
+              <option ${d.status==='Aguardando'?'selected':''}>Aguardando</option>
+              <option ${d.status==='Em produção'?'selected':''}>Em produção</option>
+              <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
+              <option ${d.status==='Cancelado'?'selected':''}>Cancelado</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Imprimir</button>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+async function mecaUpdateStatus(id,newStatus){
+  const {error}=await db.from('solicitacoes').update({status:newStatus}).eq('id',id);
+  if(error){showToast('❌ Erro ao atualizar.',true);return;}
+  const idx=allSolic.findIndex(d=>d.id===id);
+  if(idx!==-1)allSolic[idx].status=newStatus;
+  renderMecaStats();
+  showToast('✔ Status atualizado para "'+newStatus+'"');
+}
+
+function mecaPrint(id){
+  const item=allSolic.find(d=>d.id===id);if(!item)return;
+  const win=window.open('','_blank','width=700,height=600');
+  win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Solicitação — ${esc(item.titulo)}</title>
+    <style>
+      body{font-family:Arial,sans-serif;padding:2rem;color:#111;max-width:600px;margin:0 auto;}
+      h1{font-size:1.3rem;margin-bottom:.2rem;color:#1a3a2a;}
+      .sub{font-size:.85rem;color:#666;margin-bottom:1.5rem;}
+      table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;}
+      td{padding:.55rem .8rem;border:1px solid #ccc;font-size:.9rem;vertical-align:top;}
+      td:first-child{font-weight:600;background:#f5f0e8;width:40%;color:#1a3a2a;}
+      .status{display:inline-block;padding:.2rem .7rem;border-radius:99px;font-size:.8rem;font-weight:700;background:#fff3d6;color:#a06000;}
+      .footer{font-size:.75rem;color:#999;border-top:1px solid #ddd;padding-top:.8rem;margin-top:1rem;}
+      @media print{body{padding:.5rem;} .no-print{display:none;}}
+    </style></head><body>
+    <h1>📋 CópiaFácil — Solicitação de Cópias</h1>
+    <p class="sub">Impresso em ${new Date().toLocaleString('pt-BR')}</p>
+    <table>
+      <tr><td>Professor(a)</td><td>${esc(item.professor)}</td></tr>
+      <tr><td>Disciplina</td><td>${esc(item.disciplina)}</td></tr>
+      <tr><td>Título da Matriz</td><td>${esc(item.titulo)}</td></tr>
+      <tr><td>Turmas Atendidas</td><td>${esc(item.turmas)}</td></tr>
+      <tr><td>Qtd. de Cópias</td><td>${item.copias}</td></tr>
+      <tr><td>Data da Solicitação</td><td>${fmtDate(item.data_solicitacao)}</td></tr>
+      <tr><td>Prazo de Entrega</td><td>${fmtDate(item.prazo_entrega)}</td></tr>
+      <tr><td>Status</td><td><span class="status">${esc(item.status)}</span></td></tr>
+      ${item.obs?`<tr><td>Observações</td><td>${esc(item.obs)}</td></tr>`:''}
+      ${item.arquivo_url?`<tr><td>Arquivo</td><td><a href="${esc(item.arquivo_url)}">${esc(item.arquivo||'Ver arquivo')}</a></td></tr>`:''}
+    </table>
+    <div class="footer">CópiaFácil — Sistema de Solicitação de Matrizes</div>
+    <br class="no-print">
+    <button class="no-print" onclick="window.print()" style="padding:.6rem 1.4rem;background:#1a3a2a;color:#fff;border:none;border-radius:8px;font-size:.9rem;cursor:pointer;">🖨️ Imprimir</button>
+  </body></html>`);
+  win.document.close();
+  win.focus();
+}
+
 // ── AUTO LOGIN ──
 db.auth.getSession().then(async({data:{session}})=>{
   if(!session)return;
   currentUser=session.user;
+  // Mecanografia — detecta pela tabela
+  const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
+  if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
   const {data:prof}=await db.from('professores').select('*').eq('id',currentUser.id).single();
   if(prof){
     if(!prof.aprovado){document.getElementById('telaAuth').style.display='none';document.getElementById('telaPendente').style.display='flex';return;}
