@@ -31,18 +31,19 @@
   .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: 1.5rem; }
   .auth-tab { padding: .6rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600; cursor: pointer; transition: all .2s; color: var(--muted); }
   .auth-tab.active { border-color: var(--primary); background: #e8f0eb; color: var(--primary); }
+
   .fg { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
-  .fgi { display: flex; flex-direction: column; gap: .4rem; }
-  .fg label, .fgi label { font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .fg input, .fg select, .fgi input, .fgi select, .fgi textarea {
+  .fg label { font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .fg input, .fg select {
     font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem;
     border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg);
     color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; width: 100%;
   }
-  .fgi textarea { resize: vertical; min-height: 90px; }
-  .fg input:focus, .fg select:focus, .fgi input:focus, .fgi select:focus, .fgi textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
-  .senha-hint { font-size: .78rem; color: var(--muted); background: #f0ede6; border-radius: 8px; padding: .6rem .9rem; margin-bottom: 1rem; line-height: 1.5; }
-  .senha-hint strong { color: var(--primary); }
+  .fg input:focus, .fg select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
+
+  .senha-req { font-size: .78rem; color: var(--muted); background: #f0ede6; border-radius: 8px; padding: .6rem .9rem; margin-bottom: 1rem; line-height: 1.6; }
+  .senha-req strong { color: var(--primary); }
+
   .auth-erro { font-size: .82rem; color: var(--accent2); margin-bottom: .8rem; display: none; padding: .5rem .8rem; background: #fce4de; border-radius: 8px; }
   .auth-info { font-size: .82rem; color: var(--success); margin-bottom: .8rem; display: none; padding: .5rem .8rem; background: #d6f0e0; border-radius: 8px; }
 
@@ -93,18 +94,7 @@
   .fg-grid input:focus, .fg-grid select:focus, .fg-grid textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
   .fg-grid input[readonly] { opacity: .65; cursor: not-allowed; }
 
-  /* Solicitante switcher */
-  .solicitante-box {
-    background: #e8f0eb;
-    border: 1.5px solid #b8d4bf;
-    border-radius: 10px;
-    padding: 1rem 1.2rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
+  .solicitante-box { background: #e8f0eb; border: 1.5px solid #b8d4bf; border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .solicitante-box .sb-label { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--primary); white-space: nowrap; }
   .solicitante-box select { font-family: 'DM Sans', sans-serif; font-size: .9rem; padding: .5rem .9rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); outline: none; cursor: pointer; flex: 1; min-width: 200px; }
 
@@ -140,21 +130,18 @@
   .btn-download { display: inline-flex; align-items: center; gap: .4rem; font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600; padding: .45rem 1rem; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: all .2s; white-space: nowrap; }
   .btn-download:hover { background: #2a5a3a; transform: translateY(-1px); }
 
-  /* MINHA CARD */
   .minha-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.4rem 1.6rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
   .mc-titulo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--primary); margin-bottom: .25rem; }
   .mc-meta { font-size: .83rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; }
   .mc-prazo { font-size: .82rem; font-weight: 600; color: var(--accent2); margin-top: .3rem; }
   .mc-right { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; }
 
-  /* STATS */
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
   .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.5rem; display: flex; flex-direction: column; gap: .2rem; }
   .stat-card .num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1; }
   .stat-card .slabel { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
   .stat-card .accent-dot { width: 8px; height: 8px; border-radius: 50%; margin-bottom: .3rem; }
 
-  /* TABLE */
   table { width: 100%; border-collapse: collapse; font-size: .88rem; }
   thead th { text-align: left; padding: .7rem 1rem; font-size: .75rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-bottom: 2px solid var(--border); }
   tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
@@ -179,7 +166,6 @@
   #toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--primary); color: #fff; padding: 1rem 1.5rem; border-radius: 12px; font-size: .9rem; display: flex; align-items: center; gap: .6rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 340px; }
   #toast.show { transform: translateY(0); opacity: 1; }
 
-  /* MODAL */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s; }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
   .modal { background: var(--surface); border-radius: 16px; padding: 2rem; max-width: 540px; width: 90%; transform: scale(.95); transition: transform .25s; max-height: 90vh; overflow-y: auto; }
@@ -194,7 +180,6 @@
   .arquivo-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
   .arquivo-info { display: flex; align-items: center; gap: .6rem; font-size: .9rem; font-weight: 500; }
 
-  /* COORD TABS */
   .coord-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
   .coord-tab { font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 600; padding: .6rem 1.2rem; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; color: var(--muted); margin-bottom: -2px; transition: all .2s; }
   .coord-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
@@ -253,7 +238,9 @@
           <option value="outra">Outra</option>
         </select>
       </div>
-      <div class="senha-hint">🔑 Sua senha será o nome da sua disciplina em minúsculas e sem acentos.<br>Ex.: Matemática → <strong>matematica</strong> | Educação Física → <strong>educacao fisica</strong></div>
+      <div class="fg"><label>Crie sua senha *</label><input type="password" id="cadSenha" placeholder="Mínimo 6 caracteres" /></div>
+      <div class="fg"><label>Confirme a senha *</label><input type="password" id="cadSenhaConf" placeholder="Repita a senha" onkeydown="if(event.key==='Enter') fazerCadastro()" /></div>
+      <div class="senha-req">🔒 A senha deve ter no mínimo <strong>6 caracteres</strong>. Guarde-a com cuidado — ela será usada em todos os seus acessos.</div>
       <p class="auth-erro" id="cadErro"></p>
       <p class="auth-info" id="cadInfo"></p>
       <button class="btn-primary" id="btnCadastro" onclick="fazerCadastro()">Criar conta</button>
@@ -305,7 +292,7 @@
           <div class="fg-grid full">
             <label>Arquivo da Matriz</label>
             <div class="file-drop" id="fileDrop">
-              <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName','uploadProgress','uploadFill','uploadLabel')" />
+              <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName')" />
               <div class="file-icon">📄</div>
               <p><strong>Clique aqui</strong> ou arraste o arquivo</p>
               <p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
@@ -337,21 +324,19 @@
         <div><h1>Painel da Coordenação</h1><p>Gerencie professores e solicitações.</p></div>
         <button class="btn-secondary" onclick="loadCoord()">↻ Atualizar</button>
       </div>
-
       <div class="coord-tabs">
         <button class="coord-tab active" onclick="switchCoordTab('nova',this)">➕ Nova Solicitação</button>
         <button class="coord-tab" onclick="switchCoordTab('solicitacoes',this)">📋 Solicitações</button>
         <button class="coord-tab" onclick="switchCoordTab('professores',this)">👩‍🏫 Professores</button>
       </div>
 
-      <!-- TAB: NOVA SOLICITAÇÃO (coord) -->
+      <!-- TAB: NOVA -->
       <div class="tab-panel active" id="tab-nova">
         <div class="deadline-box">
           <div class="icon">📅</div>
           <div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div>
         </div>
         <div class="card">
-          <!-- Seletor de solicitante -->
           <div class="solicitante-box">
             <span class="sb-label">🧑‍💼 Solicitante:</span>
             <select id="coordSolicitante" onchange="onSolicitanteChange()">
@@ -367,7 +352,7 @@
             <div class="fg-grid full">
               <label>Arquivo da Matriz</label>
               <div class="file-drop" id="cfileDrop">
-                <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName','cuploadProgress','cuploadFill','cuploadLabel')" />
+                <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName')" />
                 <div class="file-icon">📄</div>
                 <p><strong>Clique aqui</strong> ou arraste o arquivo</p>
                 <p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
@@ -412,8 +397,8 @@
           <div id="profContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
-
     </div>
+
   </main>
 </div>
 
@@ -476,23 +461,43 @@ async function fazerCadastro() {
   const nome       = document.getElementById('cadNome').value.trim();
   const email      = document.getElementById('cadEmail').value.trim();
   const disciplina = document.getElementById('cadDisciplina').value;
+  const senha      = document.getElementById('cadSenha').value;
+  const senhaConf  = document.getElementById('cadSenhaConf').value;
   const erroEl     = document.getElementById('cadErro');
   const infoEl     = document.getElementById('cadInfo');
   const btn        = document.getElementById('btnCadastro');
-  erroEl.style.display = 'none'; infoEl.style.display = 'none';
-  if (!nome||!email||!disciplina) { erroEl.textContent='⚠️ Preencha todos os campos.'; erroEl.style.display='block'; return; }
+
+  erroEl.style.display='none'; infoEl.style.display='none';
+
+  if (!nome||!email||!disciplina||!senha||!senhaConf) {
+    erroEl.textContent='⚠️ Preencha todos os campos.'; erroEl.style.display='block'; return;
+  }
+  if (senha.length < 6) {
+    erroEl.textContent='⚠️ A senha deve ter no mínimo 6 caracteres.'; erroEl.style.display='block'; return;
+  }
+  if (senha !== senhaConf) {
+    erroEl.textContent='⚠️ As senhas não coincidem.'; erroEl.style.display='block'; return;
+  }
+
   btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Criando conta…';
+
   try {
-    const { data, error } = await db.auth.signUp({ email, password: disciplina });
+    const { data, error } = await db.auth.signUp({ email, password: senha });
     if (error) throw error;
-    const { error: profError } = await db.from('professores').insert([{ id: data.user.id, nome, email, disciplina, aprovado: false }]);
+
+    const { error: profError } = await db.from('professores').insert([{
+      id: data.user.id, nome, email, disciplina, aprovado: false
+    }]);
     if (profError) throw profError;
+
     await db.auth.signOut();
     infoEl.textContent='✅ Cadastro enviado! Aguarde a aprovação da coordenação.';
     infoEl.style.display='block';
     document.getElementById('cadNome').value='';
     document.getElementById('cadEmail').value='';
     document.getElementById('cadDisciplina').value='';
+    document.getElementById('cadSenha').value='';
+    document.getElementById('cadSenhaConf').value='';
   } catch(err) {
     erroEl.textContent = err.message.includes('already registered') ? '⚠️ Este e-mail já está cadastrado.' : '❌ Erro: '+err.message;
     erroEl.style.display='block';
@@ -512,7 +517,11 @@ async function fazerLogin() {
     const { data, error } = await db.auth.signInWithPassword({ email, password: senha });
     if (error) throw error;
     currentUser = data.user;
+
+    // Coordenação
     if (senha === SENHA_COORD) { perfilAtual='coordenacao'; await iniciarApp(); return; }
+
+    // Professor
     const { data: prof, error: profErr } = await db.from('professores').select('*').eq('id', currentUser.id).single();
     if (profErr||!prof) throw new Error('Perfil não encontrado.');
     if (!prof.aprovado) {
@@ -537,19 +546,18 @@ async function iniciarApp() {
   const nav   = document.getElementById('navBar');
 
   if (perfilAtual==='professor') {
-    badge.textContent = '👩‍🏫 '+professorData.nome.split(' ')[0];
-    badge.className   = 'perfil-badge prof';
-    nav.innerHTML = `
+    badge.textContent='👩‍🏫 '+professorData.nome.split(' ')[0];
+    badge.className='perfil-badge prof';
+    nav.innerHTML=`
       <button onclick="showPage('solicitar',this)" class="active">Nova Solicitação</button>
       <button onclick="showPage('minhas',this)">Minhas Solicitações</button>`;
     document.getElementById('f-professor').value     = professorData.nome;
     document.getElementById('f-disciplina-ro').value = disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
     showPage('solicitar');
   } else {
-    badge.textContent = '🗂️ Coordenação';
-    badge.className   = 'perfil-badge coord';
-    nav.innerHTML = `<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
-    // Preenche campos fixos da coord
+    badge.textContent='🗂️ Coordenação';
+    badge.className='perfil-badge coord';
+    nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
     document.getElementById('cf-professor').value  = 'Coordenação';
     document.getElementById('cf-disciplina').value = '—';
     await loadCoord();
@@ -586,14 +594,14 @@ function switchCoordTab(tab, btn) {
   if (btn) btn.classList.add('active');
 }
 
-// ── SOLICITANTE CHANGE (coord) ──
+// ── SOLICITANTE CHANGE ──
 function onSolicitanteChange() {
   const val = document.getElementById('coordSolicitante').value;
-  if (val === 'coord') {
+  if (val==='coord') {
     document.getElementById('cf-professor').value  = 'Coordenação';
     document.getElementById('cf-disciplina').value = '—';
   } else {
-    const prof = allProfs.find(p => p.id === val);
+    const prof = allProfs.find(p=>p.id===val);
     if (prof) {
       document.getElementById('cf-professor').value  = prof.nome;
       document.getElementById('cf-disciplina').value = disciplinaDisplay[prof.disciplina]||prof.disciplina;
@@ -601,61 +609,50 @@ function onSolicitanteChange() {
   }
 }
 
-// ── POPULAR SELETOR DE SOLICITANTE ──
 function populateSolicitante() {
   const sel = document.getElementById('coordSolicitante');
   const current = sel.value;
-  sel.innerHTML = '<option value="coord">Coordenação (em nome próprio)</option>';
-  allProfs.filter(p=>p.aprovado).forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.nome + ' — ' + (disciplinaDisplay[p.disciplina]||p.disciplina);
+  sel.innerHTML='<option value="coord">Coordenação (em nome próprio)</option>';
+  allProfs.filter(p=>p.aprovado).forEach(p=>{
+    const opt=document.createElement('option');
+    opt.value=p.id;
+    opt.textContent=p.nome+' — '+(disciplinaDisplay[p.disciplina]||p.disciplina);
     sel.appendChild(opt);
   });
-  sel.value = current;
+  sel.value=current;
   onSolicitanteChange();
 }
 
 // ── FILE ──
-function handleFile(input, fnId, progId, fillId, labelId) {
+function handleFile(input, fnId) {
   if (input.files[0]) { document.getElementById(fnId).textContent='✔ '+input.files[0].name; document.getElementById(fnId).style.display='block'; }
 }
 
-['fileDrop','cfileDrop'].forEach((id,i) => {
-  const el = document.getElementById(id);
+['fileDrop','cfileDrop'].forEach(id=>{
+  const el=document.getElementById(id);
   if (!el) return;
-  el.addEventListener('dragover', e=>{e.preventDefault();el.classList.add('drag-over');});
-  el.addEventListener('dragleave', ()=>el.classList.remove('drag-over'));
-  el.addEventListener('drop', e=>{
+  el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over');});
+  el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
+  el.addEventListener('drop',e=>{
     e.preventDefault(); el.classList.remove('drag-over');
-    const fileInput = el.querySelector('input[type="file"]');
-    if (e.dataTransfer.files[0] && fileInput) { fileInput.files=e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
+    const fi=el.querySelector('input[type="file"]');
+    if (e.dataTransfer.files[0]&&fi){fi.files=e.dataTransfer.files;fi.dispatchEvent(new Event('change'));}
   });
 });
 
 // ── UTILS ──
-function addWorkdays(date,days) { let d=new Date(date),added=0; while(added<days){d.setDate(d.getDate()+1);const dow=d.getDay();if(dow!==0&&dow!==6)added++;} return d; }
-function fmtDate(d) { return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}); }
-function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function sanitizeFileName(n) { return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_'); }
+function addWorkdays(date,days){let d=new Date(date),added=0;while(added<days){d.setDate(d.getDate()+1);const dow=d.getDay();if(dow!==0&&dow!==6)added++;}return d;}
+function fmtDate(d){return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function esc(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function sanitizeFileName(n){return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_');}
 const statusClass={'Aguardando':'badge-pending','Em produção':'badge-progress','Entregue':'badge-done','Cancelado':'badge-cancelled'};
 
-// ── CLEAR FORMS ──
-function clearProfForm() {
-  ['f-titulo','f-turmas','f-copias','f-obs'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-arquivo').value='';
-  document.getElementById('fileName').style.display='none';
-  document.getElementById('uploadProgress').style.display='none';
-}
-function clearCoordForm() {
-  ['cf-titulo','cf-turmas','cf-copias','cf-obs'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('cf-arquivo').value='';
-  document.getElementById('cfileName').style.display='none';
-  document.getElementById('cuploadProgress').style.display='none';
-}
+// ── CLEAR ──
+function clearProfForm(){['f-titulo','f-turmas','f-copias','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('fileName').style.display='none';document.getElementById('uploadProgress').style.display='none';}
+function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cuploadProgress').style.display='none';}
 
 // ── UPLOAD ──
-async function uploadFile(file, fillId, labelId, progId) {
+async function uploadFile(file,fillId,labelId,progId){
   const ext=file.name.split('.').pop();
   const base=sanitizeFileName(file.name.replace('.'+ext,''));
   const path=`${Date.now()}_${base}.${ext}`;
@@ -666,7 +663,7 @@ async function uploadFile(file, fillId, labelId, progId) {
   const iv=setInterval(()=>{pct=Math.min(pct+8,85);document.getElementById(fillId).style.width=pct+'%';},150);
   const {data,error}=await db.storage.from(BUCKET).upload(path,file,{cacheControl:'3600',upsert:false});
   clearInterval(iv);
-  if (error){document.getElementById(progId).style.display='none';throw new Error('Falha no upload: '+error.message);}
+  if(error){document.getElementById(progId).style.display='none';throw new Error('Falha no upload: '+error.message);}
   document.getElementById(fillId).style.width='100%';
   document.getElementById(labelId).textContent='✔ Arquivo enviado!';
   setTimeout(()=>{document.getElementById(progId).style.display='none';},1500);
@@ -675,55 +672,51 @@ async function uploadFile(file, fillId, labelId, progId) {
 }
 
 // ── SUBMIT ──
-async function submitForm(modo) {
-  const isCoord = modo==='coord';
-  const titulo   = document.getElementById(isCoord?'cf-titulo':'f-titulo').value.trim();
-  const turmas   = document.getElementById(isCoord?'cf-turmas':'f-turmas').value.trim();
-  const copias   = document.getElementById(isCoord?'cf-copias':'f-copias').value;
-  const obs      = document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
-  const professor  = document.getElementById(isCoord?'cf-professor':'f-professor').value;
-  const disciplina = document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
-  const arquivoInput = document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
-  const btnId = isCoord?'btnEnviarCoord':'btnEnviar';
-
-  if (!titulo||!turmas||!copias) { showToast('⚠️ Preencha todos os campos obrigatórios.',true); return; }
-
+async function submitForm(modo){
+  const isCoord=modo==='coord';
+  const titulo   =document.getElementById(isCoord?'cf-titulo':'f-titulo').value.trim();
+  const turmas   =document.getElementById(isCoord?'cf-turmas':'f-turmas').value.trim();
+  const copias   =document.getElementById(isCoord?'cf-copias':'f-copias').value;
+  const obs      =document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
+  const professor  =document.getElementById(isCoord?'cf-professor':'f-professor').value;
+  const disciplina =document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
+  const arquivoInput=document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
+  const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
+  if(!titulo||!turmas||!copias){showToast('⚠️ Preencha todos os campos obrigatórios.',true);return;}
   const btn=document.getElementById(btnId);
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Enviando…';
-
-  try {
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Enviando…';
+  try{
     let arquivoPath=null,arquivoUrl=null,arquivoNome=null;
-    if (arquivoInput.files[0]) {
+    if(arquivoInput.files[0]){
       btn.innerHTML='<span class="spinner"></span> Enviando arquivo…';
       const fillId=isCoord?'cuploadFill':'uploadFill';
       const labelId=isCoord?'cuploadLabel':'uploadLabel';
       const progId=isCoord?'cuploadProgress':'uploadProgress';
       const result=await uploadFile(arquivoInput.files[0],fillId,labelId,progId);
-      arquivoPath=result.path; arquivoUrl=result.publicUrl; arquivoNome=result.originalName;
+      arquivoPath=result.path;arquivoUrl=result.publicUrl;arquivoNome=result.originalName;
     }
     btn.innerHTML='<span class="spinner"></span> Salvando…';
-    const now=new Date(); const prazo=addWorkdays(now,5);
+    const now=new Date();const prazo=addWorkdays(now,5);
     const {error}=await db.from('solicitacoes').insert([{
-      professor, disciplina, titulo, turmas, copias:parseInt(copias),
-      obs:obs||null, arquivo:arquivoNome, arquivo_path:arquivoPath, arquivo_url:arquivoUrl,
-      data_solicitacao:now.toISOString(), prazo_entrega:prazo.toISOString(), status:'Aguardando'
+      professor,disciplina,titulo,turmas,copias:parseInt(copias),
+      obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,
+      data_solicitacao:now.toISOString(),prazo_entrega:prazo.toISOString(),status:'Aguardando'
     }]);
-    if (error) throw new Error(error.message);
-    isCoord ? clearCoordForm() : clearProfForm();
+    if(error)throw new Error(error.message);
+    isCoord?clearCoordForm():clearProfForm();
     showToast('✅ Solicitação enviada! Prazo: '+fmtDate(prazo));
-    if (!isCoord) setTimeout(()=>showPage('minhas',null),1800);
-    else { await loadCoord(); setTimeout(()=>switchCoordTab('solicitacoes',document.querySelectorAll('.coord-tab')[1]),1800); }
-  } catch(err) {
-    console.error(err); showToast('❌ Erro: '+err.message,true);
-  } finally { btn.disabled=false; btn.innerHTML='✔ Enviar Solicitação'; }
+    if(!isCoord)setTimeout(()=>showPage('minhas',null),1800);
+    else{await loadCoord();setTimeout(()=>switchCoordTab('solicitacoes',document.querySelectorAll('.coord-tab')[1]),1800);}
+  }catch(err){console.error(err);showToast('❌ Erro: '+err.message,true);}
+  finally{btn.disabled=false;btn.innerHTML='✔ Enviar Solicitação';}
 }
 
-// ── MINHAS SOLICITAÇÕES ──
-async function loadMinhas() {
+// ── MINHAS ──
+async function loadMinhas(){
   const container=document.getElementById('minhasContainer');
   container.innerHTML='<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
   const {data,error}=await db.from('solicitacoes').select('*').ilike('professor',professorData.nome).order('data_solicitacao',{ascending:false});
-  if (error||!data||data.length===0) { container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Você ainda não tem solicitações.</p></div>'; return; }
+  if(error||!data||data.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Você ainda não tem solicitações.</p></div>';return;}
   container.innerHTML=data.map(d=>`
     <div class="minha-card">
       <div>
@@ -740,15 +733,15 @@ async function loadMinhas() {
 }
 
 // ── COORD LOAD ──
-async function loadCoord() {
+async function loadCoord(){
   const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
-  allSolic=solic||[]; renderStats(); renderSolicitacoes();
+  allSolic=solic||[];renderStats();renderSolicitacoes();
   const {data:profs}=await db.from('professores').select('*').order('criado_em',{ascending:false});
-  allProfs=profs||[]; renderProfessores(); populateSolicitante();
+  allProfs=profs||[];renderProfessores();populateSolicitante();
 }
 
 // ── STATS ──
-function renderStats() {
+function renderStats(){
   const p=allSolic.filter(d=>d.status==='Aguardando').length;
   const r=allSolic.filter(d=>d.status==='Em produção').length;
   const e=allSolic.filter(d=>d.status==='Entregue').length;
@@ -759,7 +752,7 @@ function renderStats() {
 }
 
 // ── RENDER SOLICITAÇÕES ──
-function renderSolicitacoes() {
+function renderSolicitacoes(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
   const filtered=allSolic.filter(d=>{
@@ -767,7 +760,7 @@ function renderSolicitacoes() {
     return m&&(!st||d.status===st);
   });
   const container=document.getElementById('coordContainer');
-  if (filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
+  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
   container.innerHTML=`
     <table>
       <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Prazo</th><th>Arquivo</th><th>Status</th></tr></thead>
@@ -787,9 +780,9 @@ function renderSolicitacoes() {
 }
 
 // ── RENDER PROFESSORES ──
-function renderProfessores() {
+function renderProfessores(){
   const container=document.getElementById('profContainer');
-  if (allProfs.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">👥</div><p>Nenhum professor cadastrado.</p></div>';return;}
+  if(allProfs.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">👥</div><p>Nenhum professor cadastrado.</p></div>';return;}
   const pendentes=allProfs.filter(p=>!p.aprovado);
   const aprovados=allProfs.filter(p=>p.aprovado);
   container.innerHTML=`
@@ -819,14 +812,14 @@ function renderProfessores() {
     </table>`;
 }
 
-// ── APROVAR PROFESSOR ──
-async function aprovarProfessor(id, aprovar) {
-  if (aprovar) {
+// ── APROVAR ──
+async function aprovarProfessor(id,aprovar){
+  if(aprovar){
     const {error}=await db.from('professores').update({aprovado:true}).eq('id',id);
-    if (error){showToast('❌ Erro ao aprovar.',true);return;}
+    if(error){showToast('❌ Erro ao aprovar.',true);return;}
     showToast('✔ Professor aprovado!');
-  } else {
-    if (!confirm('Remover este professor?')) return;
+  }else{
+    if(!confirm('Remover este professor?'))return;
     await db.from('professores').delete().eq('id',id);
     showToast('🗑 Professor removido.');
   }
@@ -834,9 +827,9 @@ async function aprovarProfessor(id, aprovar) {
 }
 
 // ── MODAL ──
-function openModal(id) {
+function openModal(id){
   const item=allSolic.find(d=>d.id===id);
-  if (!item) return;
+  if(!item)return;
   currentSolicId=id;
   document.getElementById('modalTitle').textContent=item.titulo;
   document.getElementById('modalStatus').value=item.status;
@@ -856,53 +849,53 @@ function openModal(id) {
   document.getElementById('modalOverlay').classList.add('open');
 }
 
-function closeModal(e) {
-  if (!e||e.target===document.getElementById('modalOverlay')) {
-    document.getElementById('modalOverlay').classList.remove('open'); currentSolicId=null;
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modalOverlay')){
+    document.getElementById('modalOverlay').classList.remove('open');currentSolicId=null;
   }
 }
 
-async function updateStatus() {
-  if (!currentSolicId) return;
+async function updateStatus(){
+  if(!currentSolicId)return;
   const newStatus=document.getElementById('modalStatus').value;
   const {error}=await db.from('solicitacoes').update({status:newStatus}).eq('id',currentSolicId);
-  if (error){showToast('❌ Erro ao atualizar.',true);return;}
+  if(error){showToast('❌ Erro ao atualizar.',true);return;}
   const idx=allSolic.findIndex(d=>d.id===currentSolicId);
-  if (idx!==-1) allSolic[idx].status=newStatus;
-  renderStats(); renderSolicitacoes();
+  if(idx!==-1)allSolic[idx].status=newStatus;
+  renderStats();renderSolicitacoes();
   showToast('✔ Status atualizado para "'+newStatus+'"');
 }
 
-async function deleteItem() {
-  if (!currentSolicId) return;
-  if (!confirm('Excluir esta solicitação?')) return;
+async function deleteItem(){
+  if(!currentSolicId)return;
+  if(!confirm('Excluir esta solicitação?'))return;
   const item=allSolic.find(d=>d.id===currentSolicId);
-  if (item&&item.arquivo_path) await db.storage.from(BUCKET).remove([item.arquivo_path]);
+  if(item&&item.arquivo_path)await db.storage.from(BUCKET).remove([item.arquivo_path]);
   const {error}=await db.from('solicitacoes').delete().eq('id',currentSolicId);
-  if (error){showToast('❌ Erro ao excluir.',true);return;}
+  if(error){showToast('❌ Erro ao excluir.',true);return;}
   allSolic=allSolic.filter(d=>d.id!==currentSolicId);
-  closeModal(); renderStats(); renderSolicitacoes();
+  closeModal();renderStats();renderSolicitacoes();
   showToast('🗑 Solicitação removida.');
 }
 
 // ── TOAST ──
 let toastTimer;
-function showToast(msg,isWarn) {
+function showToast(msg,isWarn){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.style.background=isWarn?'#c94f2a':'#1a3a2a';
-  t.classList.add('show'); clearTimeout(toastTimer);
+  t.textContent=msg;t.style.background=isWarn?'#c94f2a':'#1a3a2a';
+  t.classList.add('show');clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
 // ── AUTO LOGIN ──
 db.auth.getSession().then(async({data:{session}})=>{
-  if (!session) return;
+  if(!session)return;
   currentUser=session.user;
   const {data:prof}=await db.from('professores').select('*').eq('id',currentUser.id).single();
-  if (prof) {
-    if (!prof.aprovado){document.getElementById('telaAuth').style.display='none';document.getElementById('telaPendente').style.display='flex';return;}
-    professorData=prof; perfilAtual='professor';
-  } else { perfilAtual='coordenacao'; }
+  if(prof){
+    if(!prof.aprovado){document.getElementById('telaAuth').style.display='none';document.getElementById('telaPendente').style.display='flex';return;}
+    professorData=prof;perfilAtual='professor';
+  }else{perfilAtual='coordenacao';}
   iniciarApp();
 });
 </script>
