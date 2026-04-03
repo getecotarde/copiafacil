@@ -8,21 +8,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
-    --bg: #f5f0e8;
-    --surface: #fffdf8;
-    --primary: #1a3a2a;
-    --accent: #e8a020;
-    --accent2: #c94f2a;
-    --text: #1a1a1a;
-    --muted: #6b6b5a;
-    --border: #d8d0c0;
-    --success: #2a7a4a;
-    --radius: 12px;
+    --bg: #f5f0e8; --surface: #fffdf8; --primary: #1a3a2a; --accent: #e8a020;
+    --accent2: #c94f2a; --text: #1a1a1a; --muted: #6b6b5a; --border: #d8d0c0;
+    --success: #2a7a4a; --radius: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  /* AUTH */
+  /* ── AUTH ── */
   .auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
   .auth-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 440px; box-shadow: 0 8px 32px rgba(0,0,0,.08); }
   .auth-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--primary); text-align: center; margin-bottom: .3rem; }
@@ -34,27 +27,22 @@
 
   .fg { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
   .fg label { font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .fg input, .fg select {
-    font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem;
-    border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg);
-    color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; width: 100%;
-  }
+  .fg input, .fg select { font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; width: 100%; }
   .fg input:focus, .fg select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
 
   .senha-req { font-size: .78rem; color: var(--muted); background: #f0ede6; border-radius: 8px; padding: .6rem .9rem; margin-bottom: 1rem; line-height: 1.6; }
   .senha-req strong { color: var(--primary); }
-
   .auth-erro { font-size: .82rem; color: var(--accent2); margin-bottom: .8rem; display: none; padding: .5rem .8rem; background: #fce4de; border-radius: 8px; }
   .auth-info { font-size: .82rem; color: var(--success); margin-bottom: .8rem; display: none; padding: .5rem .8rem; background: #d6f0e0; border-radius: 8px; }
 
-  /* PENDING */
+  /* ── PENDING ── */
   .pending-screen { min-height: 100vh; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
-  .pending-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,.08); }
+  .pending-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px; text-align: center; }
   .pending-box .big-icon { font-size: 3.5rem; margin-bottom: 1rem; }
   .pending-box h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--primary); margin-bottom: .5rem; }
   .pending-box p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
 
-  /* HEADER */
+  /* ── HEADER ── */
   header { background: var(--primary); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.25); }
   .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.35rem; color: #fff; letter-spacing: -.02em; display: flex; align-items: center; gap: .5rem; }
   .logo span { background: var(--accent); color: var(--primary); border-radius: 6px; padding: 1px 7px; font-size: 1rem; }
@@ -68,28 +56,22 @@
   .btn-sair { background: transparent; border: 1.5px solid rgba(255,255,255,.2); color: rgba(255,255,255,.7); font-family: 'DM Sans', sans-serif; font-size: .8rem; padding: .35rem .8rem; border-radius: 8px; cursor: pointer; transition: all .2s; }
   .btn-sair:hover { border-color: var(--accent2); color: var(--accent2); }
 
-  /* APP */
+  /* ── APP ── */
   #telaApp { display: none; }
   main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
   .page { display: none; animation: fadeIn .3s ease; }
   .page.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
   .page-header { margin-bottom: 2rem; }
   .page-header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--primary); line-height: 1.1; }
   .page-header p { color: var(--muted); margin-top: .4rem; font-size: .95rem; }
 
   .card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
-
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
   .fg-grid { display: flex; flex-direction: column; gap: .45rem; }
   .fg-grid label { font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
   .fg-grid.full { grid-column: 1 / -1; }
-  .fg-grid input, .fg-grid select, .fg-grid textarea {
-    font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem;
-    border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg);
-    color: var(--text); transition: border-color .2s, box-shadow .2s; outline: none;
-  }
+  .fg-grid input, .fg-grid select, .fg-grid textarea { font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); transition: border-color .2s, box-shadow .2s; outline: none; }
   .fg-grid textarea { resize: vertical; min-height: 90px; }
   .fg-grid input:focus, .fg-grid select:focus, .fg-grid textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
   .fg-grid input[readonly] { opacity: .65; cursor: not-allowed; }
@@ -116,8 +98,8 @@
   .deadline-box strong { font-family: 'Syne', sans-serif; color: var(--accent); font-size: 1rem; display: block; }
 
   .btn-primary { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; padding: .85rem 2rem; background: var(--accent); color: var(--primary); border: none; border-radius: 10px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; width: 100%; justify-content: center; }
-  .btn-primary:hover { background: #d49018; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(232,160,32,.35); }
-  .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-primary:hover { background: #d49018; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
   .btn-action { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; padding: .85rem 2rem; background: var(--accent); color: var(--primary); border: none; border-radius: 10px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; }
   .btn-action:hover { background: #d49018; transform: translateY(-1px); }
   .btn-action:disabled { opacity: .6; cursor: not-allowed; transform: none; }
@@ -127,6 +109,8 @@
   .btn-danger:hover { background: var(--accent2); color: #fff; }
   .btn-approve { font-family: 'DM Sans', sans-serif; font-size: .82rem; padding: .35rem .8rem; background: transparent; color: var(--success); border: 1.5px solid var(--success); border-radius: 6px; cursor: pointer; transition: all .2s; }
   .btn-approve:hover { background: var(--success); color: #fff; }
+  .btn-edit { font-family: 'DM Sans', sans-serif; font-size: .82rem; padding: .35rem .8rem; background: transparent; color: #0055aa; border: 1.5px solid #0055aa; border-radius: 6px; cursor: pointer; transition: all .2s; }
+  .btn-edit:hover { background: #0055aa; color: #fff; }
   .btn-download { display: inline-flex; align-items: center; gap: .4rem; font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600; padding: .45rem 1rem; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: all .2s; white-space: nowrap; }
   .btn-download:hover { background: #2a5a3a; transform: translateY(-1px); }
 
@@ -148,7 +132,7 @@
   tbody tr:hover { background: #f9f6ef; }
   tbody td { padding: .8rem 1rem; vertical-align: middle; }
 
-  .badge { display: inline-block; padding: .2rem .7rem; border-radius: 99px; font-size: .75rem; font-weight: 600; letter-spacing: .02em; }
+  .badge { display: inline-block; padding: .2rem .7rem; border-radius: 99px; font-size: .75rem; font-weight: 600; }
   .badge-pending   { background: #fff3d6; color: #a06000; }
   .badge-progress  { background: #ddeeff; color: #0055aa; }
   .badge-done      { background: #d6f0e0; color: #1a6a3a; }
@@ -163,23 +147,32 @@
   .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(26,58,42,.2); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: .4rem; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  #toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--primary); color: #fff; padding: 1rem 1.5rem; border-radius: 12px; font-size: .9rem; display: flex; align-items: center; gap: .6rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 340px; }
+  #toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--primary); color: #fff; padding: 1rem 1.5rem; border-radius: 12px; font-size: .9rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 340px; }
   #toast.show { transform: translateY(0); opacity: 1; }
 
+  /* ── MODAL GERAL ── */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s; }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
   .modal { background: var(--surface); border-radius: 16px; padding: 2rem; max-width: 540px; width: 90%; transform: scale(.95); transition: transform .25s; max-height: 90vh; overflow-y: auto; }
   .modal-overlay.open .modal { transform: scale(1); }
-  .modal h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); margin-bottom: 1rem; }
+  .modal h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); margin-bottom: 1.2rem; }
   .modal-detail { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1.2rem; }
   .modal-detail .d-item { background: var(--bg); border-radius: 8px; padding: .6rem .9rem; }
   .modal-detail .d-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: .2rem; }
   .modal-detail .d-value { font-size: .9rem; font-weight: 500; color: var(--text); }
-  .modal-actions { display: flex; gap: .7rem; justify-content: flex-end; flex-wrap: wrap; }
+  .modal-actions { display: flex; gap: .7rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 1.2rem; }
   .status-select { padding: .5rem .8rem; border-radius: 8px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: .88rem; background: var(--bg); cursor: pointer; }
   .arquivo-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
   .arquivo-info { display: flex; align-items: center; gap: .6rem; font-size: .9rem; font-weight: 500; }
 
+  /* ── MODAL PROFESSOR ── */
+  .mfg { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+  .mfg label { font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .mfg input, .mfg select { font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; width: 100%; }
+  .mfg input:focus, .mfg select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
+  .mfg .hint { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+
+  /* ── COORD TABS ── */
   .coord-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
   .coord-tab { font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 600; padding: .6rem 1.2rem; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; color: var(--muted); margin-bottom: -2px; transition: all .2s; }
   .coord-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
@@ -209,16 +202,12 @@
       <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
       <button class="auth-tab" onclick="switchTab('cadastro')">Primeiro acesso</button>
     </div>
-
-    <!-- LOGIN -->
     <div id="painelLogin">
       <div class="fg"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
       <div class="fg"><label>Senha</label><input type="password" id="loginSenha" placeholder="Sua senha" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
       <p class="auth-erro" id="loginErro"></p>
       <button class="btn-primary" id="btnLogin" onclick="fazerLogin()">Entrar</button>
     </div>
-
-    <!-- CADASTRO -->
     <div id="painelCadastro" style="display:none">
       <div class="fg"><label>Nome completo *</label><input type="text" id="cadNome" placeholder="Ex.: Maria da Silva" /></div>
       <div class="fg"><label>E-mail *</label><input type="email" id="cadEmail" placeholder="seu@email.com" /></div>
@@ -226,21 +215,16 @@
         <label>Disciplina *</label>
         <select id="cadDisciplina">
           <option value="">— Selecione —</option>
-          <option value="portugues">Português</option>
-          <option value="matematica">Matemática</option>
-          <option value="ciencias">Ciências</option>
-          <option value="historia">História</option>
-          <option value="geografia">Geografia</option>
-          <option value="ingles">Inglês</option>
-          <option value="arte">Arte</option>
-          <option value="educacao fisica">Educação Física</option>
-          <option value="ensino religioso">Ensino Religioso</option>
-          <option value="outra">Outra</option>
+          <option value="portugues">Português</option><option value="matematica">Matemática</option>
+          <option value="ciencias">Ciências</option><option value="historia">História</option>
+          <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
+          <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
+          <option value="ensino religioso">Ensino Religioso</option><option value="outra">Outra</option>
         </select>
       </div>
       <div class="fg"><label>Crie sua senha *</label><input type="password" id="cadSenha" placeholder="Mínimo 6 caracteres" /></div>
       <div class="fg"><label>Confirme a senha *</label><input type="password" id="cadSenhaConf" placeholder="Repita a senha" onkeydown="if(event.key==='Enter') fazerCadastro()" /></div>
-      <div class="senha-req">🔒 A senha deve ter no mínimo <strong>6 caracteres</strong>. Guarde-a com cuidado — ela será usada em todos os seus acessos.</div>
+      <div class="senha-req">🔒 Mínimo de <strong>6 caracteres</strong>. Guarde sua senha com cuidado.</div>
       <p class="auth-erro" id="cadErro"></p>
       <p class="auth-info" id="cadInfo"></p>
       <button class="btn-primary" id="btnCadastro" onclick="fazerCadastro()">Criar conta</button>
@@ -253,9 +237,8 @@
   <div class="pending-box">
     <div class="big-icon">⏳</div>
     <h2>Cadastro em análise</h2>
-    <p>Seu cadastro foi enviado com sucesso!<br>Aguarde a aprovação da coordenação para acessar a plataforma.</p>
-    <br>
-    <button class="btn-secondary" onclick="sair()">Voltar ao login</button>
+    <p>Cadastro enviado com sucesso!<br>Aguarde a aprovação da coordenação.</p>
+    <br><button class="btn-secondary" onclick="sair()">Voltar ao login</button>
   </div>
 </div>
 
@@ -269,19 +252,12 @@
       <button class="btn-sair" onclick="sair()">Sair</button>
     </div>
   </header>
-
   <main>
 
-    <!-- PAGE: SOLICITAR (professor) -->
+    <!-- PAGE PROFESSOR: SOLICITAR -->
     <div id="page-solicitar" class="page">
-      <div class="page-header">
-        <h1>Nova Solicitação de Cópias</h1>
-        <p>Preencha os dados abaixo para solicitar a reprodução de sua matriz.</p>
-      </div>
-      <div class="deadline-box">
-        <div class="icon">📅</div>
-        <div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div>
-      </div>
+      <div class="page-header"><h1>Nova Solicitação de Cópias</h1><p>Preencha os dados abaixo para solicitar a reprodução de sua matriz.</p></div>
+      <div class="deadline-box"><div class="icon">📅</div><div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div></div>
       <div class="card">
         <div class="form-grid">
           <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
@@ -293,23 +269,21 @@
             <label>Arquivo da Matriz</label>
             <div class="file-drop" id="fileDrop">
               <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName')" />
-              <div class="file-icon">📄</div>
-              <p><strong>Clique aqui</strong> ou arraste o arquivo</p>
-              <p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
+              <div class="file-icon">📄</div><p><strong>Clique aqui</strong> ou arraste</p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
               <div class="file-name" id="fileName"></div>
             </div>
             <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div><div class="upload-progress-label" id="uploadLabel"></div></div>
           </div>
           <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
         </div>
-        <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+        <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;">
           <button class="btn-action" id="btnEnviar" onclick="submitForm('prof')">✔ Enviar Solicitação</button>
           <button class="btn-secondary" onclick="clearProfForm()">Limpar</button>
         </div>
       </div>
     </div>
 
-    <!-- PAGE: MINHAS SOLICITAÇÕES -->
+    <!-- PAGE PROFESSOR: MINHAS -->
     <div id="page-minhas" class="page">
       <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
         <div><h1>Minhas Solicitações</h1><p>Acompanhe o status dos seus pedidos.</p></div>
@@ -318,7 +292,7 @@
       <div id="minhasContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
     </div>
 
-    <!-- PAGE: COORD -->
+    <!-- PAGE COORD -->
     <div id="page-coord" class="page">
       <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
         <div><h1>Painel da Coordenação</h1><p>Gerencie professores e solicitações.</p></div>
@@ -330,18 +304,13 @@
         <button class="coord-tab" onclick="switchCoordTab('professores',this)">👩‍🏫 Professores</button>
       </div>
 
-      <!-- TAB: NOVA -->
+      <!-- TAB NOVA -->
       <div class="tab-panel active" id="tab-nova">
-        <div class="deadline-box">
-          <div class="icon">📅</div>
-          <div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div>
-        </div>
+        <div class="deadline-box"><div class="icon">📅</div><div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div></div>
         <div class="card">
           <div class="solicitante-box">
             <span class="sb-label">🧑‍💼 Solicitante:</span>
-            <select id="coordSolicitante" onchange="onSolicitanteChange()">
-              <option value="coord">Coordenação (em nome próprio)</option>
-            </select>
+            <select id="coordSolicitante" onchange="onSolicitanteChange()"><option value="coord">Coordenação (em nome próprio)</option></select>
           </div>
           <div class="form-grid">
             <div class="fg-grid"><label>Professor(a)</label><input type="text" id="cf-professor" readonly /></div>
@@ -353,23 +322,21 @@
               <label>Arquivo da Matriz</label>
               <div class="file-drop" id="cfileDrop">
                 <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName')" />
-                <div class="file-icon">📄</div>
-                <p><strong>Clique aqui</strong> ou arraste o arquivo</p>
-                <p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
+                <div class="file-icon">📄</div><p><strong>Clique aqui</strong> ou arraste</p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
                 <div class="file-name" id="cfileName"></div>
               </div>
               <div class="upload-progress" id="cuploadProgress"><div class="upload-progress-bar"><div class="upload-progress-fill" id="cuploadFill"></div></div><div class="upload-progress-label" id="cuploadLabel"></div></div>
             </div>
             <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
           </div>
-          <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+          <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;">
             <button class="btn-action" id="btnEnviarCoord" onclick="submitForm('coord')">✔ Enviar Solicitação</button>
             <button class="btn-secondary" onclick="clearCoordForm()">Limpar</button>
           </div>
         </div>
       </div>
 
-      <!-- TAB: SOLICITAÇÕES -->
+      <!-- TAB SOLICITAÇÕES -->
       <div class="tab-panel" id="tab-solicitacoes">
         <div class="stats-row" id="statsRow">
           <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">—</div><div class="slabel">Aguardando</div></div>
@@ -378,21 +345,22 @@
         </div>
         <div class="card" style="padding:0;overflow:hidden;">
           <div style="padding:1rem 1.5rem;border-bottom:1.5px solid var(--border);display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
-            <input type="text" id="filterText" placeholder="🔍  Buscar por professor, disciplina ou título…" style="flex:1;min-width:200px;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderSolicitacoes()" />
+            <input type="text" id="filterText" placeholder="🔍  Buscar…" style="flex:1;min-width:180px;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderSolicitacoes()" />
             <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
               <option value="">Todos os status</option>
-              <option value="Aguardando">Aguardando</option>
-              <option value="Em produção">Em produção</option>
-              <option value="Entregue">Entregue</option>
-              <option value="Cancelado">Cancelado</option>
+              <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
+              <option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
             </select>
           </div>
           <div id="coordContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
 
-      <!-- TAB: PROFESSORES -->
+      <!-- TAB PROFESSORES -->
       <div class="tab-panel" id="tab-professores">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+          <button class="btn-action" onclick="abrirModalProfessor()">+ Adicionar Professor</button>
+        </div>
         <div class="card" style="padding:0;overflow:hidden;">
           <div id="profContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
@@ -402,7 +370,7 @@
   </main>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL SOLICITAÇÃO -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
     <h2 id="modalTitle"></h2>
@@ -411,15 +379,43 @@
     <div style="margin-bottom:1rem;">
       <label style="display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">Atualizar Status</label>
       <select class="status-select" id="modalStatus" onchange="updateStatus()">
-        <option value="Aguardando">Aguardando</option>
-        <option value="Em produção">Em produção</option>
-        <option value="Entregue">Entregue</option>
-        <option value="Cancelado">Cancelado</option>
+        <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
+        <option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
       </select>
     </div>
     <div class="modal-actions">
       <button class="btn-danger" onclick="deleteItem()">🗑 Excluir</button>
       <button class="btn-secondary" onclick="closeModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PROFESSOR -->
+<div class="modal-overlay" id="modalProfOverlay" onclick="closeModalProf(event)">
+  <div class="modal">
+    <h2 id="modalProfTitulo">Adicionar Professor</h2>
+    <div class="mfg"><label>Nome completo *</label><input type="text" id="mpNome" placeholder="Ex.: Maria da Silva" /></div>
+    <div class="mfg"><label>E-mail *</label><input type="email" id="mpEmail" placeholder="seu@email.com" /><span class="hint" id="mpEmailHint"></span></div>
+    <div class="mfg">
+      <label>Disciplina *</label>
+      <select id="mpDisciplina">
+        <option value="">— Selecione —</option>
+        <option value="portugues">Português</option><option value="matematica">Matemática</option>
+        <option value="ciencias">Ciências</option><option value="historia">História</option>
+        <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
+        <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
+        <option value="ensino religioso">Ensino Religioso</option><option value="outra">Outra</option>
+      </select>
+    </div>
+    <div class="mfg" id="mpSenhaGroup">
+      <label>Senha inicial *</label>
+      <input type="password" id="mpSenha" placeholder="Mínimo 6 caracteres" />
+      <span class="hint">O professor poderá alterar a senha depois.</span>
+    </div>
+    <p class="auth-erro" id="modalProfErro"></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModalProf()">Cancelar</button>
+      <button class="btn-action" id="btnSalvarProf" onclick="salvarProfessor()">Salvar</button>
     </div>
   </div>
 </div>
@@ -441,6 +437,7 @@ let professorData  = null;
 let allSolic       = [];
 let allProfs       = [];
 let currentSolicId = null;
+let editandoProfId = null; // id do professor sendo editado (null = novo)
 
 const disciplinaDisplay = {
   'portugues':'Português','matematica':'Matemática','ciencias':'Ciências',
@@ -451,115 +448,91 @@ const disciplinaDisplay = {
 
 // ── AUTH TABS ──
 function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((b,i) => b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='cadastro')));
-  document.getElementById('painelLogin').style.display    = tab==='login'    ? 'block' : 'none';
-  document.getElementById('painelCadastro').style.display = tab==='cadastro' ? 'block' : 'none';
+  document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='cadastro')));
+  document.getElementById('painelLogin').style.display    = tab==='login'    ? 'block':'none';
+  document.getElementById('painelCadastro').style.display = tab==='cadastro' ? 'block':'none';
 }
 
-// ── CADASTRO ──
+// ── CADASTRO (professor auto) ──
 async function fazerCadastro() {
-  const nome       = document.getElementById('cadNome').value.trim();
-  const email      = document.getElementById('cadEmail').value.trim();
-  const disciplina = document.getElementById('cadDisciplina').value;
-  const senha      = document.getElementById('cadSenha').value;
-  const senhaConf  = document.getElementById('cadSenhaConf').value;
-  const erroEl     = document.getElementById('cadErro');
-  const infoEl     = document.getElementById('cadInfo');
-  const btn        = document.getElementById('btnCadastro');
-
+  const nome=document.getElementById('cadNome').value.trim();
+  const email=document.getElementById('cadEmail').value.trim();
+  const disciplina=document.getElementById('cadDisciplina').value;
+  const senha=document.getElementById('cadSenha').value;
+  const senhaConf=document.getElementById('cadSenhaConf').value;
+  const erroEl=document.getElementById('cadErro');
+  const infoEl=document.getElementById('cadInfo');
+  const btn=document.getElementById('btnCadastro');
   erroEl.style.display='none'; infoEl.style.display='none';
-
-  if (!nome||!email||!disciplina||!senha||!senhaConf) {
-    erroEl.textContent='⚠️ Preencha todos os campos.'; erroEl.style.display='block'; return;
-  }
-  if (senha.length < 6) {
-    erroEl.textContent='⚠️ A senha deve ter no mínimo 6 caracteres.'; erroEl.style.display='block'; return;
-  }
-  if (senha !== senhaConf) {
-    erroEl.textContent='⚠️ As senhas não coincidem.'; erroEl.style.display='block'; return;
-  }
-
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Criando conta…';
-
+  if (!nome||!email||!disciplina||!senha||!senhaConf){erroEl.textContent='⚠️ Preencha todos os campos.';erroEl.style.display='block';return;}
+  if (senha.length<6){erroEl.textContent='⚠️ A senha deve ter no mínimo 6 caracteres.';erroEl.style.display='block';return;}
+  if (senha!==senhaConf){erroEl.textContent='⚠️ As senhas não coincidem.';erroEl.style.display='block';return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando conta…';
   try {
-    const { data, error } = await db.auth.signUp({ email, password: senha });
+    const {data,error}=await db.auth.signUp({email,password:senha});
     if (error) throw error;
-
-    const { error: profError } = await db.from('professores').insert([{
-      id: data.user.id, nome, email, disciplina, aprovado: false
-    }]);
+    const {error:profError}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:false}]);
     if (profError) throw profError;
-
     await db.auth.signOut();
     infoEl.textContent='✅ Cadastro enviado! Aguarde a aprovação da coordenação.';
     infoEl.style.display='block';
-    document.getElementById('cadNome').value='';
-    document.getElementById('cadEmail').value='';
+    ['cadNome','cadEmail','cadSenha','cadSenhaConf'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('cadDisciplina').value='';
-    document.getElementById('cadSenha').value='';
-    document.getElementById('cadSenhaConf').value='';
   } catch(err) {
-    erroEl.textContent = err.message.includes('already registered') ? '⚠️ Este e-mail já está cadastrado.' : '❌ Erro: '+err.message;
+    erroEl.textContent=err.message.includes('already registered')?'⚠️ Este e-mail já está cadastrado.':'❌ Erro: '+err.message;
     erroEl.style.display='block';
-  } finally { btn.disabled=false; btn.innerHTML='Criar conta'; }
+  } finally {btn.disabled=false;btn.innerHTML='Criar conta';}
 }
 
 // ── LOGIN ──
 async function fazerLogin() {
-  const email  = document.getElementById('loginEmail').value.trim();
-  const senha  = document.getElementById('loginSenha').value;
-  const erroEl = document.getElementById('loginErro');
-  const btn    = document.getElementById('btnLogin');
+  const email=document.getElementById('loginEmail').value.trim();
+  const senha=document.getElementById('loginSenha').value;
+  const erroEl=document.getElementById('loginErro');
+  const btn=document.getElementById('btnLogin');
   erroEl.style.display='none';
-  if (!email||!senha) { erroEl.textContent='⚠️ Preencha e-mail e senha.'; erroEl.style.display='block'; return; }
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Entrando…';
+  if (!email||!senha){erroEl.textContent='⚠️ Preencha e-mail e senha.';erroEl.style.display='block';return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Entrando…';
   try {
-    const { data, error } = await db.auth.signInWithPassword({ email, password: senha });
+    const {data,error}=await db.auth.signInWithPassword({email,password:senha});
     if (error) throw error;
-    currentUser = data.user;
-
-    // Coordenação
-    if (senha === SENHA_COORD) { perfilAtual='coordenacao'; await iniciarApp(); return; }
-
-    // Professor
-    const { data: prof, error: profErr } = await db.from('professores').select('*').eq('id', currentUser.id).single();
+    currentUser=data.user;
+    if (senha===SENHA_COORD){perfilAtual='coordenacao';await iniciarApp();return;}
+    const {data:prof,error:profErr}=await db.from('professores').select('*').eq('id',currentUser.id).single();
     if (profErr||!prof) throw new Error('Perfil não encontrado.');
-    if (!prof.aprovado) {
+    if (!prof.aprovado){
       await db.auth.signOut();
       document.getElementById('telaAuth').style.display='none';
       document.getElementById('telaPendente').style.display='flex';
       return;
     }
-    professorData=prof; perfilAtual='professor'; await iniciarApp();
+    professorData=prof;perfilAtual='professor';await iniciarApp();
   } catch(err) {
-    erroEl.textContent = err.message.includes('Invalid login') ? '❌ E-mail ou senha incorretos.' : '❌ '+err.message;
+    erroEl.textContent=err.message.includes('Invalid login')?'❌ E-mail ou senha incorretos.':'❌ '+err.message;
     erroEl.style.display='block';
-  } finally { btn.disabled=false; btn.innerHTML='Entrar'; }
+  } finally {btn.disabled=false;btn.innerHTML='Entrar';}
 }
 
 // ── INICIAR APP ──
 async function iniciarApp() {
-  document.getElementById('telaAuth').style.display    ='none';
+  document.getElementById('telaAuth').style.display='none';
   document.getElementById('telaPendente').style.display='none';
-  document.getElementById('telaApp').style.display     ='block';
-  const badge = document.getElementById('perfilBadge');
-  const nav   = document.getElementById('navBar');
-
+  document.getElementById('telaApp').style.display='block';
+  const badge=document.getElementById('perfilBadge');
+  const nav=document.getElementById('navBar');
   if (perfilAtual==='professor') {
     badge.textContent='👩‍🏫 '+professorData.nome.split(' ')[0];
     badge.className='perfil-badge prof';
-    nav.innerHTML=`
-      <button onclick="showPage('solicitar',this)" class="active">Nova Solicitação</button>
-      <button onclick="showPage('minhas',this)">Minhas Solicitações</button>`;
-    document.getElementById('f-professor').value     = professorData.nome;
-    document.getElementById('f-disciplina-ro').value = disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
+    nav.innerHTML=`<button onclick="showPage('solicitar',this)" class="active">Nova Solicitação</button><button onclick="showPage('minhas',this)">Minhas Solicitações</button>`;
+    document.getElementById('f-professor').value=professorData.nome;
+    document.getElementById('f-disciplina-ro').value=disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
     showPage('solicitar');
   } else {
     badge.textContent='🗂️ Coordenação';
     badge.className='perfil-badge coord';
     nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
-    document.getElementById('cf-professor').value  = 'Coordenação';
-    document.getElementById('cf-disciplina').value = '—';
+    document.getElementById('cf-professor').value='Coordenação';
+    document.getElementById('cf-disciplina').value='—';
     await loadCoord();
     showPage('coord');
   }
@@ -568,17 +541,17 @@ async function iniciarApp() {
 // ── SAIR ──
 async function sair() {
   await db.auth.signOut();
-  currentUser=null; perfilAtual=null; professorData=null; allSolic=[]; allProfs=[]; currentSolicId=null;
-  document.getElementById('telaApp').style.display      ='none';
-  document.getElementById('telaPendente').style.display ='none';
-  document.getElementById('telaAuth').style.display     ='flex';
+  currentUser=null;perfilAtual=null;professorData=null;allSolic=[];allProfs=[];currentSolicId=null;
+  document.getElementById('telaApp').style.display='none';
+  document.getElementById('telaPendente').style.display='none';
+  document.getElementById('telaAuth').style.display='flex';
   document.getElementById('loginEmail').value='';
   document.getElementById('loginSenha').value='';
   document.getElementById('loginErro').style.display='none';
 }
 
 // ── PAGES ──
-function showPage(id, btn) {
+function showPage(id,btn) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
@@ -587,63 +560,48 @@ function showPage(id, btn) {
 }
 
 // ── COORD TABS ──
-function switchCoordTab(tab, btn) {
+function switchCoordTab(tab,btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.coord-tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
   if (btn) btn.classList.add('active');
 }
 
-// ── SOLICITANTE CHANGE ──
+// ── SOLICITANTE ──
 function onSolicitanteChange() {
-  const val = document.getElementById('coordSolicitante').value;
-  if (val==='coord') {
-    document.getElementById('cf-professor').value  = 'Coordenação';
-    document.getElementById('cf-disciplina').value = '—';
-  } else {
-    const prof = allProfs.find(p=>p.id===val);
-    if (prof) {
-      document.getElementById('cf-professor').value  = prof.nome;
-      document.getElementById('cf-disciplina').value = disciplinaDisplay[prof.disciplina]||prof.disciplina;
-    }
+  const val=document.getElementById('coordSolicitante').value;
+  if (val==='coord'){document.getElementById('cf-professor').value='Coordenação';document.getElementById('cf-disciplina').value='—';}
+  else {
+    const prof=allProfs.find(p=>p.id===val);
+    if (prof){document.getElementById('cf-professor').value=prof.nome;document.getElementById('cf-disciplina').value=disciplinaDisplay[prof.disciplina]||prof.disciplina;}
   }
 }
 
 function populateSolicitante() {
-  const sel = document.getElementById('coordSolicitante');
-  const current = sel.value;
+  const sel=document.getElementById('coordSolicitante');
+  const cur=sel.value;
   sel.innerHTML='<option value="coord">Coordenação (em nome próprio)</option>';
   allProfs.filter(p=>p.aprovado).forEach(p=>{
-    const opt=document.createElement('option');
-    opt.value=p.id;
-    opt.textContent=p.nome+' — '+(disciplinaDisplay[p.disciplina]||p.disciplina);
-    sel.appendChild(opt);
+    const o=document.createElement('option');o.value=p.id;
+    o.textContent=p.nome+' — '+(disciplinaDisplay[p.disciplina]||p.disciplina);
+    sel.appendChild(o);
   });
-  sel.value=current;
-  onSolicitanteChange();
+  sel.value=cur;onSolicitanteChange();
 }
 
 // ── FILE ──
-function handleFile(input, fnId) {
-  if (input.files[0]) { document.getElementById(fnId).textContent='✔ '+input.files[0].name; document.getElementById(fnId).style.display='block'; }
-}
-
+function handleFile(input,fnId){if(input.files[0]){document.getElementById(fnId).textContent='✔ '+input.files[0].name;document.getElementById(fnId).style.display='block';}}
 ['fileDrop','cfileDrop'].forEach(id=>{
-  const el=document.getElementById(id);
-  if (!el) return;
+  const el=document.getElementById(id);if(!el)return;
   el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over');});
   el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
-  el.addEventListener('drop',e=>{
-    e.preventDefault(); el.classList.remove('drag-over');
-    const fi=el.querySelector('input[type="file"]');
-    if (e.dataTransfer.files[0]&&fi){fi.files=e.dataTransfer.files;fi.dispatchEvent(new Event('change'));}
-  });
+  el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag-over');const fi=el.querySelector('input[type="file"]');if(e.dataTransfer.files[0]&&fi){fi.files=e.dataTransfer.files;fi.dispatchEvent(new Event('change'));}});
 });
 
 // ── UTILS ──
-function addWorkdays(date,days){let d=new Date(date),added=0;while(added<days){d.setDate(d.getDate()+1);const dow=d.getDay();if(dow!==0&&dow!==6)added++;}return d;}
+function addWorkdays(d,days){let dt=new Date(d),a=0;while(a<days){dt.setDate(dt.getDate()+1);const dow=dt.getDay();if(dow!==0&&dow!==6)a++;}return dt;}
 function fmtDate(d){return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});}
-function esc(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function sanitizeFileName(n){return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_');}
 const statusClass={'Aguardando':'badge-pending','Em produção':'badge-progress','Entregue':'badge-done','Cancelado':'badge-cancelled'};
 
@@ -671,37 +629,30 @@ async function uploadFile(file,fillId,labelId,progId){
   return {path,publicUrl:urlData.publicUrl,originalName:file.name};
 }
 
-// ── SUBMIT ──
+// ── SUBMIT SOLICITAÇÃO ──
 async function submitForm(modo){
   const isCoord=modo==='coord';
-  const titulo   =document.getElementById(isCoord?'cf-titulo':'f-titulo').value.trim();
-  const turmas   =document.getElementById(isCoord?'cf-turmas':'f-turmas').value.trim();
-  const copias   =document.getElementById(isCoord?'cf-copias':'f-copias').value;
-  const obs      =document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
-  const professor  =document.getElementById(isCoord?'cf-professor':'f-professor').value;
-  const disciplina =document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
+  const titulo=document.getElementById(isCoord?'cf-titulo':'f-titulo').value.trim();
+  const turmas=document.getElementById(isCoord?'cf-turmas':'f-turmas').value.trim();
+  const copias=document.getElementById(isCoord?'cf-copias':'f-copias').value;
+  const obs=document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
+  const professor=document.getElementById(isCoord?'cf-professor':'f-professor').value;
+  const disciplina=document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
   const arquivoInput=document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
   const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
   if(!titulo||!turmas||!copias){showToast('⚠️ Preencha todos os campos obrigatórios.',true);return;}
   const btn=document.getElementById(btnId);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Enviando…';
-  try{
+  try {
     let arquivoPath=null,arquivoUrl=null,arquivoNome=null;
-    if(arquivoInput.files[0]){
+    if (arquivoInput.files[0]){
       btn.innerHTML='<span class="spinner"></span> Enviando arquivo…';
-      const fillId=isCoord?'cuploadFill':'uploadFill';
-      const labelId=isCoord?'cuploadLabel':'uploadLabel';
-      const progId=isCoord?'cuploadProgress':'uploadProgress';
-      const result=await uploadFile(arquivoInput.files[0],fillId,labelId,progId);
-      arquivoPath=result.path;arquivoUrl=result.publicUrl;arquivoNome=result.originalName;
+      const r=await uploadFile(arquivoInput.files[0],isCoord?'cuploadFill':'uploadFill',isCoord?'cuploadLabel':'uploadLabel',isCoord?'cuploadProgress':'uploadProgress');
+      arquivoPath=r.path;arquivoUrl=r.publicUrl;arquivoNome=r.originalName;
     }
     btn.innerHTML='<span class="spinner"></span> Salvando…';
     const now=new Date();const prazo=addWorkdays(now,5);
-    const {error}=await db.from('solicitacoes').insert([{
-      professor,disciplina,titulo,turmas,copias:parseInt(copias),
-      obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,
-      data_solicitacao:now.toISOString(),prazo_entrega:prazo.toISOString(),status:'Aguardando'
-    }]);
+    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,data_solicitacao:now.toISOString(),prazo_entrega:prazo.toISOString(),status:'Aguardando'}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     showToast('✅ Solicitação enviada! Prazo: '+fmtDate(prazo));
@@ -711,7 +662,7 @@ async function submitForm(modo){
   finally{btn.disabled=false;btn.innerHTML='✔ Enviar Solicitação';}
 }
 
-// ── MINHAS ──
+// ── MINHAS SOLICITAÇÕES ──
 async function loadMinhas(){
   const container=document.getElementById('minhasContainer');
   container.innerHTML='<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
@@ -769,8 +720,7 @@ function renderSolicitacoes(){
           <td><strong>${esc(d.professor)}</strong>${d.professor==='Coordenação'?` <span class="badge badge-coord" style="font-size:.65rem;padding:.1rem .4rem;">coord</span>`:''}</td>
           <td>${esc(d.disciplina)}</td>
           <td style="max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
-          <td>${esc(d.turmas)}</td>
-          <td style="text-align:center;">${d.copias}</td>
+          <td>${esc(d.turmas)}</td><td style="text-align:center;">${d.copias}</td>
           <td>${fmtDate(d.prazo_entrega)}</td>
           <td>${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download">⬇ Baixar</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}</td>
           <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
@@ -787,49 +737,142 @@ function renderProfessores(){
   const aprovados=allProfs.filter(p=>p.aprovado);
   container.innerHTML=`
     <table>
-      <thead><tr><th>Nome</th><th>E-mail</th><th>Disciplina</th><th>Cadastrado em</th><th>Status</th><th>Ação</th></tr></thead>
+      <thead><tr><th>Nome</th><th>E-mail</th><th>Disciplina</th><th>Cadastrado em</th><th>Status</th><th>Ações</th></tr></thead>
       <tbody>
         ${pendentes.map(p=>`
           <tr>
             <td><strong>${esc(p.nome)}</strong></td><td>${esc(p.email)}</td>
-            <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td>
-            <td>${fmtDate(p.criado_em)}</td>
+            <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td><td>${fmtDate(p.criado_em)}</td>
             <td><span class="badge badge-waiting">⏳ Pendente</span></td>
             <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
               <button class="btn-approve" onclick="aprovarProfessor('${p.id}',true)">✔ Aprovar</button>
-              <button class="btn-danger" onclick="aprovarProfessor('${p.id}',false)">✖ Rejeitar</button>
+              <button class="btn-edit" onclick="abrirModalProfessor('${p.id}')">✏️ Editar</button>
+              <button class="btn-danger" onclick="excluirProfessor('${p.id}')">🗑</button>
             </td>
           </tr>`).join('')}
         ${aprovados.map(p=>`
           <tr>
             <td><strong>${esc(p.nome)}</strong></td><td>${esc(p.email)}</td>
-            <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td>
-            <td>${fmtDate(p.criado_em)}</td>
+            <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td><td>${fmtDate(p.criado_em)}</td>
             <td><span class="badge badge-done">✔ Aprovado</span></td>
-            <td><button class="btn-danger" onclick="aprovarProfessor('${p.id}',false)">Revogar</button></td>
+            <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
+              <button class="btn-edit" onclick="abrirModalProfessor('${p.id}')">✏️ Editar</button>
+              <button class="btn-danger" onclick="excluirProfessor('${p.id}')">🗑 Excluir</button>
+            </td>
           </tr>`).join('')}
       </tbody>
     </table>`;
 }
 
+// ── MODAL PROFESSOR ──
+function abrirModalProfessor(id) {
+  editandoProfId = id || null;
+  const erroEl = document.getElementById('modalProfErro');
+  erroEl.style.display='none';
+
+  if (id) {
+    // Editar
+    const prof = allProfs.find(p=>p.id===id);
+    if (!prof) return;
+    document.getElementById('modalProfTitulo').textContent = '✏️ Editar Professor';
+    document.getElementById('mpNome').value      = prof.nome;
+    document.getElementById('mpEmail').value     = prof.email;
+    document.getElementById('mpEmail').readOnly  = true;
+    document.getElementById('mpEmailHint').textContent = 'O e-mail não pode ser alterado.';
+    document.getElementById('mpDisciplina').value = prof.disciplina;
+    document.getElementById('mpSenha').value     = '';
+    document.getElementById('mpSenhaGroup').style.display = 'none'; // não altera senha no edit
+  } else {
+    // Novo
+    document.getElementById('modalProfTitulo').textContent = '➕ Adicionar Professor';
+    ['mpNome','mpEmail','mpSenha'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('mpEmail').readOnly  = false;
+    document.getElementById('mpEmailHint').textContent = '';
+    document.getElementById('mpDisciplina').value = '';
+    document.getElementById('mpSenhaGroup').style.display = 'block';
+  }
+
+  document.getElementById('modalProfOverlay').classList.add('open');
+}
+
+function closeModalProf(e) {
+  if (!e||e.target===document.getElementById('modalProfOverlay')) {
+    document.getElementById('modalProfOverlay').classList.remove('open');
+    editandoProfId=null;
+  }
+}
+
+async function salvarProfessor() {
+  const nome      = document.getElementById('mpNome').value.trim();
+  const email     = document.getElementById('mpEmail').value.trim();
+  const disciplina= document.getElementById('mpDisciplina').value;
+  const senha     = document.getElementById('mpSenha').value;
+  const erroEl    = document.getElementById('modalProfErro');
+  const btn       = document.getElementById('btnSalvarProf');
+  erroEl.style.display='none';
+
+  if (!nome||!disciplina){erroEl.textContent='⚠️ Preencha nome e disciplina.';erroEl.style.display='block';return;}
+
+  if (!editandoProfId) {
+    // Novo professor
+    if (!email){erroEl.textContent='⚠️ Informe o e-mail.';erroEl.style.display='block';return;}
+    if (!senha||senha.length<6){erroEl.textContent='⚠️ A senha deve ter no mínimo 6 caracteres.';erroEl.style.display='block';return;}
+  }
+
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Salvando…';
+
+  try {
+    if (!editandoProfId) {
+      // Criar usuário no Auth + inserir na tabela já aprovado
+      const {data,error}=await db.auth.signUp({email,password:senha});
+      if (error) throw error;
+
+      // Necessário re-autenticar como coord pois signUp troca a sessão
+      const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true}]);
+      if (insertErr) throw insertErr;
+
+      // Relogar como coord
+      await db.auth.signOut();
+      const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+      if (!loginErr) currentUser=sessao.user;
+
+      showToast('✅ Professor cadastrado com sucesso!');
+    } else {
+      // Editar — apenas atualiza nome e disciplina na tabela
+      const {error}=await db.from('professores').update({nome,disciplina}).eq('id',editandoProfId);
+      if (error) throw error;
+      showToast('✅ Professor atualizado!');
+    }
+
+    closeModalProf();
+    await loadCoord();
+  } catch(err) {
+    console.error(err);
+    erroEl.textContent = err.message.includes('already registered')?'⚠️ Este e-mail já está cadastrado.':'❌ Erro: '+err.message;
+    erroEl.style.display='block';
+  } finally {btn.disabled=false;btn.innerHTML='Salvar';}
+}
+
 // ── APROVAR ──
 async function aprovarProfessor(id,aprovar){
-  if(aprovar){
-    const {error}=await db.from('professores').update({aprovado:true}).eq('id',id);
-    if(error){showToast('❌ Erro ao aprovar.',true);return;}
-    showToast('✔ Professor aprovado!');
-  }else{
-    if(!confirm('Remover este professor?'))return;
-    await db.from('professores').delete().eq('id',id);
-    showToast('🗑 Professor removido.');
-  }
+  const {error}=await db.from('professores').update({aprovado:aprovar}).eq('id',id);
+  if(error){showToast('❌ Erro ao atualizar.',true);return;}
+  showToast(aprovar?'✔ Professor aprovado!':'✔ Aprovação revogada.');
   await loadCoord();
 }
 
-// ── MODAL ──
+// ── EXCLUIR PROFESSOR ──
+async function excluirProfessor(id){
+  if(!confirm('Excluir este professor? Ele perderá o acesso à plataforma.'))return;
+  const {error}=await db.from('professores').delete().eq('id',id);
+  if(error){showToast('❌ Erro ao excluir.',true);return;}
+  showToast('🗑 Professor removido.');
+  await loadCoord();
+}
+
+// ── MODAL SOLICITAÇÃO ──
 function openModal(id){
-  const item=allSolic.find(d=>d.id===id);
-  if(!item)return;
+  const item=allSolic.find(d=>d.id===id);if(!item)return;
   currentSolicId=id;
   document.getElementById('modalTitle').textContent=item.titulo;
   document.getElementById('modalStatus').value=item.status;
@@ -850,9 +893,7 @@ function openModal(id){
 }
 
 function closeModal(e){
-  if(!e||e.target===document.getElementById('modalOverlay')){
-    document.getElementById('modalOverlay').classList.remove('open');currentSolicId=null;
-  }
+  if(!e||e.target===document.getElementById('modalOverlay')){document.getElementById('modalOverlay').classList.remove('open');currentSolicId=null;}
 }
 
 async function updateStatus(){
