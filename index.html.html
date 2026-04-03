@@ -325,7 +325,11 @@
     <div id="page-coord" class="page">
       <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
         <div><h1>Painel da Coordenação</h1><p>Gerencie professores e solicitações.</p></div>
-        <button class="btn-secondary" onclick="loadCoord()">↻ Atualizar</button>
+        <button class="btn-secondary" id="btnAtualizar" onclick="loadCoordComLoader()">↻ Atualizar</button>
+      </div>
+      <!-- BARRA DE LOADING -->
+      <div id="loadingBar" style="height:3px;background:var(--border);border-radius:99px;margin-bottom:1.2rem;overflow:hidden;display:none;">
+        <div id="loadingBarFill" style="height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .3s ease;"></div>
       </div>
       <div class="coord-tabs">
         <button class="coord-tab active" onclick="switchCoordTab('nova',this)">➕ Nova Solicitação</button>
@@ -391,9 +395,16 @@
 
       <!-- TAB PROFESSORES -->
       <div class="tab-panel" id="tab-professores">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+        <div style="display:flex;justify-content:flex-end;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;">
+          <label class="btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;" title="Importar lista de professores via CSV">
+            📥 Importar CSV
+            <input type="file" id="csvImportInput" accept=".csv" style="display:none;" onchange="importarProfessoresCSV(this)" />
+          </label>
+          <button class="btn-secondary" onclick="baixarModeloCSV()" title="Baixar modelo de planilha para preenchimento">📄 Baixar modelo</button>
           <button class="btn-action" onclick="abrirModalProfessor()">+ Adicionar Professor</button>
         </div>
+        <!-- INFO IMPORTAÇÃO -->
+        <div id="csvImportInfo" style="display:none;margin-bottom:1rem;background:#e8f0eb;border:1.5px solid #b8d4bf;border-radius:10px;padding:1rem 1.2rem;font-size:.88rem;color:var(--primary);"></div>
         <div class="card" style="padding:0;overflow:hidden;">
           <div id="profContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
@@ -751,6 +762,113 @@ async function loadMinhas(){
         ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo</a>`:''}
       </div>
     </div>`).join('');
+}
+
+// ── COORD LOAD COM LOADER ──
+async function loadCoordComLoader(){
+  const bar=document.getElementById('loadingBar');
+  const fill=document.getElementById('loadingBarFill');
+  const btn=document.getElementById('btnAtualizar');
+  bar.style.display='block';
+  fill.style.width='0%';
+  btn.disabled=true;btn.textContent='⏳ Atualizando…';
+  // Animação progressiva
+  let pct=0;
+  const iv=setInterval(()=>{pct=Math.min(pct+12,85);fill.style.width=pct+'%';},120);
+  await loadCoord();
+  clearInterval(iv);
+  fill.style.width='100%';
+  setTimeout(()=>{bar.style.display='none';fill.style.width='0%';},500);
+  btn.disabled=false;btn.textContent='↻ Atualizar';
+}
+
+// ── IMPORTAR PROFESSORES VIA CSV ──
+function gerarSenhaAleatoria(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
+  let s='';for(let i=0;i<10;i++)s+=chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+
+function baixarModeloCSV(){
+  const csv='\uFEFF'+'nome;email;disciplina\r\nMaria da Silva;maria@escola.com;portugues\r\nJoão Souza;joao@escola.com;matematica';
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='modelo_importacao_professores.csv';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+  showToast('📄 Modelo baixado! Preencha nome, e-mail e disciplina.');
+}
+
+function baixarRelatorioCreds(credenciais){
+  const now=new Date();
+  const stamp=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  const csv='\uFEFF'+'Nome;E-mail;Disciplina;Senha inicial\r\n'
+    +credenciais.map(c=>`"${c.nome}";"${c.email}";"${c.disciplina}";"${c.senha}"`).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`credenciais_professores_${stamp}.csv`;
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+}
+
+async function importarProfessoresCSV(input){
+  const file=input.files[0];if(!file)return;
+  const infoEl=document.getElementById('csvImportInfo');
+  infoEl.style.display='block';
+  infoEl.innerHTML='<span style="display:inline-flex;align-items:center;gap:.5rem;"><span class="spinner"></span> Lendo arquivo…</span>';
+  input.value='';
+
+  const text=await file.text();
+  const lines=text.replace(/\r/g,'').split('\n').map(l=>l.trim()).filter(Boolean);
+  if(lines.length<2){infoEl.innerHTML='⚠️ Arquivo vazio ou sem dados além do cabeçalho.';return;}
+
+  const sep=lines[0].includes(';')?';':',';
+  const header=lines[0].split(sep).map(h=>h.replace(/"/g,'').trim().toLowerCase());
+  const iNome=header.indexOf('nome');
+  const iEmail=header.indexOf('email');
+  const iDisc=header.indexOf('disciplina');
+  if(iNome<0||iEmail<0||iDisc<0){
+    infoEl.innerHTML='❌ Cabeçalho inválido. Use as colunas: <strong>nome;email;disciplina</strong>';return;
+  }
+
+  const disciplinasValidas=['portugues','matematica','ciencias','historia','geografia','ingles','arte','educacao fisica','ensino religioso','outra'];
+  const rows=lines.slice(1).map(l=>l.split(sep).map(v=>v.replace(/"/g,'').trim()));
+  let ok=0,erros=[],credenciais=[];
+
+  infoEl.innerHTML=`<span class="spinner"></span> Importando 0 de ${rows.length}…`;
+
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i];
+    const nome=r[iNome]||'';
+    const email=r[iEmail]||'';
+    const disciplina=(r[iDisc]||'').toLowerCase().trim();
+    if(!nome||!email||!disciplina){erros.push(`Linha ${i+2}: dados incompletos`);continue;}
+    if(!disciplinasValidas.includes(disciplina)){erros.push(`Linha ${i+2} (${nome}): disciplina inválida "${disciplina}"`);continue;}
+    const senha=gerarSenhaAleatoria();
+    try{
+      const {data,error}=await db.auth.signUp({email,password:senha});
+      if(error){erros.push(`Linha ${i+2} (${nome}): ${error.message}`);continue;}
+      const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true}]);
+      if(insertErr){erros.push(`Linha ${i+2} (${nome}): ${insertErr.message}`);continue;}
+      credenciais.push({nome,email,disciplina:disciplinaDisplay[disciplina]||disciplina,senha});
+      ok++;
+    }catch(e){erros.push(`Linha ${i+2} (${nome}): ${e.message}`);}
+    infoEl.innerHTML=`<span class="spinner"></span> Importando ${ok+erros.length} de ${rows.length}…`;
+  }
+
+  await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+  await loadCoord();
+
+  let resumo=`✅ <strong>${ok} professor${ok!==1?'es':''} importado${ok!==1?'s':''} com sucesso!</strong>`;
+  if(ok>0){
+    resumo+=` <button onclick="baixarRelatorioCreds(window._lastCreds)" style="margin-left:.6rem;font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.3rem .8rem;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;">⬇ Baixar senhas (CSV)</button>`;
+    window._lastCreds=credenciais;
+  }
+  if(erros.length>0) resumo+=`<br><br>⚠️ ${erros.length} erro${erros.length!==1?'s':''}:<ul style="margin:.4rem 0 0 1rem;font-size:.82rem;">${erros.map(e=>`<li>${e}</li>`).join('')}</ul>`;
+  infoEl.innerHTML=resumo;
+  showToast(`✅ ${ok} professor${ok!==1?'es':''} importado${ok!==1?'s':''}! Baixe o relatório de senhas.`);
 }
 
 // ── COORD LOAD ──
