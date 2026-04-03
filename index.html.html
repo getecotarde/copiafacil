@@ -136,6 +136,7 @@
   .badge { display: inline-block; padding: .2rem .7rem; border-radius: 99px; font-size: .75rem; font-weight: 600; }
   .badge-pending   { background: #fff3d6; color: #a06000; }
   .badge-progress  { background: #ddeeff; color: #0055aa; }
+  .badge-ready     { background: #e8f0eb; color: #1a3a2a; }
   .badge-done      { background: #d6f0e0; color: #1a6a3a; }
   .badge-cancelled { background: #fce4de; color: #a02a10; }
   .badge-waiting   { background: #f0e8ff; color: #6600cc; }
@@ -311,6 +312,7 @@
             <option value="">Todos os status</option>
             <option value="Aguardando">Aguardando</option>
             <option value="Em produção">Em produção</option>
+            <option value="Pronto">Pronto</option>
             <option value="Entregue">Entregue</option>
             <option value="Cancelado">Cancelado</option>
           </select>
@@ -377,7 +379,7 @@
             <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
               <option value="">Todos os status</option>
               <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
-              <option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
+              <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
             </select>
           </div>
           <div id="coordContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
@@ -417,7 +419,7 @@
       <label style="display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">Atualizar Status</label>
       <select class="status-select" id="modalStatus" onchange="updateStatus()">
         <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
-        <option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
+        <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
       </select>
     </div>
     <div class="modal-actions">
@@ -668,7 +670,7 @@ function addWorkdays(d,days){let dt=new Date(d),a=0;while(a<days){dt.setDate(dt.
 function fmtDate(d){return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function sanitizeFileName(n){return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_');}
-const statusClass={'Aguardando':'badge-pending','Em produção':'badge-progress','Entregue':'badge-done','Cancelado':'badge-cancelled'};
+const statusClass={'Aguardando':'badge-pending','Em produção':'badge-progress','Pronto':'badge-ready','Entregue':'badge-done','Cancelado':'badge-cancelled'};
 
 // ── CLEAR ──
 function clearProfForm(){['f-titulo','f-turmas','f-copias','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('fileName').style.display='none';document.getElementById('uploadProgress').style.display='none';}
@@ -1116,6 +1118,7 @@ function renderMeca(){
             <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
               <option ${d.status==='Aguardando'?'selected':''}>Aguardando</option>
               <option ${d.status==='Em produção'?'selected':''}>Em produção</option>
+              <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
               <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
               <option ${d.status==='Cancelado'?'selected':''}>Cancelado</option>
             </select>
@@ -1139,40 +1142,8 @@ async function mecaUpdateStatus(id,newStatus){
 
 function mecaPrint(id){
   const item=allSolic.find(d=>d.id===id);if(!item)return;
-  const win=window.open('','_blank','width=700,height=600');
-  win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-    <title>Solicitação — ${esc(item.titulo)}</title>
-    <style>
-      body{font-family:Arial,sans-serif;padding:2rem;color:#111;max-width:600px;margin:0 auto;}
-      h1{font-size:1.3rem;margin-bottom:.2rem;color:#1a3a2a;}
-      .sub{font-size:.85rem;color:#666;margin-bottom:1.5rem;}
-      table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;}
-      td{padding:.55rem .8rem;border:1px solid #ccc;font-size:.9rem;vertical-align:top;}
-      td:first-child{font-weight:600;background:#f5f0e8;width:40%;color:#1a3a2a;}
-      .status{display:inline-block;padding:.2rem .7rem;border-radius:99px;font-size:.8rem;font-weight:700;background:#fff3d6;color:#a06000;}
-      .footer{font-size:.75rem;color:#999;border-top:1px solid #ddd;padding-top:.8rem;margin-top:1rem;}
-      @media print{body{padding:.5rem;} .no-print{display:none;}}
-    </style></head><body>
-    <h1>📋 CópiaFácil — Solicitação de Cópias</h1>
-    <p class="sub">Impresso em ${new Date().toLocaleString('pt-BR')}</p>
-    <table>
-      <tr><td>Professor(a)</td><td>${esc(item.professor)}</td></tr>
-      <tr><td>Disciplina</td><td>${esc(item.disciplina)}</td></tr>
-      <tr><td>Título da Matriz</td><td>${esc(item.titulo)}</td></tr>
-      <tr><td>Turmas Atendidas</td><td>${esc(item.turmas)}</td></tr>
-      <tr><td>Qtd. de Cópias</td><td>${item.copias}</td></tr>
-      <tr><td>Data da Solicitação</td><td>${fmtDate(item.data_solicitacao)}</td></tr>
-      <tr><td>Prazo de Entrega</td><td>${fmtDate(item.prazo_entrega)}</td></tr>
-      <tr><td>Status</td><td><span class="status">${esc(item.status)}</span></td></tr>
-      ${item.obs?`<tr><td>Observações</td><td>${esc(item.obs)}</td></tr>`:''}
-      ${item.arquivo_url?`<tr><td>Arquivo</td><td><a href="${esc(item.arquivo_url)}">${esc(item.arquivo||'Ver arquivo')}</a></td></tr>`:''}
-    </table>
-    <div class="footer">CópiaFácil — Sistema de Solicitação de Matrizes</div>
-    <br class="no-print">
-    <button class="no-print" onclick="window.print()" style="padding:.6rem 1.4rem;background:#1a3a2a;color:#fff;border:none;border-radius:8px;font-size:.9rem;cursor:pointer;">🖨️ Imprimir</button>
-  </body></html>`);
-  win.document.close();
-  win.focus();
+  if(!item.arquivo_url){showToast('⚠️ Esta solicitação não possui arquivo anexado.',true);return;}
+  window.open(item.arquivo_url,'_blank');
 }
 
 // ── AUTO LOGIN ──
