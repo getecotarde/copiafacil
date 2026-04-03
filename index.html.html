@@ -401,7 +401,29 @@
             <input type="file" id="csvImportInput" accept=".csv" style="display:none;" onchange="importarProfessoresCSV(this)" />
           </label>
           <button class="btn-secondary" onclick="baixarModeloCSV()" title="Baixar modelo de planilha para preenchimento">📄 Baixar modelo</button>
+          <button class="btn-secondary" id="btnVerSenhas" onclick="togglePainelSenhas()" style="display:none;" title="Ver senhas geradas na última importação">🔑 Ver senhas</button>
           <button class="btn-action" onclick="abrirModalProfessor()">+ Adicionar Professor</button>
+        </div>
+        <!-- PAINEL DE SENHAS -->
+        <div id="painelSenhas" style="display:none;margin-bottom:1rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
+            <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas geradas — última importação</span>
+            <div style="display:flex;gap:.5rem;">
+              <button onclick="baixarRelatorioCreds(window._lastCreds)" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+              <button onclick="togglePainelSenhas()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table id="tabelaSenhas" style="width:100%;border-collapse:collapse;font-size:.88rem;">
+              <thead><tr>
+                <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Nome</th>
+                <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">E-mail</th>
+                <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Disciplina</th>
+                <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Senha inicial</th>
+              </tr></thead>
+              <tbody id="tabelaSenhasBody"></tbody>
+            </table>
+          </div>
         </div>
         <!-- INFO IMPORTAÇÃO -->
         <div id="csvImportInfo" style="display:none;margin-bottom:1rem;background:#e8f0eb;border:1.5px solid #b8d4bf;border-radius:10px;padding:1rem 1.2rem;font-size:.88rem;color:var(--primary);"></div>
@@ -783,10 +805,26 @@ async function loadCoordComLoader(){
 }
 
 // ── IMPORTAR PROFESSORES VIA CSV ──
-function gerarSenhaAleatoria(){
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
-  let s='';for(let i=0;i<10;i++)s+=chars[Math.floor(Math.random()*chars.length)];
-  return s;
+function gerarSenhaPorNome(nomeCompleto){
+  // Remove acentos e normaliza
+  const normalizar=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z ]/g,'');
+  const especiais=['@','#','!','$','%','&','*'];
+  const partes=normalizar(nomeCompleto).trim().split(/\s+/).filter(Boolean);
+  const primeiro=partes[0]||'';
+  const segundo=partes[1]||'';
+
+  // Posição no alfabeto de cada letra (a=1, b=2 ... z=26), com zero à esquerda
+  const pos=c=>{const n=c.charCodeAt(0)-96;return String(n).padStart(2,'0');};
+
+  // Pega até 5 letras: primeiro as do primeiro nome, completa com início do sobrenome
+  const letras=(primeiro+segundo).slice(0,5).split('');
+  while(letras.length<5) letras.push('a'); // fallback se nome muito curto
+
+  const base=letras.map(pos).join(''); // 10 dígitos (5 × 2)
+  // Usa os 5 primeiros dígitos do resultado (posições compactadas)
+  const cinco=base.slice(0,5);
+  const especial=especiais[Math.floor(Math.random()*especiais.length)];
+  return cinco+especial;
 }
 
 function baixarModeloCSV(){
@@ -846,7 +884,7 @@ async function importarProfessoresCSV(input){
     const disciplina=(r[iDisc]||'').toLowerCase().trim();
     if(!nome||!email||!disciplina){erros.push(`Linha ${i+2}: dados incompletos`);continue;}
     if(!disciplinasValidas.includes(disciplina)){erros.push(`Linha ${i+2} (${nome}): disciplina inválida "${disciplina}"`);continue;}
-    const senha=gerarSenhaAleatoria();
+    const senha=gerarSenhaPorNome(nome);
     try{
       const {data,error}=await db.auth.signUp({email,password:senha});
       if(error){erros.push(`Linha ${i+2} (${nome}): ${error.message}`);continue;}
@@ -861,14 +899,29 @@ async function importarProfessoresCSV(input){
   await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
   await loadCoord();
 
-  let resumo=`✅ <strong>${ok} professor${ok!==1?'es':''} importado${ok!==1?'s':''} com sucesso!</strong>`;
+  // Popula tabela de senhas
+  window._lastCreds=credenciais;
   if(ok>0){
-    resumo+=` <button onclick="baixarRelatorioCreds(window._lastCreds)" style="margin-left:.6rem;font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.3rem .8rem;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;">⬇ Baixar senhas (CSV)</button>`;
-    window._lastCreds=credenciais;
+    document.getElementById('tabelaSenhasBody').innerHTML=credenciais.map(c=>`
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:.7rem 1rem;">${esc(c.nome)}</td>
+        <td style="padding:.7rem 1rem;">${esc(c.email)}</td>
+        <td style="padding:.7rem 1rem;">${esc(c.disciplina)}</td>
+        <td style="padding:.7rem 1rem;font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);">${esc(c.senha)}</td>
+      </tr>`).join('');
+    document.getElementById('btnVerSenhas').style.display='inline-flex';
+    document.getElementById('painelSenhas').style.display='block';
   }
+
+  let resumo=`✅ <strong>${ok} professor${ok!==1?'es':''} importado${ok!==1?'s':''} com sucesso!</strong> Use o botão <strong>🔑 Ver senhas</strong> para consultar ou baixar as credenciais.`;
   if(erros.length>0) resumo+=`<br><br>⚠️ ${erros.length} erro${erros.length!==1?'s':''}:<ul style="margin:.4rem 0 0 1rem;font-size:.82rem;">${erros.map(e=>`<li>${e}</li>`).join('')}</ul>`;
   infoEl.innerHTML=resumo;
-  showToast(`✅ ${ok} professor${ok!==1?'es':''} importado${ok!==1?'s':''}! Baixe o relatório de senhas.`);
+  showToast(`✅ ${ok} professor${ok!==1?'es':''} importado${ok!==1?'s':''}! Veja as senhas no botão 🔑`);
+}
+
+function togglePainelSenhas(){
+  const p=document.getElementById('painelSenhas');
+  p.style.display=p.style.display==='none'?'block':'none';
 }
 
 // ── COORD LOAD ──
