@@ -884,6 +884,15 @@ function showPage(id,btn) {
   document.getElementById('page-'+id).classList.add('active');
   if (btn) btn.classList.add('active');
   if (id==='minhas') loadMinhas();
+  if (id==='coord') {
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.coord-tab').forEach(b=>b.classList.remove('active'));
+    const tabNova=document.getElementById('tab-nova');
+    if(tabNova)tabNova.classList.add('active');
+    const btnNova=document.querySelector('.coord-tab');
+    if(btnNova)btnNova.classList.add('active');
+    loadCoord();
+  }
 }
 
 // ── COORD TABS ──
