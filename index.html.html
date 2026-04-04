@@ -1019,7 +1019,7 @@ async function submitForm(modo){
       prazo = addWorkdays(now,5);
       statusInicial = 'Aguardando';
     }
-    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
+    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     if (retroativo) {
