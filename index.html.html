@@ -890,10 +890,23 @@ function showPage(id,btn) {
 function switchCoordTab(tab,btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.coord-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  if(btn)btn.classList.add('active');
-  if(tab==='mecanografia')renderMecaGerenciar();
-  if(tab==='resumo'){setResumoSemana();renderResumo();}
+  const panel = document.getElementById('tab-'+tab);
+  if(panel) panel.classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(tab==='mecanografia') renderMecaGerenciar();
+  if(tab==='resumo') {
+    // Garante que allSolic está carregado antes de renderizar
+    if(allSolic.length === 0) {
+      db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false}).then(({data}) => {
+        allSolic = data || [];
+        setResumoSemana();
+        renderResumo();
+      });
+    } else {
+      setResumoSemana();
+      renderResumo();
+    }
+  }
 }
 
 // ── RESUMO SEMANAL ──
@@ -907,6 +920,10 @@ function setResumoSemana(){
 }
 
 function renderResumo(){
+  // Se datas estiverem vazias, preenche com a semana atual automaticamente
+  if(!document.getElementById('resumoDe').value && !document.getElementById('resumoAte').value){
+    setResumoSemana();
+  }
   const de=document.getElementById('resumoDe').value;
   const ate=document.getElementById('resumoAte').value;
   const stFiltro=document.getElementById('resumoStatus').value;
