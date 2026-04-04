@@ -439,6 +439,7 @@
         <button class="coord-tab" onclick="switchCoordTab('solicitacoes',this)">📄 Solicitações</button>
         <button class="coord-tab" onclick="switchCoordTab('professores',this)">👩‍🏫 Professores</button>
         <button class="coord-tab" onclick="switchCoordTab('mecanografia',this)">🖨️ Mecanografia</button>
+        <button class="coord-tab" onclick="switchCoordTab('resumo',this)">📊 Resumo Semanal</button>
       </div>
 
       <!-- TAB NOVA -->
@@ -603,6 +604,46 @@
           <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">🖨️ Acesso da Mecanografia</h3>
           <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.5rem;">Este perfil permite visualizar solicitações, baixar arquivos, imprimir e atualizar o status das cópias.</p>
           <div id="mecaGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+        </div>
+      </div>
+
+      <!-- TAB RESUMO SEMANAL -->
+      <div class="tab-panel" id="tab-resumo">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">Resumo de Cópias</div>
+            <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Solicitações agrupadas por professor no período selecionado</div>
+          </div>
+          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+            <div style="display:flex;flex-direction:column;gap:.2rem;">
+              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
+              <input type="date" id="resumoDe" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
+            </div>
+            <div style="display:flex;flex-direction:column;gap:.2rem;">
+              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Até</label>
+              <input type="date" id="resumoAte" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
+            </div>
+            <div style="display:flex;flex-direction:column;gap:.2rem;">
+              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
+              <select id="resumoStatus" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()">
+                <option value="">Todos</option>
+                <option value="Aguardando">Aguardando</option>
+                <option value="Em produção">Em produção</option>
+                <option value="Pronto">Pronto</option>
+                <option value="Entregue">Entregue</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+            <button class="btn-secondary" onclick="setResumoSemana()" style="margin-top:1.1rem;">Esta semana</button>
+          </div>
+        </div>
+
+        <!-- TOTALIZADOR -->
+        <div id="resumoTotais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
+
+        <!-- TABELA POR PROFESSOR -->
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div id="resumoContainer"><div class="empty-state"><div class="emoji">📊</div><p>Selecione um período para ver o resumo.</p></div></div>
         </div>
       </div>
     </div>
@@ -852,6 +893,89 @@ function switchCoordTab(tab,btn) {
   document.getElementById('tab-'+tab).classList.add('active');
   if(btn)btn.classList.add('active');
   if(tab==='mecanografia')renderMecaGerenciar();
+  if(tab==='resumo'){setResumoSemana();renderResumo();}
+}
+
+// ── RESUMO SEMANAL ──
+function setResumoSemana(){
+  const hoje=new Date();
+  const dow=hoje.getDay();
+  const seg=new Date(hoje);seg.setDate(hoje.getDate()-(dow===0?6:dow-1));
+  const sex=new Date(seg);sex.setDate(seg.getDate()+6);
+  document.getElementById('resumoDe').value=seg.toISOString().slice(0,10);
+  document.getElementById('resumoAte').value=sex.toISOString().slice(0,10);
+}
+
+function renderResumo(){
+  const de=document.getElementById('resumoDe').value;
+  const ate=document.getElementById('resumoAte').value;
+  const stFiltro=document.getElementById('resumoStatus').value;
+  const totaisEl=document.getElementById('resumoTotais');
+  const container=document.getElementById('resumoContainer');
+
+  if(!de||!ate){container.innerHTML='<div class="empty-state"><div class="emoji">📅</div><p>Selecione o período para ver o resumo.</p></div>';totaisEl.innerHTML='';return;}
+
+  const deDate=new Date(de+'T00:00:00');
+  const ateDate=new Date(ate+'T23:59:59');
+
+  const filtered=allSolic.filter(d=>{
+    const dt=new Date(d.data_solicitacao);
+    const dentroData=dt>=deDate&&dt<=ateDate;
+    const dentroStatus=!stFiltro||d.status===stFiltro;
+    return dentroData&&dentroStatus;
+  });
+
+  // Totalizadores gerais
+  const totalSolic=filtered.length;
+  const totalCopias=filtered.reduce((s,d)=>s+(d.copias||0),0);
+  const totalProfs=new Set(filtered.map(d=>d.professor)).size;
+  totaisEl.innerHTML=`
+    <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${totalCopias.toLocaleString('pt-BR')}</div><div class="slabel">Total de Cópias</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:var(--primary);"></div><div class="num">${totalSolic}</div><div class="slabel">Solicitações</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${totalProfs}</div><div class="slabel">Professores</div></div>`;
+
+  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação neste período.</p></div>';return;}
+
+  // Agrupa por professor
+  const porProf={};
+  filtered.forEach(d=>{
+    const k=d.professor||'—';
+    if(!porProf[k])porProf[k]={professor:k,solicitacoes:[],totalCopias:0};
+    porProf[k].solicitacoes.push(d);
+    porProf[k].totalCopias+=d.copias||0;
+  });
+
+  const rows=Object.values(porProf).sort((a,b)=>b.totalCopias-a.totalCopias);
+
+  container.innerHTML=`
+    <table>
+      <thead><tr>
+        <th>Professor(a)</th>
+        <th style="text-align:center;">Solicitações</th>
+        <th style="text-align:center;">Total de Cópias</th>
+        <th>Títulos</th>
+        <th>Status</th>
+      </tr></thead>
+      <tbody>${rows.map(r=>`
+        <tr>
+          <td><strong>${esc(r.professor)}</strong></td>
+          <td style="text-align:center;">${r.solicitacoes.length}</td>
+          <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${r.totalCopias.toLocaleString('pt-BR')}</td>
+          <td style="max-width:220px;">
+            ${r.solicitacoes.map(s=>`<div style="font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;" title="${esc(s.titulo)}">• ${esc(s.titulo)}</div>`).join('')}
+          </td>
+          <td>
+            ${r.solicitacoes.map(s=>`<div style="margin-bottom:.2rem;"><span class="badge ${statusClass[s.status]||'badge-pending'}" style="font-size:.68rem;">${esc(s.status)}</span></div>`).join('')}
+          </td>
+        </tr>`).join('')}
+        <tr style="background:#f5f0e8;border-top:2px solid var(--border);">
+          <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">TOTAL GERAL</td>
+          <td style="text-align:center;font-weight:700;">${totalSolic}</td>
+          <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:800;color:var(--accent2);font-size:1rem;">${totalCopias.toLocaleString('pt-BR')}</td>
+          <td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>`;
 }
 
 // ── SOLICITANTE ──
