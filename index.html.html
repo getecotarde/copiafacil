@@ -260,10 +260,7 @@
           <option value="ciencias">Ciências</option><option value="historia">História</option>
           <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
           <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-          <option value="ensino religioso">Ensino Religioso</option><option value="outra">Outra</option>
-        </select>
-      </div>
-      <div class="fg"><label>Crie sua senha *</label><input type="password" id="cadSenha" placeholder="Mínimo 6 caracteres" /></div>
+          <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option><input type="password" id="cadSenha" placeholder="Mínimo 6 caracteres" /></div>
       <div class="fg"><label>Confirme a senha *</label><input type="password" id="cadSenhaConf" placeholder="Repita a senha" onkeydown="if(event.key==='Enter') fazerCadastro()" /></div>
       <div class="senha-req">🔒 Mínimo de <strong>6 caracteres</strong>. Guarde sua senha com cuidado.</div>
       <p class="auth-erro" id="cadErro"></p>
@@ -697,10 +694,7 @@
         <option value="ciencias">Ciências</option><option value="historia">História</option>
         <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
         <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-        <option value="ensino religioso">Ensino Religioso</option><option value="outra">Outra</option>
-      </select>
-    </div>
-    <div class="mfg" id="mpSenhaGroup">
+        <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option>
       <label>Senha inicial (gerada automaticamente)</label>
       <div style="display:flex;align-items:center;gap:.6rem;">
         <input type="text" id="mpSenhaGerada" readonly style="font-family:monospace;font-weight:700;letter-spacing:.1em;background:#f0ede6;color:var(--primary);flex:1;" placeholder="Será gerada ao salvar" />
@@ -761,7 +755,7 @@ const disciplinaDisplay = {
   'portugues':'Português','matematica':'Matemática','ciencias':'Ciências',
   'historia':'História','geografia':'Geografia','ingles':'Inglês',
   'arte':'Arte','educacao fisica':'Educação Física',
-  'ensino religioso':'Ensino Religioso','outra':'Outra'
+  'ensino religioso':'Ensino Religioso','coordenacao':'Coordenação','outra':'Outra'
 };
 
 // ── AUTH TABS ──
@@ -871,7 +865,7 @@ async function iniciarApp() {
     badge.className='perfil-badge coord';
     nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
     document.getElementById('cf-professor').value='Coordenação';
-    document.getElementById('cf-disciplina').value='—';
+    document.getElementById('cf-disciplina').value='Coordenação';
     await loadCoord();
     showPage('coord');
   }
@@ -1019,7 +1013,7 @@ function renderResumo(){
 // ── SOLICITANTE ──
 function onSolicitanteChange() {
   const val=document.getElementById('coordSolicitante').value;
-  if (val==='coord'){document.getElementById('cf-professor').value='Coordenação';document.getElementById('cf-disciplina').value='—';}
+  if (val==='coord'){document.getElementById('cf-professor').value='Coordenação';document.getElementById('cf-disciplina').value='Coordenação';}
   else {
     const prof=allProfs.find(p=>p.id===val);
     if (prof){document.getElementById('cf-professor').value=prof.nome;document.getElementById('cf-disciplina').value=disciplinaDisplay[prof.disciplina]||prof.disciplina;}
@@ -1315,7 +1309,7 @@ async function importarProfessoresCSV(input){
     infoEl.innerHTML='❌ Cabeçalho inválido. Use as colunas: <strong>nome;email;disciplina</strong>';return;
   }
 
-  const disciplinasValidas=['portugues','matematica','ciencias','historia','geografia','ingles','arte','educacao fisica','ensino religioso','outra'];
+  const disciplinasValidas=['portugues','matematica','ciencias','historia','geografia','ingles','arte','educacao fisica','ensino religioso','coordenacao','outra'];
   const rows=lines.slice(1).map(l=>l.split(sep).map(v=>v.replace(/"/g,'').trim()));
   let ok=0,erros=[],credenciais=[];
 
