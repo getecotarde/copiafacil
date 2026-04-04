@@ -59,52 +59,77 @@
 
   /* ── APP ── */
   #telaApp { display: none; }
-  main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  main { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1.5rem; }
   .page { display: none; animation: fadeIn .3s ease; }
   .page.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .page-header { margin-bottom: 2rem; }
-  .page-header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--primary); line-height: 1.1; }
-  .page-header p { color: var(--muted); margin-top: .4rem; font-size: .95rem; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .page-header { margin-bottom: 1.2rem; }
+  .page-header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.55rem; color: var(--primary); line-height: 1.1; }
+  .page-header p { color: var(--muted); margin-top: .25rem; font-size: .88rem; }
 
-  .card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-  .fg-grid { display: flex; flex-direction: column; gap: .45rem; }
-  .fg-grid label { font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  /* ── LAYOUT DUAS COLUNAS PARA FORMULÁRIO ── */
+  .form-layout { display: grid; grid-template-columns: 1fr 380px; gap: 1.2rem; align-items: start; }
+  .form-layout-wide { display: grid; grid-template-columns: 1fr 400px; gap: 1.2rem; align-items: start; }
+
+  .card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.4rem 1.6rem; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  .card-sm { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.4rem; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .9rem; }
+  .fg-grid { display: flex; flex-direction: column; gap: .35rem; }
+  .fg-grid label { font-size: .73rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
   .fg-grid.full { grid-column: 1 / -1; }
-  .fg-grid input, .fg-grid select, .fg-grid textarea { font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); transition: border-color .2s, box-shadow .2s; outline: none; }
-  .fg-grid textarea { resize: vertical; min-height: 90px; }
+  .fg-grid input, .fg-grid select, .fg-grid textarea { font-family: 'DM Sans', sans-serif; font-size: .9rem; padding: .55rem .9rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); transition: border-color .2s, box-shadow .2s; outline: none; }
+  .fg-grid textarea { resize: vertical; min-height: 70px; }
   .fg-grid input:focus, .fg-grid select:focus, .fg-grid textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
   .fg-grid input[readonly] { opacity: .65; cursor: not-allowed; }
 
-  .solicitante-box { background: #e8f0eb; border: 1.5px solid #b8d4bf; border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-  .solicitante-box .sb-label { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--primary); white-space: nowrap; }
-  .solicitante-box select { font-family: 'DM Sans', sans-serif; font-size: .9rem; padding: .5rem .9rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); outline: none; cursor: pointer; flex: 1; min-width: 200px; }
+  .solicitante-box { background: #e8f0eb; border: 1.5px solid #b8d4bf; border-radius: 8px; padding: .7rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  .solicitante-box .sb-label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--primary); white-space: nowrap; }
+  .solicitante-box select { font-family: 'DM Sans', sans-serif; font-size: .88rem; padding: .4rem .8rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); outline: none; cursor: pointer; flex: 1; min-width: 180px; }
 
-  .file-drop { border: 2px dashed var(--border); border-radius: 10px; padding: 2rem 1.5rem; text-align: center; cursor: pointer; transition: all .2s; background: var(--bg); position: relative; }
+  /* ── FILE DROP compacto ── */
+  .file-drop { border: 2px dashed var(--border); border-radius: 8px; padding: .9rem 1rem; text-align: center; cursor: pointer; transition: all .2s; background: var(--bg); position: relative; }
   .file-drop:hover, .file-drop.drag-over { border-color: var(--accent); background: #fef8ec; }
   .file-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .file-drop .file-icon { font-size: 2rem; margin-bottom: .5rem; }
-  .file-drop p { font-size: .88rem; color: var(--muted); }
+  .file-drop .file-icon { font-size: 1.4rem; margin-bottom: .2rem; }
+  .file-drop p { font-size: .8rem; color: var(--muted); line-height: 1.4; }
   .file-drop strong { color: var(--primary); font-weight: 600; }
-  .file-name { display: none; margin-top: .5rem; font-size: .85rem; color: var(--success); font-weight: 500; }
-  .upload-progress { display: none; margin-top: .8rem; }
-  .upload-progress-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .file-name { display: none; margin-top: .35rem; font-size: .78rem; color: var(--success); font-weight: 500; }
+  .upload-progress { display: none; margin-top: .6rem; }
+  .upload-progress-bar { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
   .upload-progress-fill { height: 100%; background: var(--accent); border-radius: 99px; width: 0%; transition: width .3s ease; }
-  .upload-progress-label { font-size: .78rem; color: var(--muted); margin-top: .3rem; text-align: center; }
+  .upload-progress-label { font-size: .73rem; color: var(--muted); margin-top: .25rem; text-align: center; }
 
-  .deadline-box { background: linear-gradient(135deg, var(--primary) 0%, #2a5a3a 100%); border-radius: 10px; padding: 1rem 1.4rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-  .deadline-box .icon { font-size: 1.8rem; }
-  .deadline-box p { font-size: .85rem; color: rgba(255,255,255,.7); }
-  .deadline-box strong { font-family: 'Syne', sans-serif; color: var(--accent); font-size: 1rem; display: block; }
+  /* ── ANEXOS SIDE-BY-SIDE ── */
+  .anexos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  .anexo-bloco { display: flex; flex-direction: column; gap: .4rem; }
+  .anexo-label { font-size: .73rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
 
-  .btn-primary { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; padding: .85rem 2rem; background: var(--accent); color: var(--primary); border: none; border-radius: 10px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; width: 100%; justify-content: center; }
+  /* ── LINK DRIVE ── */
+  .drive-link-row { display: flex; gap: .4rem; align-items: center; }
+  .drive-link-row input { flex: 1; font-family: 'DM Sans', sans-serif; font-size: .82rem; padding: .45rem .8rem; border: 1.5px solid var(--border); border-radius: 7px; background: var(--bg); color: var(--text); outline: none; transition: border-color .2s; }
+  .drive-link-row input:focus { border-color: #4285f4; box-shadow: 0 0 0 3px rgba(66,133,244,.12); }
+  .drive-link-row input::placeholder { color: var(--muted); }
+  .btn-drive-clear { background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--muted); padding: .2rem; line-height: 1; transition: color .15s; }
+  .btn-drive-clear:hover { color: var(--accent2); }
+  .drive-preview { display: none; align-items: center; gap: .5rem; margin-top: .35rem; padding: .4rem .7rem; background: #e8f0fb; border: 1.5px solid #b8cef0; border-radius: 7px; font-size: .8rem; }
+  .drive-preview .dp-icon { font-size: 1rem; }
+  .drive-preview a { color: #1a6ac7; font-weight: 600; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+  .drive-preview a:hover { text-decoration: underline; }
+  .drive-or { text-align: center; font-size: .73rem; color: var(--muted); font-weight: 600; letter-spacing: .05em; padding: .15rem 0; }
+
+  .deadline-box { background: linear-gradient(135deg, var(--primary) 0%, #2a5a3a 100%); border-radius: 8px; padding: .7rem 1.1rem; display: flex; align-items: center; gap: .8rem; margin-bottom: 1rem; }
+  .deadline-box .icon { font-size: 1.4rem; }
+  .deadline-box p { font-size: .8rem; color: rgba(255,255,255,.7); }
+  .deadline-box strong { font-family: 'Syne', sans-serif; color: var(--accent); font-size: .9rem; display: block; }
+
+  .btn-primary { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; padding: .7rem 1.6rem; background: var(--accent); color: var(--primary); border: none; border-radius: 8px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; width: 100%; justify-content: center; }
   .btn-primary:hover { background: #d49018; transform: translateY(-1px); }
   .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
-  .btn-action { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; padding: .85rem 2rem; background: var(--accent); color: var(--primary); border: none; border-radius: 10px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; }
+  .btn-action { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; padding: .65rem 1.5rem; background: var(--accent); color: var(--primary); border: none; border-radius: 8px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; }
   .btn-action:hover { background: #d49018; transform: translateY(-1px); }
   .btn-action:disabled { opacity: .6; cursor: not-allowed; transform: none; }
-  .btn-secondary { font-family: 'DM Sans', sans-serif; font-size: .88rem; padding: .55rem 1.2rem; background: transparent; color: var(--primary); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all .2s; }
+  .btn-secondary { font-family: 'DM Sans', sans-serif; font-size: .85rem; padding: .5rem 1rem; background: transparent; color: var(--primary); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all .2s; }
   .btn-secondary:hover { border-color: var(--primary); background: rgba(26,58,42,.04); }
   .btn-danger { font-family: 'DM Sans', sans-serif; font-size: .82rem; padding: .35rem .8rem; background: transparent; color: var(--accent2); border: 1.5px solid var(--accent2); border-radius: 6px; cursor: pointer; transition: all .2s; }
   .btn-danger:hover { background: var(--accent2); color: #fff; }
@@ -112,28 +137,28 @@
   .btn-approve:hover { background: var(--success); color: #fff; }
   .btn-edit { font-family: 'DM Sans', sans-serif; font-size: .82rem; padding: .35rem .8rem; background: transparent; color: #0055aa; border: 1.5px solid #0055aa; border-radius: 6px; cursor: pointer; transition: all .2s; }
   .btn-edit:hover { background: #0055aa; color: #fff; }
-  .btn-download { display: inline-flex; align-items: center; gap: .4rem; font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600; padding: .45rem 1rem; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: all .2s; white-space: nowrap; }
+  .btn-download { display: inline-flex; align-items: center; gap: .4rem; font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 600; padding: .35rem .8rem; background: var(--primary); color: #fff; border: none; border-radius: 7px; cursor: pointer; text-decoration: none; transition: all .2s; white-space: nowrap; }
   .btn-download:hover { background: #2a5a3a; transform: translateY(-1px); }
 
-  .minha-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.4rem 1.6rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
-  .mc-titulo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--primary); margin-bottom: .25rem; }
-  .mc-meta { font-size: .83rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; }
-  .mc-prazo { font-size: .82rem; font-weight: 600; color: var(--accent2); margin-top: .3rem; }
-  .mc-right { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; }
+  .minha-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.3rem; margin-bottom: .7rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
+  .mc-titulo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; color: var(--primary); margin-bottom: .2rem; }
+  .mc-meta { font-size: .8rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .3rem 1rem; }
+  .mc-prazo { font-size: .78rem; font-weight: 600; color: var(--accent2); margin-top: .2rem; }
+  .mc-right { display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; }
 
-  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
-  .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.5rem; display: flex; flex-direction: column; gap: .2rem; }
-  .stat-card .num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1; }
-  .stat-card .slabel { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-  .stat-card .accent-dot { width: 8px; height: 8px; border-radius: 50%; margin-bottom: .3rem; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-bottom: 1.2rem; }
+  .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: .9rem 1.2rem; display: flex; flex-direction: column; gap: .15rem; }
+  .stat-card .num { font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--primary); line-height: 1; }
+  .stat-card .slabel { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .stat-card .accent-dot { width: 7px; height: 7px; border-radius: 50%; margin-bottom: .2rem; }
 
-  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-  thead th { text-align: left; padding: .7rem 1rem; font-size: .75rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-bottom: 2px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  thead th { text-align: left; padding: .6rem .9rem; font-size: .72rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-bottom: 2px solid var(--border); }
   tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
   tbody tr:hover { background: #f9f6ef; }
-  tbody td { padding: .8rem 1rem; vertical-align: middle; }
+  tbody td { padding: .65rem .9rem; vertical-align: middle; }
 
-  .badge { display: inline-block; padding: .2rem .7rem; border-radius: 99px; font-size: .75rem; font-weight: 600; }
+  .badge { display: inline-block; padding: .18rem .65rem; border-radius: 99px; font-size: .72rem; font-weight: 600; }
   .badge-pending   { background: #fff3d6; color: #a06000; }
   .badge-progress  { background: #ddeeff; color: #0055aa; }
   .badge-ready     { background: #e8f0eb; color: #1a3a2a; }
@@ -142,51 +167,61 @@
   .badge-waiting   { background: #f0e8ff; color: #6600cc; }
   .badge-coord     { background: #e8f0eb; color: var(--primary); }
 
-  .empty-state { text-align: center; padding: 3.5rem 2rem; color: var(--muted); }
-  .empty-state .emoji { font-size: 2.8rem; margin-bottom: .8rem; }
-  .empty-state p { font-size: .95rem; }
+  .empty-state { text-align: center; padding: 2.5rem 2rem; color: var(--muted); }
+  .empty-state .emoji { font-size: 2.2rem; margin-bottom: .6rem; }
+  .empty-state p { font-size: .9rem; }
 
-  .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(26,58,42,.2); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: .4rem; }
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(26,58,42,.2); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: .4rem; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  #toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--primary); color: #fff; padding: 1rem 1.5rem; border-radius: 12px; font-size: .9rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 340px; }
+  #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primary); color: #fff; padding: .8rem 1.2rem; border-radius: 10px; font-size: .88rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 320px; }
   #toast.show { transform: translateY(0); opacity: 1; }
 
   /* ── MODAL GERAL ── */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s; }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
-  .modal { background: var(--surface); border-radius: 16px; padding: 2rem; max-width: 540px; width: 90%; transform: scale(.95); transition: transform .25s; max-height: 90vh; overflow-y: auto; }
+  .modal { background: var(--surface); border-radius: 14px; padding: 1.6rem; max-width: 520px; width: 90%; transform: scale(.95); transition: transform .25s; max-height: 90vh; overflow-y: auto; }
   .modal-overlay.open .modal { transform: scale(1); }
-  .modal h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--primary); margin-bottom: 1.2rem; }
-  .modal-detail { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1.2rem; }
-  .modal-detail .d-item { background: var(--bg); border-radius: 8px; padding: .6rem .9rem; }
-  .modal-detail .d-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: .2rem; }
-  .modal-detail .d-value { font-size: .9rem; font-weight: 500; color: var(--text); }
-  .modal-actions { display: flex; gap: .7rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 1.2rem; }
-  .status-select { padding: .5rem .8rem; border-radius: 8px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: .88rem; background: var(--bg); cursor: pointer; }
-  .arquivo-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
-  .arquivo-info { display: flex; align-items: center; gap: .6rem; font-size: .9rem; font-weight: 500; }
+  .modal h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--primary); margin-bottom: 1rem; }
+  .modal-detail { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: 1rem; }
+  .modal-detail .d-item { background: var(--bg); border-radius: 7px; padding: .5rem .8rem; }
+  .modal-detail .d-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: .15rem; }
+  .modal-detail .d-value { font-size: .88rem; font-weight: 500; color: var(--text); }
+  .modal-actions { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 1rem; }
+  .status-select { padding: .45rem .75rem; border-radius: 7px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: .85rem; background: var(--bg); cursor: pointer; }
+  .arquivo-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; padding: .75rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .8rem; flex-wrap: wrap; }
+  .arquivo-info { display: flex; align-items: center; gap: .5rem; font-size: .88rem; font-weight: 500; }
 
   /* ── MODAL PROFESSOR ── */
-  .mfg { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
-  .mfg label { font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .mfg input, .mfg select { font-family: 'DM Sans', sans-serif; font-size: .95rem; padding: .7rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; width: 100%; }
+  .mfg { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .85rem; }
+  .mfg label { font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .mfg input, .mfg select { font-family: 'DM Sans', sans-serif; font-size: .92rem; padding: .6rem .9rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; width: 100%; }
   .mfg input:focus, .mfg select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
-  .mfg .hint { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+  .mfg .hint { font-size: .73rem; color: var(--muted); margin-top: .18rem; }
 
   /* ── COORD TABS ── */
-  .coord-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
-  .coord-tab { font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 600; padding: .6rem 1.2rem; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; color: var(--muted); margin-bottom: -2px; transition: all .2s; }
+  .coord-tabs { display: flex; gap: .4rem; margin-bottom: 1.2rem; border-bottom: 2px solid var(--border); }
+  .coord-tab { font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600; padding: .5rem 1rem; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; color: var(--muted); margin-bottom: -2px; transition: all .2s; }
   .coord-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
+  /* ── RETRO BOX ── */
+  .retro-box { background: #fffdf8; border: 1.5px solid var(--border); border-radius: 8px; padding: .8rem 1rem; display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  .retro-box label { display: flex; align-items: center; gap: .6rem; cursor: pointer; flex: 1; min-width: 200px; }
+  .retro-box input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+
+  @media (max-width: 900px) {
+    .form-layout, .form-layout-wide { grid-template-columns: 1fr; }
+    .anexos-grid { grid-template-columns: 1fr; }
+  }
   @media (max-width: 640px) {
     .form-grid { grid-template-columns: 1fr; }
+    .form-grid-3 { grid-template-columns: 1fr 1fr; }
     .stats-row { grid-template-columns: 1fr 1fr; }
     header { padding: 0 1rem; }
-    main { padding: 1.5rem 1rem; }
-    .page-header h1 { font-size: 1.5rem; }
+    main { padding: 1rem; }
+    .page-header h1 { font-size: 1.3rem; }
     .modal-detail { grid-template-columns: 1fr; }
     .minha-card { grid-template-columns: 1fr; }
     .mc-right { align-items: flex-start; }
@@ -258,59 +293,92 @@
 
     <!-- PAGE PROFESSOR: SOLICITAR -->
     <div id="page-solicitar" class="page">
-      <div class="page-header"><h1>Nova Solicitação de Cópias</h1><p>Preencha os dados abaixo para solicitar a reprodução de sua matriz.</p></div>
-      <!-- BLOCO SENHA PROFESSOR -->
-      <div id="profSenhaBox" style="display:none;margin-bottom:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-        <span style="font-size:1.3rem;">🔑</span>
-        <div>
-          <div style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.2rem;">Sua senha inicial</div>
-          <div id="profSenhaValor" style="font-family:monospace;font-weight:700;font-size:1.1rem;letter-spacing:.12em;color:var(--primary);">—</div>
-        </div>
-        <span style="font-size:.78rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
+        <div class="page-header" style="margin-bottom:0;"><h1>Nova Solicitação de Cópias</h1><p>Preencha os dados e envie para a mecanografia.</p></div>
+        <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
       </div>
-      <div class="deadline-box"><div class="icon">📅</div><div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div></div>
-      <div class="card">
-        <div class="form-grid">
-          <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
-          <div class="fg-grid"><label>Disciplina</label><input type="text" id="f-disciplina-ro" readonly /></div>
-          <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
-          <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
-          <div class="fg-grid"><label>Quantidade de Cópias *</label><input type="number" id="f-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
-          <div class="fg-grid full">
-            <label>Arquivos da Matriz <span style="font-weight:400;color:var(--muted);font-size:.78rem;">(até 2 arquivos)</span></label>
-            <div style="display:flex;flex-direction:column;gap:.6rem;">
-              <div class="file-drop" id="fileDrop">
-                <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName')" />
-                <div class="file-icon">📄</div><p><strong>Arquivo 1</strong> — Clique ou arraste</p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
-                <div class="file-name" id="fileName"></div>
-              </div>
-              <div class="file-drop" id="fileDrop2">
-                <input type="file" id="f-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName2')" />
-                <div class="file-icon">📄</div><p><strong>Arquivo 2</strong> — Clique ou arraste <span style="color:var(--muted);font-size:.8rem;">(opcional)</span></p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
-                <div class="file-name" id="fileName2"></div>
-              </div>
-            </div>
-            <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div><div class="upload-progress-label" id="uploadLabel"></div></div>
+      <!-- BLOCO SENHA PROFESSOR -->
+      <div id="profSenhaBox" style="display:none;margin-bottom:.8rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:8px;padding:.7rem 1.1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <span style="font-size:1.2rem;">🔑</span>
+        <div><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.15rem;">Sua senha inicial</div><div id="profSenhaValor" style="font-family:monospace;font-weight:700;font-size:1rem;letter-spacing:.12em;color:var(--primary);">—</div></div>
+        <span style="font-size:.75rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
+      </div>
+
+      <div class="form-layout">
+        <!-- COLUNA ESQUERDA: dados principais -->
+        <div class="card">
+          <div class="form-grid">
+            <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
+            <div class="fg-grid"><label>Disciplina</label><input type="text" id="f-disciplina-ro" readonly /></div>
+            <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
+            <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
+            <div class="fg-grid"><label>Qtd. de Cópias *</label><input type="number" id="f-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
+            <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
           </div>
-          <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
-        </div>
-        <!-- REGISTRO RETROATIVO -->
-        <div id="profRetroBox" style="margin-top:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-          <label style="display:flex;align-items:center;gap:.7rem;cursor:pointer;flex:1;min-width:220px;">
-            <input type="checkbox" id="f-retroativo" onchange="toggleRetroativo('prof')" style="width:18px;height:18px;accent-color:var(--primary);cursor:pointer;" />
-            <div>
-              <div style="font-weight:600;font-size:.9rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
-              <div style="font-size:.78rem;color:var(--muted);margin-top:.1rem;">Marque para registrar cópias feitas fora da plataforma. O pedido será salvo como <strong>Entregue</strong>.</div>
+          <!-- RETROATIVO -->
+          <div class="retro-box" style="margin-top:.9rem;">
+            <label>
+              <input type="checkbox" id="f-retroativo" onchange="toggleRetroativo('prof')" />
+              <div>
+                <div style="font-weight:600;font-size:.85rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
+                <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem;">Registra como <strong>Entregue</strong>, sem prazo.</div>
+              </div>
+            </label>
+            <div id="f-dataRealizada-box" style="display:none;flex-direction:column;gap:.25rem;">
+              <label style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Data realizado</label>
+              <input type="date" id="f-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.45rem .8rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);outline:none;" />
             </div>
-          </label>
-          <div id="f-dataRealizada-box" style="display:none;flex-direction:column;gap:.3rem;">
-            <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Data em que foi feito</label>
-            <input type="date" id="f-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;" />
+          </div>
+          <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
+            <button class="btn-action" id="btnEnviar" onclick="submitForm('prof')">✔ Enviar Solicitação</button>
+            <button class="btn-secondary" onclick="clearProfForm()">Limpar</button>
           </div>
         </div>
-        <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;">
-          <button class="btn-action" id="btnEnviar" onclick="submitForm('prof')">✔ Enviar Solicitação</button>
-          <button class="btn-secondary" onclick="clearProfForm()">Limpar</button>
+
+        <!-- COLUNA DIREITA: anexos -->
+        <div style="display:flex;flex-direction:column;gap:.8rem;">
+          <div class="card-sm">
+            <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);margin-bottom:.8rem;">📎 Anexos <span style="font-weight:400;color:var(--muted);font-size:.72rem;">(até 2)</span></div>
+            <div class="anexos-grid">
+              <!-- Arquivo 1 -->
+              <div class="anexo-bloco">
+                <div class="anexo-label">📄 Arquivo 1 — do computador</div>
+                <div class="file-drop" id="fileDrop">
+                  <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName')" />
+                  <div class="file-icon">📁</div><p><strong>Clique ou arraste</strong></p><p>PDF, DOC, DOCX, ODT</p>
+                  <div class="file-name" id="fileName"></div>
+                </div>
+                <div class="drive-or">— ou link do Drive —</div>
+                <div class="drive-link-row">
+                  <input type="url" id="f-drive1" placeholder="Cole o link do Google Drive…" oninput="handleDriveLink('f-drive1','f-drive1-preview')" />
+                  <button class="btn-drive-clear" onclick="clearDriveLink('f-drive1','f-drive1-preview')" title="Limpar">✕</button>
+                </div>
+                <div class="drive-preview" id="f-drive1-preview">
+                  <span class="dp-icon">🔗</span>
+                  <a id="f-drive1-preview-link" href="#" target="_blank">Ver arquivo</a>
+                </div>
+              </div>
+              <!-- Arquivo 2 -->
+              <div class="anexo-bloco">
+                <div class="anexo-label">📄 Arquivo 2 — opcional</div>
+                <div class="file-drop" id="fileDrop2">
+                  <input type="file" id="f-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName2')" />
+                  <div class="file-icon">📁</div><p><strong>Clique ou arraste</strong></p><p>PDF, DOC, DOCX, ODT</p>
+                  <div class="file-name" id="fileName2"></div>
+                </div>
+                <div class="drive-or">— ou link do Drive —</div>
+                <div class="drive-link-row">
+                  <input type="url" id="f-drive2" placeholder="Cole o link do Google Drive…" oninput="handleDriveLink('f-drive2','f-drive2-preview')" />
+                  <button class="btn-drive-clear" onclick="clearDriveLink('f-drive2','f-drive2-preview')" title="Limpar">✕</button>
+                </div>
+                <div class="drive-preview" id="f-drive2-preview">
+                  <span class="dp-icon">🔗</span>
+                  <a id="f-drive2-preview-link" href="#" target="_blank">Ver arquivo</a>
+                </div>
+              </div>
+            </div>
+            <div class="upload-progress" id="uploadProgress" style="margin-top:.6rem;"><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div><div class="upload-progress-label" id="uploadLabel"></div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -379,53 +447,89 @@
 
       <!-- TAB NOVA -->
       <div class="tab-panel active" id="tab-nova">
-        <div class="deadline-box"><div class="icon">📅</div><div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div></div>
-        <div class="card">
-          <div class="solicitante-box">
-            <span class="sb-label">🧑‍💼 Solicitante:</span>
-            <select id="coordSolicitante" onchange="onSolicitanteChange()"><option value="coord">Coordenação (em nome próprio)</option></select>
-          </div>
-          <div class="form-grid">
-            <div class="fg-grid"><label>Professor(a)</label><input type="text" id="cf-professor" readonly /></div>
-            <div class="fg-grid"><label>Disciplina</label><input type="text" id="cf-disciplina" readonly /></div>
-            <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
-            <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
-            <div class="fg-grid"><label>Quantidade de Cópias *</label><input type="number" id="cf-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
-            <div class="fg-grid full">
-              <label>Arquivos da Matriz <span style="font-weight:400;color:var(--muted);font-size:.78rem;">(até 2 arquivos)</span></label>
-              <div style="display:flex;flex-direction:column;gap:.6rem;">
-                <div class="file-drop" id="cfileDrop">
-                  <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName')" />
-                  <div class="file-icon">📄</div><p><strong>Arquivo 1</strong> — Clique ou arraste</p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
-                  <div class="file-name" id="cfileName"></div>
-                </div>
-                <div class="file-drop" id="cfileDrop2">
-                  <input type="file" id="cf-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName2')" />
-                  <div class="file-icon">📄</div><p><strong>Arquivo 2</strong> — Clique ou arraste <span style="color:var(--muted);font-size:.8rem;">(opcional)</span></p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
-                  <div class="file-name" id="cfileName2"></div>
-                </div>
-              </div>
-              <div class="upload-progress" id="cuploadProgress"><div class="upload-progress-bar"><div class="upload-progress-fill" id="cuploadFill"></div></div><div class="upload-progress-label" id="cuploadLabel"></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
+          <div style="font-size:.88rem;color:var(--muted);">Crie uma solicitação em nome próprio ou de um professor.</div>
+          <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
+        </div>
+        <div class="form-layout">
+          <!-- COLUNA ESQUERDA -->
+          <div class="card">
+            <div class="solicitante-box">
+              <span class="sb-label">🧑‍💼 Solicitante:</span>
+              <select id="coordSolicitante" onchange="onSolicitanteChange()"><option value="coord">Coordenação (em nome próprio)</option></select>
             </div>
-            <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
-          </div>
-          <!-- REGISTRO RETROATIVO COORD -->
-          <div style="margin-top:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-            <label style="display:flex;align-items:center;gap:.7rem;cursor:pointer;flex:1;min-width:220px;">
-              <input type="checkbox" id="cf-retroativo" onchange="toggleRetroativo('coord')" style="width:18px;height:18px;accent-color:var(--primary);cursor:pointer;" />
-              <div>
-                <div style="font-weight:600;font-size:.9rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
-                <div style="font-size:.78rem;color:var(--muted);margin-top:.1rem;">Marque para registrar cópias feitas fora da plataforma. O pedido será salvo como <strong>Entregue</strong>.</div>
+            <div class="form-grid">
+              <div class="fg-grid"><label>Professor(a)</label><input type="text" id="cf-professor" readonly /></div>
+              <div class="fg-grid"><label>Disciplina</label><input type="text" id="cf-disciplina" readonly /></div>
+              <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
+              <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
+              <div class="fg-grid"><label>Qtd. de Cópias *</label><input type="number" id="cf-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
+              <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+            </div>
+            <!-- RETROATIVO COORD -->
+            <div class="retro-box" style="margin-top:.9rem;">
+              <label>
+                <input type="checkbox" id="cf-retroativo" onchange="toggleRetroativo('coord')" />
+                <div>
+                  <div style="font-weight:600;font-size:.85rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
+                  <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem;">Registra como <strong>Entregue</strong>, sem prazo.</div>
+                </div>
+              </label>
+              <div id="cf-dataRealizada-box" style="display:none;flex-direction:column;gap:.25rem;">
+                <label style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Data realizado</label>
+                <input type="date" id="cf-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.45rem .8rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);outline:none;" />
               </div>
-            </label>
-            <div id="cf-dataRealizada-box" style="display:none;flex-direction:column;gap:.3rem;">
-              <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Data em que foi feito</label>
-              <input type="date" id="cf-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;" />
+            </div>
+            <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
+              <button class="btn-action" id="btnEnviarCoord" onclick="submitForm('coord')">✔ Enviar Solicitação</button>
+              <button class="btn-secondary" onclick="clearCoordForm()">Limpar</button>
             </div>
           </div>
-          <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;">
-            <button class="btn-action" id="btnEnviarCoord" onclick="submitForm('coord')">✔ Enviar Solicitação</button>
-            <button class="btn-secondary" onclick="clearCoordForm()">Limpar</button>
+
+          <!-- COLUNA DIREITA: anexos -->
+          <div style="display:flex;flex-direction:column;gap:.8rem;">
+            <div class="card-sm">
+              <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);margin-bottom:.8rem;">📎 Anexos <span style="font-weight:400;color:var(--muted);font-size:.72rem;">(até 2)</span></div>
+              <div class="anexos-grid">
+                <!-- Arquivo 1 -->
+                <div class="anexo-bloco">
+                  <div class="anexo-label">📄 Arquivo 1 — do computador</div>
+                  <div class="file-drop" id="cfileDrop">
+                    <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName')" />
+                    <div class="file-icon">📁</div><p><strong>Clique ou arraste</strong></p><p>PDF, DOC, DOCX, ODT</p>
+                    <div class="file-name" id="cfileName"></div>
+                  </div>
+                  <div class="drive-or">— ou link do Drive —</div>
+                  <div class="drive-link-row">
+                    <input type="url" id="cf-drive1" placeholder="Cole o link do Google Drive…" oninput="handleDriveLink('cf-drive1','cf-drive1-preview')" />
+                    <button class="btn-drive-clear" onclick="clearDriveLink('cf-drive1','cf-drive1-preview')" title="Limpar">✕</button>
+                  </div>
+                  <div class="drive-preview" id="cf-drive1-preview">
+                    <span class="dp-icon">🔗</span>
+                    <a id="cf-drive1-preview-link" href="#" target="_blank">Ver arquivo</a>
+                  </div>
+                </div>
+                <!-- Arquivo 2 -->
+                <div class="anexo-bloco">
+                  <div class="anexo-label">📄 Arquivo 2 — opcional</div>
+                  <div class="file-drop" id="cfileDrop2">
+                    <input type="file" id="cf-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName2')" />
+                    <div class="file-icon">📁</div><p><strong>Clique ou arraste</strong></p><p>PDF, DOC, DOCX, ODT</p>
+                    <div class="file-name" id="cfileName2"></div>
+                  </div>
+                  <div class="drive-or">— ou link do Drive —</div>
+                  <div class="drive-link-row">
+                    <input type="url" id="cf-drive2" placeholder="Cole o link do Google Drive…" oninput="handleDriveLink('cf-drive2','cf-drive2-preview')" />
+                    <button class="btn-drive-clear" onclick="clearDriveLink('cf-drive2','cf-drive2-preview')" title="Limpar">✕</button>
+                  </div>
+                  <div class="drive-preview" id="cf-drive2-preview">
+                    <span class="dp-icon">🔗</span>
+                    <a id="cf-drive2-preview-link" href="#" target="_blank">Ver arquivo</a>
+                  </div>
+                </div>
+              </div>
+              <div class="upload-progress" id="cuploadProgress" style="margin-top:.6rem;"><div class="upload-progress-bar"><div class="upload-progress-fill" id="cuploadFill"></div></div><div class="upload-progress-label" id="cuploadLabel"></div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -788,8 +892,25 @@ function sanitizeFileName(n){return n.normalize('NFD').replace(/[\u0300-\u036f]/
 const statusClass={'Aguardando':'badge-pending','Em produção':'badge-progress','Pronto':'badge-ready','Entregue':'badge-done','Cancelado':'badge-cancelled'};
 
 // ── CLEAR ──
-function clearProfForm(){['f-titulo','f-turmas','f-copias','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');}
-function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');}
+// ── DRIVE LINK ──
+function handleDriveLink(inputId, previewId) {
+  const val = document.getElementById(inputId).value.trim();
+  const preview = document.getElementById(previewId);
+  const link = document.getElementById(previewId + '-link');
+  if (val && (val.startsWith('https://drive.google.com') || val.startsWith('https://docs.google.com'))) {
+    preview.style.display = 'flex';
+    link.href = val;
+  } else {
+    preview.style.display = 'none';
+  }
+}
+function clearDriveLink(inputId, previewId) {
+  document.getElementById(inputId).value = '';
+  document.getElementById(previewId).style.display = 'none';
+}
+
+function clearProfForm(){['f-titulo','f-turmas','f-copias','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');}
+function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');}
 
 // ── UPLOAD ──
 async function uploadFile(file,fillId,labelId,progId){
@@ -836,6 +957,8 @@ async function submitForm(modo){
   const disciplina=document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
   const arquivoInput=document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
   const arquivoInput2=document.getElementById(isCoord?'cf-arquivo2':'f-arquivo2');
+  const driveLink1=(document.getElementById(isCoord?'cf-drive1':'f-drive1').value||'').trim();
+  const driveLink2=(document.getElementById(isCoord?'cf-drive2':'f-drive2').value||'').trim();
   const retroativo=document.getElementById(isCoord?'cf-retroativo':'f-retroativo').checked;
   const dataRealizadaEl=document.getElementById(isCoord?'cf-dataRealizada':'f-dataRealizada');
   const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
@@ -868,7 +991,7 @@ async function submitForm(modo){
       prazo = addWorkdays(now,5);
       statusInicial = 'Aguardando';
     }
-    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo2:arquivoNome2||null,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
+    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo2:arquivoNome2||null,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     if (retroativo) {
@@ -899,7 +1022,9 @@ async function loadMinhas(){
       <div class="mc-right">
         <span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>
         ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 1</a>`:''}
+        ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 1</a>`:''}
         ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 2</a>`:''}
+        ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 2</a>`:''}
       </div>
     </div>`).join('');
 }
@@ -1100,7 +1225,9 @@ function renderSolicitacoes(){
           <td>${fmtDate(d.prazo_entrega)}</td>
           <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
             ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+            ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
             ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
+            ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
           </td>
           <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
         </tr>`).join('')}
@@ -1302,8 +1429,14 @@ function openModal(id){
   if (item.arquivo_url) {
     arquivosHtml += `<div class="arquivo-box"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo||'Arquivo 1')}</span></div><a href="${esc(item.arquivo_url)}" target="_blank" class="btn-download">⬇ Baixar arquivo 1</a></div>`;
   }
+  if (item.drive_link1) {
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 1</span></div><a href="${esc(item.drive_link1)}" target="_blank" class="btn-download" style="background:#4285f4;">🔗 Abrir no Drive</a></div>`;
+  }
   if (item.arquivo_url2) {
-    arquivosHtml += `<div class="arquivo-box" style="margin-top:.6rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo2||'Arquivo 2')}</span></div><a href="${esc(item.arquivo_url2)}" target="_blank" class="btn-download">⬇ Baixar arquivo 2</a></div>`;
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo2||'Arquivo 2')}</span></div><a href="${esc(item.arquivo_url2)}" target="_blank" class="btn-download">⬇ Baixar arquivo 2</a></div>`;
+  }
+  if (item.drive_link2) {
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 2</span></div><a href="${esc(item.drive_link2)}" target="_blank" class="btn-download" style="background:#4285f4;">🔗 Abrir no Drive</a></div>`;
   }
   if (item.retroativo) {
     arquivosHtml += `<div style="margin-top:.8rem;background:#e8f0eb;border-radius:8px;padding:.6rem 1rem;font-size:.84rem;color:#1a3a2a;">📋 <strong>Registro retroativo</strong> — cópias realizadas fora da plataforma.</div>`;
@@ -1471,7 +1604,9 @@ function renderMeca(){
           <td>${fmtDate(d.prazo_entrega)}</td>
           <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
             ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+            ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
             ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 2</a>`:''}
+            ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
           </td>
           <td>
             <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
