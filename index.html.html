@@ -118,6 +118,10 @@
   .drive-preview a:hover { text-decoration: underline; }
   .drive-or { text-align: center; font-size: .7rem; color: var(--muted); font-weight: 600; letter-spacing: .05em; padding: .1rem 0; }
 
+  /* ── REMOVE FILE BUTTON ── */
+  .btn-remove-file { display: none; align-items: center; justify-content: center; gap: .35rem; width: 100%; padding: .32rem .6rem; background: #fce4de; color: var(--accent2); border: 1.5px solid #f0c0b0; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: .73rem; font-weight: 600; cursor: pointer; transition: all .2s; }
+  .btn-remove-file:hover { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+
   .deadline-box { background: linear-gradient(135deg, var(--primary) 0%, #2a5a3a 100%); border-radius: 8px; padding: .7rem 1.1rem; display: flex; align-items: center; gap: .8rem; margin-bottom: 1rem; }
   .deadline-box .icon { font-size: 1.4rem; }
   .deadline-box p { font-size: .8rem; color: rgba(255,255,255,.7); }
@@ -347,10 +351,11 @@
               <div class="anexo-bloco">
                 <div class="anexo-label">📄 Arquivo 1 — do computador</div>
                 <div class="file-drop" id="fileDrop">
-                  <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName')" />
+                  <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName','fileDrop','btnRemove1')" />
                   <div class="file-icon">📁</div><p><strong>Clique ou arraste</strong></p><p>PDF, DOC, DOCX, ODT</p>
                   <div class="file-name" id="fileName"></div>
                 </div>
+                <button class="btn-remove-file" id="btnRemove1" onclick="removeFile('f-arquivo','fileName','fileDrop','btnRemove1')" style="display:none;">✕ Remover arquivo</button>
                 <div class="drive-or">— ou link do Drive —</div>
                 <div class="drive-link-row">
                   <input type="url" id="f-drive1" placeholder="Cole o link do Google Drive…" oninput="handleDriveLink('f-drive1','f-drive1-preview')" />
@@ -365,10 +370,11 @@
               <div class="anexo-bloco">
                 <div class="anexo-label">📄 Arquivo 2 — opcional</div>
                 <div class="file-drop" id="fileDrop2">
-                  <input type="file" id="f-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName2')" />
+                  <input type="file" id="f-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName2','fileDrop2','btnRemove2')" />
                   <div class="file-icon">📁</div><p><strong>Clique ou arraste</strong></p><p>PDF, DOC, DOCX, ODT</p>
                   <div class="file-name" id="fileName2"></div>
                 </div>
+                <button class="btn-remove-file" id="btnRemove2" onclick="removeFile('f-arquivo2','fileName2','fileDrop2','btnRemove2')" style="display:none;">✕ Remover arquivo</button>
                 <div class="drive-or">— ou link do Drive —</div>
                 <div class="drive-link-row">
                   <input type="url" id="f-drive2" placeholder="Cole o link do Google Drive…" oninput="handleDriveLink('f-drive2','f-drive2-preview')" />
@@ -501,10 +507,11 @@
                 <div class="anexo-bloco">
                   <div class="anexo-label">📄 Arquivo 1 — do computador</div>
                   <div class="file-drop" id="cfileDrop">
-                    <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName')" />
+                    <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName','cfileDrop','cbtnRemove1')" />
                     <div class="file-icon">📁</div><p><strong>Clique ou arraste</strong></p><p>PDF, DOC, DOCX, ODT</p>
                     <div class="file-name" id="cfileName"></div>
                   </div>
+                  <button class="btn-remove-file" id="cbtnRemove1" onclick="removeFile('cf-arquivo','cfileName','cfileDrop','cbtnRemove1')" style="display:none;">✕ Remover arquivo</button>
                   <div class="drive-or">— ou link do Drive —</div>
                   <div class="drive-link-row">
                     <input type="url" id="cf-drive1" placeholder="Cole o link do Google Drive…" oninput="handleDriveLink('cf-drive1','cf-drive1-preview')" />
@@ -519,10 +526,11 @@
                 <div class="anexo-bloco">
                   <div class="anexo-label">📄 Arquivo 2 — opcional</div>
                   <div class="file-drop" id="cfileDrop2">
-                    <input type="file" id="cf-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName2')" />
+                    <input type="file" id="cf-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName2','cfileDrop2','cbtnRemove2')" />
                     <div class="file-icon">📁</div><p><strong>Clique ou arraste</strong></p><p>PDF, DOC, DOCX, ODT</p>
                     <div class="file-name" id="cfileName2"></div>
                   </div>
+                  <button class="btn-remove-file" id="cbtnRemove2" onclick="removeFile('cf-arquivo2','cfileName2','cfileDrop2','cbtnRemove2')" style="display:none;">✕ Remover arquivo</button>
                   <div class="drive-or">— ou link do Drive —</div>
                   <div class="drive-link-row">
                     <input type="url" id="cf-drive2" placeholder="Cole o link do Google Drive…" oninput="handleDriveLink('cf-drive2','cf-drive2-preview')" />
@@ -882,7 +890,21 @@ function populateSolicitante() {
 }
 
 // ── FILE ──
-function handleFile(input,fnId){if(input.files[0]){document.getElementById(fnId).textContent='✔ '+input.files[0].name;document.getElementById(fnId).style.display='block';}}
+function handleFile(input,fnId,dropId,btnId){
+  if(input.files[0]){
+    document.getElementById(fnId).textContent='✔ '+input.files[0].name;
+    document.getElementById(fnId).style.display='block';
+    if(btnId) document.getElementById(btnId).style.display='flex';
+    if(dropId){const d=document.getElementById(dropId);d.style.borderColor='var(--success)';d.style.background='#f0faf4';}
+  }
+}
+function removeFile(inputId,fnId,dropId,btnId){
+  const input=document.getElementById(inputId);
+  input.value='';
+  const fn=document.getElementById(fnId);fn.textContent='';fn.style.display='none';
+  document.getElementById(btnId).style.display='none';
+  const d=document.getElementById(dropId);d.style.borderColor='';d.style.background='';
+}
 ['fileDrop','cfileDrop','fileDrop2','cfileDrop2'].forEach(id=>{
   const el=document.getElementById(id);if(!el)return;
   el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over');});
@@ -997,7 +1019,7 @@ async function submitForm(modo){
       prazo = addWorkdays(now,5);
       statusInicial = 'Aguardando';
     }
-    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo2:arquivoNome2||null,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
+    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     if (retroativo) {
