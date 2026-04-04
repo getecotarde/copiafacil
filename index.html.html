@@ -319,20 +319,7 @@
             <div class="fg-grid"><label>Qtd. de Cópias *</label><input type="number" id="f-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
             <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
           </div>
-          <!-- RETROATIVO -->
-          <div class="retro-box" style="margin-top:.9rem;">
-            <label>
-              <input type="checkbox" id="f-retroativo" onchange="toggleRetroativo('prof')" />
-              <div>
-                <div style="font-weight:600;font-size:.85rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
-                <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem;">Registra como <strong>Entregue</strong>, sem prazo.</div>
-              </div>
-            </label>
-            <div id="f-dataRealizada-box" style="display:none;flex-direction:column;gap:.25rem;">
-              <label style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Data realizado</label>
-              <input type="date" id="f-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.45rem .8rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);outline:none;" />
-            </div>
-          </div>
+          <!-- RETROATIVO removido: apenas coordenação pode lançar retroativo -->
           <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
             <button class="btn-action" id="btnEnviar" onclick="submitForm('prof')">✔ Enviar Solicitação</button>
             <button class="btn-secondary" onclick="clearProfForm()">Limpar</button>
@@ -987,8 +974,8 @@ async function submitForm(modo){
   const arquivoInput2=document.getElementById(isCoord?'cf-arquivo2':'f-arquivo2');
   const driveLink1=(document.getElementById(isCoord?'cf-drive1':'f-drive1').value||'').trim();
   const driveLink2=(document.getElementById(isCoord?'cf-drive2':'f-drive2').value||'').trim();
-  const retroativo=document.getElementById(isCoord?'cf-retroativo':'f-retroativo').checked;
-  const dataRealizadaEl=document.getElementById(isCoord?'cf-dataRealizada':'f-dataRealizada');
+  const retroativo=isCoord ? document.getElementById('cf-retroativo').checked : false;
+  const dataRealizadaEl=isCoord ? document.getElementById('cf-dataRealizada') : null;
   const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
   if(!titulo||!turmas||!copias){showToast('⚠️ Preencha todos os campos obrigatórios.',true);return;}
   const btn=document.getElementById(btnId);
@@ -1041,10 +1028,14 @@ async function loadMinhas(){
   container.innerHTML=data.map(d=>`
     <div class="minha-card">
       <div>
-        <div class="mc-titulo">${esc(d.titulo)}</div>
-        <div class="mc-meta"><span>👥 ${esc(d.turmas)}</span><span>📄 ${d.copias} cópia${d.copias>1?'s':''}</span><span>🗓 ${fmtDate(d.data_solicitacao)}</span></div>
-        <div class="mc-prazo">⏰ Prazo: ${fmtDate(d.prazo_entrega)}</div>
-        ${d.obs?`<div style="margin-top:.3rem;font-size:.82rem;color:var(--muted);">💬 ${esc(d.obs)}</div>`:''}
+        <div class="mc-titulo">${esc(d.titulo)}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</div>
+        <div class="mc-meta">
+          <span>👥 ${esc(d.turmas)}</span>
+          <span>📄 ${d.copias} cópia${d.copias>1?'s':''}</span>
+          <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
+          ${d.obs?`<span>💬 ${esc(d.obs)}</span>`:''}
+        </div>
+        ${d.status!=='Entregue'?`<div class="mc-prazo">⏰ Prazo: ${fmtDate(d.prazo_entrega)}</div>`:''}
       </div>
       <div class="mc-right">
         <span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>
