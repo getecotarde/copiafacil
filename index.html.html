@@ -259,6 +259,15 @@
     <!-- PAGE PROFESSOR: SOLICITAR -->
     <div id="page-solicitar" class="page">
       <div class="page-header"><h1>Nova Solicitação de Cópias</h1><p>Preencha os dados abaixo para solicitar a reprodução de sua matriz.</p></div>
+      <!-- BLOCO SENHA PROFESSOR -->
+      <div id="profSenhaBox" style="display:none;margin-bottom:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <span style="font-size:1.3rem;">🔑</span>
+        <div>
+          <div style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.2rem;">Sua senha inicial</div>
+          <div id="profSenhaValor" style="font-family:monospace;font-weight:700;font-size:1.1rem;letter-spacing:.12em;color:var(--primary);">—</div>
+        </div>
+        <span style="font-size:.78rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
+      </div>
       <div class="deadline-box"><div class="icon">📅</div><div><strong>Prazo de entrega: 5 dias úteis</strong><p>Contados a partir da confirmação da solicitação.</p></div></div>
       <div class="card">
         <div class="form-grid">
@@ -299,6 +308,15 @@
       <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
         <div><h1>Painel da Mecanografia</h1><p>Gerencie as solicitações de cópias recebidas.</p></div>
         <button class="btn-secondary" onclick="loadMeca()">↻ Atualizar</button>
+      </div>
+      <!-- BLOCO SENHA MECANOGRAFIA -->
+      <div id="mecaSenhaBox" style="display:none;margin-bottom:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <span style="font-size:1.3rem;">🔑</span>
+        <div>
+          <div style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.2rem;">Sua senha inicial</div>
+          <div id="mecaSenhaValor" style="font-family:monospace;font-weight:700;font-size:1.1rem;letter-spacing:.12em;color:var(--primary);">—</div>
+        </div>
+        <span style="font-size:.78rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
       </div>
       <div class="stats-row" id="mecaStatsRow">
         <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">—</div><div class="slabel">Aguardando</div></div>
@@ -401,7 +419,7 @@
             <input type="file" id="csvImportInput" accept=".csv" style="display:none;" onchange="importarProfessoresCSV(this)" />
           </label>
           <button class="btn-secondary" onclick="baixarModeloCSV()" title="Baixar modelo de planilha para preenchimento">📄 Baixar modelo</button>
-          <button class="btn-secondary" id="btnVerSenhas" onclick="togglePainelSenhas()" style="display:none;" title="Ver senhas geradas na última importação">🔑 Ver senhas</button>
+          <button class="btn-secondary" id="btnVerSenhas" onclick="togglePainelSenhas()" title="Ver senhas geradas na última importação">🔑 Ver senhas</button>
           <button class="btn-action" onclick="abrirModalProfessor()">+ Adicionar Professor</button>
         </div>
         <!-- PAINEL DE SENHAS -->
@@ -483,9 +501,12 @@
       </select>
     </div>
     <div class="mfg" id="mpSenhaGroup">
-      <label>Senha inicial *</label>
-      <input type="password" id="mpSenha" placeholder="Mínimo 6 caracteres" />
-      <span class="hint">O professor poderá alterar a senha depois.</span>
+      <label>Senha inicial (gerada automaticamente)</label>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <input type="text" id="mpSenhaGerada" readonly style="font-family:monospace;font-weight:700;letter-spacing:.1em;background:#f0ede6;color:var(--primary);flex:1;" placeholder="Será gerada ao salvar" />
+        <button type="button" onclick="previewSenhaProf()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.5rem .9rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;">↻ Prévia</button>
+      </div>
+      <span class="hint">Baseada nas 5 primeiras letras do nome + caractere especial.</span>
     </div>
     <p class="auth-erro" id="modalProfErro"></p>
     <div class="modal-actions">
@@ -499,11 +520,15 @@
 <div class="modal-overlay" id="modalMecaOverlay" onclick="closeModalMeca(event)">
   <div class="modal">
     <h2>🖨️ Criar Acesso da Mecanografia</h2>
+    <div class="mfg"><label>Nome completo *</label><input type="text" id="mecaNome" placeholder="Ex.: João da Mecanografia" oninput="previewSenhaMeca()" /></div>
     <div class="mfg"><label>E-mail *</label><input type="email" id="mecaEmail" placeholder="mecanografia@escola.com" /></div>
     <div class="mfg">
-      <label>Senha inicial *</label>
-      <input type="password" id="mecaSenha" placeholder="Mínimo 6 caracteres" />
-      <span class="hint">A senha poderá ser alterada pelo usuário depois.</span>
+      <label>Senha inicial (gerada automaticamente)</label>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <input type="text" id="mecaSenhaGerada" readonly style="font-family:monospace;font-weight:700;letter-spacing:.1em;background:#f0ede6;color:var(--primary);flex:1;" placeholder="Digite o nome para gerar" />
+        <button type="button" onclick="previewSenhaMeca()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.5rem .9rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;">↻ Prévia</button>
+      </div>
+      <span class="hint">Baseada nas 5 primeiras letras do nome + caractere especial.</span>
     </div>
     <p class="auth-erro" id="modalMecaErro"></p>
     <div class="modal-actions">
@@ -622,11 +647,23 @@ async function iniciarApp() {
     nav.innerHTML=`<button onclick="showPage('solicitar',this)" class="active">Nova Solicitação</button><button onclick="showPage('minhas',this)">Minhas Solicitações</button>`;
     document.getElementById('f-professor').value=professorData.nome;
     document.getElementById('f-disciplina-ro').value=disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
+    // Exibe senha individual do professor
+    if(professorData.senha_inicial){
+      const box=document.getElementById('profSenhaBox');
+      document.getElementById('profSenhaValor').textContent=professorData.senha_inicial;
+      box.style.display='flex';
+    }
     showPage('solicitar');
   } else if (perfilAtual==='mecanografia') {
     badge.textContent='🖨️ Mecanografia';
     badge.className='perfil-badge meca';
     nav.innerHTML=`<button onclick="showPage('meca',this)" class="active">Solicitações</button>`;
+    // Busca e exibe senha individual da mecanografia
+    const {data:mecaData}=await db.from('mecanografia').select('senha_inicial').eq('id',currentUser.id).maybeSingle();
+    if(mecaData&&mecaData.senha_inicial){
+      document.getElementById('mecaSenhaValor').textContent=mecaData.senha_inicial;
+      document.getElementById('mecaSenhaBox').style.display='flex';
+    }
     await loadMeca();
     showPage('meca');
   } else {
@@ -888,7 +925,7 @@ async function importarProfessoresCSV(input){
     try{
       const {data,error}=await db.auth.signUp({email,password:senha});
       if(error){erros.push(`Linha ${i+2} (${nome}): ${error.message}`);continue;}
-      const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true}]);
+      const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true,senha_inicial:senha}]);
       if(insertErr){erros.push(`Linha ${i+2} (${nome}): ${insertErr.message}`);continue;}
       credenciais.push({nome,email,disciplina:disciplinaDisplay[disciplina]||disciplina,senha});
       ok++;
@@ -910,7 +947,6 @@ async function importarProfessoresCSV(input){
         <td style="padding:.7rem 1rem;font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);">${esc(c.senha)}</td>
       </tr>`).join('');
     document.getElementById('btnVerSenhas').style.display='inline-flex';
-    document.getElementById('painelSenhas').style.display='block';
   }
 
   let resumo=`✅ <strong>${ok} professor${ok!==1?'es':''} importado${ok!==1?'s':''} com sucesso!</strong> Use o botão <strong>🔑 Ver senhas</strong> para consultar ou baixar as credenciais.`;
@@ -919,9 +955,26 @@ async function importarProfessoresCSV(input){
   showToast(`✅ ${ok} professor${ok!==1?'es':''} importado${ok!==1?'s':''}! Veja as senhas no botão 🔑`);
 }
 
-function togglePainelSenhas(){
+async function togglePainelSenhas(){
   const p=document.getElementById('painelSenhas');
-  p.style.display=p.style.display==='none'?'block':'none';
+  if(p.style.display==='block'){p.style.display='none';return;}
+  // Carrega sempre do banco
+  document.getElementById('tabelaSenhasBody').innerHTML=`<tr><td colspan="4" style="padding:1rem;text-align:center;"><span class="spinner"></span> Carregando…</td></tr>`;
+  p.style.display='block';
+  const {data:profs}=await db.from('professores').select('nome,email,disciplina,senha_inicial').order('nome',{ascending:true});
+  const lista=(profs||[]).filter(p=>p.senha_inicial);
+  if(lista.length===0){
+    document.getElementById('tabelaSenhasBody').innerHTML=`<tr><td colspan="4" style="padding:1.5rem;text-align:center;color:var(--muted);">Nenhuma senha registrada.</td></tr>`;
+    return;
+  }
+  window._lastCreds=lista.map(p=>({nome:p.nome,email:p.email,disciplina:disciplinaDisplay[p.disciplina]||p.disciplina,senha:p.senha_inicial}));
+  document.getElementById('tabelaSenhasBody').innerHTML=lista.map(p=>`
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:.7rem 1rem;">${esc(p.nome)}</td>
+      <td style="padding:.7rem 1rem;">${esc(p.email)}</td>
+      <td style="padding:.7rem 1rem;">${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td>
+      <td style="padding:.7rem 1rem;font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);">${esc(p.senha_inicial)}</td>
+    </tr>`).join('');
 }
 
 // ── COORD LOAD ──
@@ -1043,13 +1096,18 @@ function renderProfessores(){
 }
 
 // ── MODAL PROFESSOR ──
+function previewSenhaProf(){
+  const nome=document.getElementById('mpNome').value.trim();
+  if(!nome){document.getElementById('mpSenhaGerada').value='';return;}
+  document.getElementById('mpSenhaGerada').value=gerarSenhaPorNome(nome);
+}
+
 function abrirModalProfessor(id) {
   editandoProfId = id || null;
   const erroEl = document.getElementById('modalProfErro');
   erroEl.style.display='none';
 
   if (id) {
-    // Editar
     const prof = allProfs.find(p=>p.id===id);
     if (!prof) return;
     document.getElementById('modalProfTitulo').textContent = '✏️ Editar Professor';
@@ -1058,18 +1116,20 @@ function abrirModalProfessor(id) {
     document.getElementById('mpEmail').readOnly  = true;
     document.getElementById('mpEmailHint').textContent = 'O e-mail não pode ser alterado.';
     document.getElementById('mpDisciplina').value = prof.disciplina;
-    document.getElementById('mpSenha').value     = '';
-    document.getElementById('mpSenhaGroup').style.display = 'none'; // não altera senha no edit
+    document.getElementById('mpSenhaGerada').value = prof.senha_inicial||'(não registrada)';
+    document.getElementById('mpSenhaGroup').style.display = 'block';
   } else {
-    // Novo
     document.getElementById('modalProfTitulo').textContent = '➕ Adicionar Professor';
-    ['mpNome','mpEmail','mpSenha'].forEach(id=>document.getElementById(id).value='');
+    ['mpNome','mpEmail'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('mpEmail').readOnly  = false;
     document.getElementById('mpEmailHint').textContent = '';
     document.getElementById('mpDisciplina').value = '';
+    document.getElementById('mpSenhaGerada').value = '';
     document.getElementById('mpSenhaGroup').style.display = 'block';
   }
 
+  // Gera prévia ao digitar nome
+  document.getElementById('mpNome').oninput = previewSenhaProf;
   document.getElementById('modalProfOverlay').classList.add('open');
 }
 
@@ -1084,7 +1144,6 @@ async function salvarProfessor() {
   const nome      = document.getElementById('mpNome').value.trim();
   const email     = document.getElementById('mpEmail').value.trim();
   const disciplina= document.getElementById('mpDisciplina').value;
-  const senha     = document.getElementById('mpSenha').value;
   const erroEl    = document.getElementById('modalProfErro');
   const btn       = document.getElementById('btnSalvarProf');
   erroEl.style.display='none';
@@ -1092,36 +1151,27 @@ async function salvarProfessor() {
   if (!nome||!disciplina){erroEl.textContent='⚠️ Preencha nome e disciplina.';erroEl.style.display='block';return;}
 
   if (!editandoProfId) {
-    // Novo professor
     if (!email){erroEl.textContent='⚠️ Informe o e-mail.';erroEl.style.display='block';return;}
-    if (!senha||senha.length<6){erroEl.textContent='⚠️ A senha deve ter no mínimo 6 caracteres.';erroEl.style.display='block';return;}
   }
 
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Salvando…';
 
   try {
     if (!editandoProfId) {
-      // Criar usuário no Auth + inserir na tabela já aprovado
+      const senha=gerarSenhaPorNome(nome);
       const {data,error}=await db.auth.signUp({email,password:senha});
       if (error) throw error;
-
-      // Necessário re-autenticar como coord pois signUp troca a sessão
-      const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true}]);
+      const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true,senha_inicial:senha}]);
       if (insertErr) throw insertErr;
-
-      // Relogar como coord
       await db.auth.signOut();
       const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
       if (!loginErr) currentUser=sessao.user;
-
-      showToast('✅ Professor cadastrado com sucesso!');
+      showToast(`✅ Professor cadastrado! Senha: ${senha}`);
     } else {
-      // Editar — apenas atualiza nome e disciplina na tabela
       const {error}=await db.from('professores').update({nome,disciplina}).eq('id',editandoProfId);
       if (error) throw error;
       showToast('✅ Professor atualizado!');
     }
-
     closeModalProf();
     await loadCoord();
   } catch(err) {
@@ -1236,9 +1286,15 @@ async function renderMecaGerenciar(){
     </div>`;
 }
 
+function previewSenhaMeca(){
+  const nome=document.getElementById('mecaNome').value.trim();
+  document.getElementById('mecaSenhaGerada').value=nome?gerarSenhaPorNome(nome):'';
+}
+
 function abrirModalMeca(){
+  document.getElementById('mecaNome').value='';
   document.getElementById('mecaEmail').value='';
-  document.getElementById('mecaSenha').value='';
+  document.getElementById('mecaSenhaGerada').value='';
   document.getElementById('modalMecaErro').style.display='none';
   document.getElementById('modalMecaOverlay').classList.add('open');
 }
@@ -1249,29 +1305,26 @@ function closeModalMeca(e){
 }
 
 async function salvarMeca(){
+  const nome=document.getElementById('mecaNome').value.trim();
   const email=document.getElementById('mecaEmail').value.trim();
-  const senha=document.getElementById('mecaSenha').value;
   const erroEl=document.getElementById('modalMecaErro');
   const btn=document.getElementById('btnSalvarMeca');
   erroEl.style.display='none';
-  if(!email||!senha){erroEl.textContent='⚠️ Preencha e-mail e senha.';erroEl.style.display='block';return;}
-  if(senha.length<6){erroEl.textContent='⚠️ A senha deve ter no mínimo 6 caracteres.';erroEl.style.display='block';return;}
+  if(!nome||!email){erroEl.textContent='⚠️ Preencha nome e e-mail.';erroEl.style.display='block';return;}
+  const senha=gerarSenhaPorNome(nome);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
   try {
-    // Cria usuário no Auth
     const {data,error}=await db.auth.signUp({email,password:senha});
     if(error)throw error;
     const uid=data.user.id;
-    // Insere na tabela mecanografia
-    const {error:insErr}=await db.from('mecanografia').insert([{id:uid,email}]);
+    const {error:insErr}=await db.from('mecanografia').insert([{id:uid,email,nome,senha_inicial:senha}]);
     if(insErr)throw insErr;
-    // Reloga como coordenação
     await db.auth.signOut();
     const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
     if(!loginErr)currentUser=sessao.user;
     closeModalMeca();
     await renderMecaGerenciar();
-    showToast('✅ Acesso da Mecanografia criado!');
+    showToast(`✅ Acesso criado! Senha: ${senha}`);
   } catch(err){
     erroEl.textContent=err.message.includes('already registered')?'⚠️ Este e-mail já está cadastrado.':'❌ Erro: '+err.message;
     erroEl.style.display='block';
