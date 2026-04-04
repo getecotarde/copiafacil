@@ -277,15 +277,36 @@
           <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
           <div class="fg-grid"><label>Quantidade de Cópias *</label><input type="number" id="f-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
           <div class="fg-grid full">
-            <label>Arquivo da Matriz</label>
-            <div class="file-drop" id="fileDrop">
-              <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName')" />
-              <div class="file-icon">📄</div><p><strong>Clique aqui</strong> ou arraste</p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
-              <div class="file-name" id="fileName"></div>
+            <label>Arquivos da Matriz <span style="font-weight:400;color:var(--muted);font-size:.78rem;">(até 2 arquivos)</span></label>
+            <div style="display:flex;flex-direction:column;gap:.6rem;">
+              <div class="file-drop" id="fileDrop">
+                <input type="file" id="f-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName')" />
+                <div class="file-icon">📄</div><p><strong>Arquivo 1</strong> — Clique ou arraste</p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
+                <div class="file-name" id="fileName"></div>
+              </div>
+              <div class="file-drop" id="fileDrop2">
+                <input type="file" id="f-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'fileName2')" />
+                <div class="file-icon">📄</div><p><strong>Arquivo 2</strong> — Clique ou arraste <span style="color:var(--muted);font-size:.8rem;">(opcional)</span></p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
+                <div class="file-name" id="fileName2"></div>
+              </div>
             </div>
             <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div><div class="upload-progress-label" id="uploadLabel"></div></div>
           </div>
           <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+        </div>
+        <!-- REGISTRO RETROATIVO -->
+        <div id="profRetroBox" style="margin-top:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:.7rem;cursor:pointer;flex:1;min-width:220px;">
+            <input type="checkbox" id="f-retroativo" onchange="toggleRetroativo('prof')" style="width:18px;height:18px;accent-color:var(--primary);cursor:pointer;" />
+            <div>
+              <div style="font-weight:600;font-size:.9rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
+              <div style="font-size:.78rem;color:var(--muted);margin-top:.1rem;">Marque para registrar cópias feitas fora da plataforma. O pedido será salvo como <strong>Entregue</strong>.</div>
+            </div>
+          </label>
+          <div id="f-dataRealizada-box" style="display:none;flex-direction:column;gap:.3rem;">
+            <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Data em que foi feito</label>
+            <input type="date" id="f-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;" />
+          </div>
         </div>
         <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;">
           <button class="btn-action" id="btnEnviar" onclick="submitForm('prof')">✔ Enviar Solicitação</button>
@@ -371,15 +392,36 @@
             <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
             <div class="fg-grid"><label>Quantidade de Cópias *</label><input type="number" id="cf-copias" min="1" max="999" placeholder="Ex.: 90" /></div>
             <div class="fg-grid full">
-              <label>Arquivo da Matriz</label>
-              <div class="file-drop" id="cfileDrop">
-                <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName')" />
-                <div class="file-icon">📄</div><p><strong>Clique aqui</strong> ou arraste</p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
-                <div class="file-name" id="cfileName"></div>
+              <label>Arquivos da Matriz <span style="font-weight:400;color:var(--muted);font-size:.78rem;">(até 2 arquivos)</span></label>
+              <div style="display:flex;flex-direction:column;gap:.6rem;">
+                <div class="file-drop" id="cfileDrop">
+                  <input type="file" id="cf-arquivo" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName')" />
+                  <div class="file-icon">📄</div><p><strong>Arquivo 1</strong> — Clique ou arraste</p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
+                  <div class="file-name" id="cfileName"></div>
+                </div>
+                <div class="file-drop" id="cfileDrop2">
+                  <input type="file" id="cf-arquivo2" accept=".pdf,.doc,.docx,.odt" onchange="handleFile(this,'cfileName2')" />
+                  <div class="file-icon">📄</div><p><strong>Arquivo 2</strong> — Clique ou arraste <span style="color:var(--muted);font-size:.8rem;">(opcional)</span></p><p>PDF, DOC, DOCX ou ODT — até 20 MB</p>
+                  <div class="file-name" id="cfileName2"></div>
+                </div>
               </div>
               <div class="upload-progress" id="cuploadProgress"><div class="upload-progress-bar"><div class="upload-progress-fill" id="cuploadFill"></div></div><div class="upload-progress-label" id="cuploadLabel"></div></div>
             </div>
             <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+          </div>
+          <!-- REGISTRO RETROATIVO COORD -->
+          <div style="margin-top:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:.7rem;cursor:pointer;flex:1;min-width:220px;">
+              <input type="checkbox" id="cf-retroativo" onchange="toggleRetroativo('coord')" style="width:18px;height:18px;accent-color:var(--primary);cursor:pointer;" />
+              <div>
+                <div style="font-weight:600;font-size:.9rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
+                <div style="font-size:.78rem;color:var(--muted);margin-top:.1rem;">Marque para registrar cópias feitas fora da plataforma. O pedido será salvo como <strong>Entregue</strong>.</div>
+              </div>
+            </label>
+            <div id="cf-dataRealizada-box" style="display:none;flex-direction:column;gap:.3rem;">
+              <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Data em que foi feito</label>
+              <input type="date" id="cf-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;" />
+            </div>
           </div>
           <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;">
             <button class="btn-action" id="btnEnviarCoord" onclick="submitForm('coord')">✔ Enviar Solicitação</button>
@@ -731,7 +773,7 @@ function populateSolicitante() {
 
 // ── FILE ──
 function handleFile(input,fnId){if(input.files[0]){document.getElementById(fnId).textContent='✔ '+input.files[0].name;document.getElementById(fnId).style.display='block';}}
-['fileDrop','cfileDrop'].forEach(id=>{
+['fileDrop','cfileDrop','fileDrop2','cfileDrop2'].forEach(id=>{
   const el=document.getElementById(id);if(!el)return;
   el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over');});
   el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
@@ -746,8 +788,8 @@ function sanitizeFileName(n){return n.normalize('NFD').replace(/[\u0300-\u036f]/
 const statusClass={'Aguardando':'badge-pending','Em produção':'badge-progress','Pronto':'badge-ready','Entregue':'badge-done','Cancelado':'badge-cancelled'};
 
 // ── CLEAR ──
-function clearProfForm(){['f-titulo','f-turmas','f-copias','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('fileName').style.display='none';document.getElementById('uploadProgress').style.display='none';}
-function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cuploadProgress').style.display='none';}
+function clearProfForm(){['f-titulo','f-turmas','f-copias','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');}
+function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');}
 
 // ── UPLOAD ──
 async function uploadFile(file,fillId,labelId,progId){
@@ -769,6 +811,20 @@ async function uploadFile(file,fillId,labelId,progId){
   return {path,publicUrl:urlData.publicUrl,originalName:file.name};
 }
 
+// ── TOGGLE RETROATIVO ──
+function toggleRetroativo(modo) {
+  const isCoord = modo === 'coord';
+  const chk = document.getElementById(isCoord ? 'cf-retroativo' : 'f-retroativo');
+  const box = document.getElementById(isCoord ? 'cf-dataRealizada-box' : 'f-dataRealizada-box');
+  const deadlineBox = isCoord ? null : document.querySelector('.deadline-box');
+  box.style.display = chk.checked ? 'flex' : 'none';
+  // Set default date to today if empty
+  if (chk.checked) {
+    const dateEl = document.getElementById(isCoord ? 'cf-dataRealizada' : 'f-dataRealizada');
+    if (!dateEl.value) dateEl.value = new Date().toISOString().slice(0, 10);
+  }
+}
+
 // ── SUBMIT SOLICITAÇÃO ──
 async function submitForm(modo){
   const isCoord=modo==='coord';
@@ -779,23 +835,47 @@ async function submitForm(modo){
   const professor=document.getElementById(isCoord?'cf-professor':'f-professor').value;
   const disciplina=document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
   const arquivoInput=document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
+  const arquivoInput2=document.getElementById(isCoord?'cf-arquivo2':'f-arquivo2');
+  const retroativo=document.getElementById(isCoord?'cf-retroativo':'f-retroativo').checked;
+  const dataRealizadaEl=document.getElementById(isCoord?'cf-dataRealizada':'f-dataRealizada');
   const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
   if(!titulo||!turmas||!copias){showToast('⚠️ Preencha todos os campos obrigatórios.',true);return;}
   const btn=document.getElementById(btnId);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Enviando…';
   try {
     let arquivoPath=null,arquivoUrl=null,arquivoNome=null;
+    let arquivoPath2=null,arquivoUrl2=null,arquivoNome2=null;
     if (arquivoInput.files[0]){
-      btn.innerHTML='<span class="spinner"></span> Enviando arquivo…';
+      btn.innerHTML='<span class="spinner"></span> Enviando arquivo 1…';
       const r=await uploadFile(arquivoInput.files[0],isCoord?'cuploadFill':'uploadFill',isCoord?'cuploadLabel':'uploadLabel',isCoord?'cuploadProgress':'uploadProgress');
       arquivoPath=r.path;arquivoUrl=r.publicUrl;arquivoNome=r.originalName;
     }
+    if (arquivoInput2.files[0]){
+      btn.innerHTML='<span class="spinner"></span> Enviando arquivo 2…';
+      const r2=await uploadFile(arquivoInput2.files[0],isCoord?'cuploadFill':'uploadFill',isCoord?'cuploadLabel':'uploadLabel',isCoord?'cuploadProgress':'uploadProgress');
+      arquivoPath2=r2.path;arquivoUrl2=r2.publicUrl;arquivoNome2=r2.originalName;
+    }
     btn.innerHTML='<span class="spinner"></span> Salvando…';
-    const now=new Date();const prazo=addWorkdays(now,5);
-    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,data_solicitacao:now.toISOString(),prazo_entrega:prazo.toISOString(),status:'Aguardando'}]);
+    const now=new Date();
+    let prazo, statusInicial, dataSolicitacao;
+    if (retroativo) {
+      const dataRef = dataRealizadaEl.value ? new Date(dataRealizadaEl.value+'T12:00:00') : now;
+      dataSolicitacao = dataRef.toISOString();
+      prazo = dataRef;
+      statusInicial = 'Entregue';
+    } else {
+      dataSolicitacao = now.toISOString();
+      prazo = addWorkdays(now,5);
+      statusInicial = 'Aguardando';
+    }
+    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo2:arquivoNome2||null,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
-    showToast('✅ Solicitação enviada! Prazo: '+fmtDate(prazo));
+    if (retroativo) {
+      showToast('📋 Registro salvo como Entregue!');
+    } else {
+      showToast('✅ Solicitação enviada! Prazo: '+fmtDate(prazo));
+    }
     if(!isCoord)setTimeout(()=>showPage('minhas',null),1800);
     else{await loadCoord();setTimeout(()=>switchCoordTab('solicitacoes',document.querySelectorAll('.coord-tab')[1]),1800);}
   }catch(err){console.error(err);showToast('❌ Erro: '+err.message,true);}
@@ -818,7 +898,8 @@ async function loadMinhas(){
       </div>
       <div class="mc-right">
         <span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>
-        ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo</a>`:''}
+        ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 1</a>`:''}
+        ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 2</a>`:''}
       </div>
     </div>`).join('');
 }
@@ -1009,15 +1090,18 @@ function renderSolicitacoes(){
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
   container.innerHTML=`
     <table>
-      <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Prazo</th><th>Arquivo</th><th>Status</th></tr></thead>
+      <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead>
       <tbody>${filtered.map(d=>`
         <tr onclick="openModal(${d.id})" style="cursor:pointer">
-          <td><strong>${esc(d.professor)}</strong>${d.professor==='Coordenação'?` <span class="badge badge-coord" style="font-size:.65rem;padding:.1rem .4rem;">coord</span>`:''}</td>
+          <td><strong>${esc(d.professor)}</strong>${d.professor==='Coordenação'?` <span class="badge badge-coord" style="font-size:.65rem;padding:.1rem .4rem;">coord</span>`:''}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.65rem;padding:.1rem .4rem;">📋 retroativo</span>`:''}</td>
           <td>${esc(d.disciplina)}</td>
           <td style="max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
           <td>${esc(d.turmas)}</td><td style="text-align:center;">${d.copias}</td>
           <td>${fmtDate(d.prazo_entrega)}</td>
-          <td>${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download">📄 Ver arquivo</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}</td>
+          <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
+            ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+            ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
+          </td>
           <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
         </tr>`).join('')}
       </tbody>
@@ -1035,7 +1119,7 @@ function exportarSolicitacoesExcel(){
   if(filtered.length===0){showToast('⚠️ Nenhuma solicitação para exportar.',true);return;}
 
   // Monta CSV com separador ponto-e-vírgula (padrão pt-BR no Excel)
-  const cols=['Professor(a)','Disciplina','Título','Turmas','Cópias','Data Solicitação','Prazo Entrega','Status','Arquivo'];
+  const cols=['Professor(a)','Disciplina','Título','Turmas','Cópias','Data Solicitação','Prazo Entrega','Status','Arquivo 1','Arquivo 2','Retroativo'];
   const rows=filtered.map(d=>[
     d.professor||'',
     d.disciplina||'',
@@ -1045,7 +1129,9 @@ function exportarSolicitacoesExcel(){
     d.data_solicitacao?fmtDate(d.data_solicitacao):'',
     d.prazo_entrega?fmtDate(d.prazo_entrega):'',
     d.status||'',
-    d.arquivo_url||''
+    d.arquivo_url||'',
+    d.arquivo_url2||'',
+    d.retroativo?'Sim':'Não'
   ].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';'));
 
   const csv='\uFEFF'+[cols.map(c=>'"'+c+'"').join(';'),...rows].join('\r\n');
@@ -1212,11 +1298,17 @@ function openModal(id){
     <div class="d-item"><div class="d-label">Data da Solicitação</div><div class="d-value">${fmtDate(item.data_solicitacao)}</div></div>
     <div class="d-item"><div class="d-label">Prazo de Entrega</div><div class="d-value" style="color:var(--accent2);font-weight:600;">${fmtDate(item.prazo_entrega)}</div></div>
     ${item.obs?`<div class="d-item" style="grid-column:1/-1"><div class="d-label">Observações</div><div class="d-value">${esc(item.obs)}</div></div>`:''}`;
-  document.getElementById('modalArquivo').innerHTML=item.arquivo_url?`
-    <div class="arquivo-box">
-      <div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo||'Arquivo')}</span></div>
-      <a href="${esc(item.arquivo_url)}" target="_blank" class="btn-download">⬇ Baixar arquivo</a>
-    </div>`:'';
+  let arquivosHtml = '';
+  if (item.arquivo_url) {
+    arquivosHtml += `<div class="arquivo-box"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo||'Arquivo 1')}</span></div><a href="${esc(item.arquivo_url)}" target="_blank" class="btn-download">⬇ Baixar arquivo 1</a></div>`;
+  }
+  if (item.arquivo_url2) {
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.6rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo2||'Arquivo 2')}</span></div><a href="${esc(item.arquivo_url2)}" target="_blank" class="btn-download">⬇ Baixar arquivo 2</a></div>`;
+  }
+  if (item.retroativo) {
+    arquivosHtml += `<div style="margin-top:.8rem;background:#e8f0eb;border-radius:8px;padding:.6rem 1rem;font-size:.84rem;color:#1a3a2a;">📋 <strong>Registro retroativo</strong> — cópias realizadas fora da plataforma.</div>`;
+  }
+  document.getElementById('modalArquivo').innerHTML = arquivosHtml;
   document.getElementById('modalOverlay').classList.add('open');
 }
 
@@ -1240,6 +1332,7 @@ async function deleteItem(){
   if(!confirm('Excluir esta solicitação?'))return;
   const item=allSolic.find(d=>d.id===currentSolicId);
   if(item&&item.arquivo_path)await db.storage.from(BUCKET).remove([item.arquivo_path]);
+  if(item&&item.arquivo_path2)await db.storage.from(BUCKET).remove([item.arquivo_path2]);
   const {error}=await db.from('solicitacoes').delete().eq('id',currentSolicId);
   if(error){showToast('❌ Erro ao excluir.',true);return;}
   allSolic=allSolic.filter(d=>d.id!==currentSolicId);
@@ -1367,16 +1460,19 @@ function renderMeca(){
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
   container.innerHTML=`
     <table>
-      <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Prazo</th><th>Arquivo</th><th>Status</th><th>Ações</th></tr></thead>
+      <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Prazo</th><th>Arquivos</th><th>Status</th><th>Ações</th></tr></thead>
       <tbody>${filtered.map(d=>`
         <tr>
-          <td><strong>${esc(d.professor)}</strong></td>
+          <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
           <td>${esc(d.disciplina)}</td>
           <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
           <td>${esc(d.turmas)}</td>
           <td style="text-align:center;">${d.copias}</td>
           <td>${fmtDate(d.prazo_entrega)}</td>
-          <td>${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download">📄 Ver arquivo</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}</td>
+          <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
+            ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+            ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 2</a>`:''}
+          </td>
           <td>
             <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
               <option ${d.status==='Aguardando'?'selected':''}>Aguardando</option>
