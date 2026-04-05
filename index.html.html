@@ -610,14 +610,7 @@
             <select id="filterProfessor" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;max-width:180px;" onchange="renderSolicitacoes()">
               <option value="">Todos os professores</option>
             </select>
-            <select id="filterDisciplina" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
-              <option value="">Todas as disciplinas</option>
-              <option value="portugues">Português</option><option value="matematica">Matemática</option>
-              <option value="ciencias">Ciências</option><option value="historia">História</option>
-              <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
-              <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-              <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option>
-            </select>
+
             <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
               <option value="">Todos os status</option>
               <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
@@ -637,14 +630,7 @@
         <div style="display:flex;justify-content:space-between;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;">
           <div style="display:flex;gap:.5rem;flex:1;min-width:220px;flex-wrap:wrap;">
             <input type="text" id="profFilterText" placeholder="🔍 Buscar por nome ou e-mail…" oninput="renderProfessores()" style="flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
-            <select id="profFilterDisc" onchange="renderProfessores()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
-              <option value="">Todas as disciplinas</option>
-              <option value="portugues">Português</option><option value="matematica">Matemática</option>
-              <option value="ciencias">Ciências</option><option value="historia">História</option>
-              <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
-              <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-              <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option>
-            </select>
+
             <select id="profFilterStatus" onchange="renderProfessores()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
               <option value="">Todos</option>
               <option value="aprovado">Aprovados</option>
@@ -765,12 +751,7 @@
                   <option value="">Todos</option>
                 </select>
               </div>
-              <div style="display:flex;flex-direction:column;gap:.2rem;">
-                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Disciplina</label>
-                <select id="resumoDisciplina" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
-                  <option value="">Todas</option>
-                </select>
-              </div>
+
               <button class="btn-secondary" onclick="setResumoSemana()">Esta semana</button>
               <button class="btn-secondary" onclick="limparFiltrosResumo()">✕ Limpar</button>
             </div>
@@ -944,17 +925,7 @@
             <option value="">Todos os professores</option>
           </select>
         </div>
-        <div style="display:flex;flex-direction:column;gap:.25rem;flex:1;min-width:140px;">
-          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Disciplina</label>
-          <select id="adm1FilterDisc" onchange="renderAdmCopias()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
-            <option value="">Todas as disciplinas</option>
-            <option value="portugues">Português</option><option value="matematica">Matemática</option>
-            <option value="ciencias">Ciências</option><option value="historia">História</option>
-            <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
-            <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-            <option value="ensino religioso">Ensino Religioso</option><option value="outra">Outra</option>
-          </select>
-        </div>
+
         <div style="display:flex;flex-direction:column;gap:.25rem;">
           <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
           <input type="date" id="adm1FilterDe" onchange="renderAdmCopias()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
@@ -1324,13 +1295,11 @@ function showPage(id,btn) {
 function limparFiltrosSolicitacoes(){
   document.getElementById('filterText').value='';
   document.getElementById('filterProfessor').value='';
-  document.getElementById('filterDisciplina').value='';
   document.getElementById('filterStatus').value='';
   renderSolicitacoes();
 }
 function limparFiltrosProfessores(){
   document.getElementById('profFilterText').value='';
-  document.getElementById('profFilterDisc').value='';
   document.getElementById('profFilterStatus').value='';
   renderProfessores();
 }
@@ -1345,7 +1314,6 @@ function limparFiltrosResumo(){
   document.getElementById('resumoAte').value='';
   document.getElementById('resumoStatus').value='';
   document.getElementById('resumoProfessor').value='';
-  document.getElementById('resumoDisciplina').value='';
   renderResumo();
 }
 function limparFiltrosResumoMensal(){
@@ -1535,7 +1503,6 @@ function renderResumo(){
   const ate=document.getElementById('resumoAte').value;
   const stFiltro=document.getElementById('resumoStatus').value;
   const profFiltro=(document.getElementById('resumoProfessor').value||'').toLowerCase();
-  const discFiltro=(document.getElementById('resumoDisciplina').value||'').toLowerCase();
   const totaisEl=document.getElementById('resumoTotais');
   const container=document.getElementById('resumoContainer');
 
@@ -1549,8 +1516,7 @@ function renderResumo(){
     const dentroData=dt>=deDate&&dt<=ateDate;
     const dentroStatus=!stFiltro||d.status===stFiltro;
     const dentroProf=!profFiltro||(d.professor||'').toLowerCase()===profFiltro;
-    const dentroDisc=!discFiltro||(d.disciplina||'').toLowerCase()===discFiltro;
-    return dentroData&&dentroStatus&&dentroProf&&dentroDisc;
+    return dentroData&&dentroStatus&&dentroProf;
   });
 
   // Totalizadores gerais
@@ -1608,18 +1574,12 @@ function renderResumo(){
 
 function populateResumoFiltros(){
   const selProf=document.getElementById('resumoProfessor');
-  const selDisc=document.getElementById('resumoDisciplina');
-  if(!selProf||!selDisc)return;
+  if(!selProf)return;
   const curProf=selProf.value;
-  const curDisc=selDisc.value;
   // Professores únicos
   const profs=[...new Set(allSolic.map(d=>d.professor||'').filter(Boolean))].sort();
   selProf.innerHTML='<option value="">Todos</option>'+profs.map(p=>`<option value="${esc(p.toLowerCase())}">${esc(p)}</option>`).join('');
   if(curProf)selProf.value=curProf;
-  // Disciplinas únicas
-  const discs=[...new Set(allSolic.map(d=>d.disciplina||'').filter(Boolean))].sort();
-  selDisc.innerHTML='<option value="">Todas</option>'+discs.map(d=>`<option value="${esc(d.toLowerCase())}">${esc(d)}</option>`).join('');
-  if(curDisc)selDisc.value=curDisc;
 }
 
 // ── SOLICITANTE ──
@@ -2234,12 +2194,10 @@ function renderSolicitacoes(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
   const prof=(document.getElementById('filterProfessor')||{}).value||'';
-  const disc=(document.getElementById('filterDisciplina')||{}).value||'';
   const filtered=allSolic.filter(d=>{
     const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
-    const mDisc=!disc||(d.disciplina||'').toLowerCase()===disc;
-    return mTxt&&mProf&&mDisc&&(!st||d.status===st);
+    return mTxt&&mProf&&(!st||d.status===st);
   });
   const container=document.getElementById('coordContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
@@ -2305,12 +2263,10 @@ function exportarSolicitacoesExcel(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
   const prof=(document.getElementById('filterProfessor')||{}).value||'';
-  const disc=(document.getElementById('filterDisciplina')||{}).value||'';
   const filtered=allSolic.filter(d=>{
     const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
-    const mDisc=!disc||(d.disciplina||'').toLowerCase()===disc;
-    return mTxt&&mProf&&mDisc&&(!st||d.status===st);
+    return mTxt&&mProf&&(!st||d.status===st);
   });
   if(filtered.length===0){showToast('⚠️ Nenhuma solicitação para exportar.',true);return;}
 
@@ -2350,14 +2306,12 @@ function renderProfessores(){
   if(allProfs.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">👥</div><p>Nenhum professor cadastrado.</p></div>';return;}
 
   const txt=(document.getElementById('profFilterText').value||'').toLowerCase();
-  const disc=document.getElementById('profFilterDisc').value;
   const stFilter=document.getElementById('profFilterStatus').value;
 
   const filtered=allProfs.filter(p=>{
     const matchTxt=!txt||(p.nome||'').toLowerCase().includes(txt)||(p.email||'').toLowerCase().includes(txt);
-    const matchDisc=!disc||p.disciplina===disc;
     const matchSt=!stFilter||(stFilter==='aprovado'?p.aprovado:!p.aprovado);
-    return matchTxt&&matchDisc&&matchSt;
+    return matchTxt&&matchSt;
   });
 
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">🔍</div><p>Nenhum professor encontrado.</p></div>';return;}
@@ -3089,18 +3043,16 @@ async function iniciarAdmArquivos(){
 
 function adm1FilteredData(){
   const prof=document.getElementById('adm1FilterProf').value;
-  const disc=document.getElementById('adm1FilterDisc').value;
   const de=document.getElementById('adm1FilterDe').value;
   const ate=document.getElementById('adm1FilterAte').value;
   const st=document.getElementById('adm1FilterStatus').value;
   return allSolic.filter(d=>{
     const mProf=!prof||d.professor===prof;
-    const mDisc=!disc||(d.disciplina||'').toLowerCase()===disc;
     const dt=new Date(d.data_solicitacao);
     const mDe=!de||dt>=new Date(de+'T00:00:00');
     const mAte=!ate||dt<=new Date(ate+'T23:59:59');
     const mSt=!st||d.status===st;
-    return mProf&&mDisc&&mDe&&mAte&&mSt;
+    return mProf&&mDe&&mAte&&mSt;
   });
 }
 
@@ -3175,7 +3127,7 @@ function adm1SetMes(){
   renderAdmCopias();
 }
 function limparAdm1(){
-  ['adm1FilterProf','adm1FilterDisc','adm1FilterDe','adm1FilterAte','adm1FilterStatus'].forEach(id=>{
+  ['adm1FilterProf','adm1FilterDe','adm1FilterAte','adm1FilterStatus'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   renderAdmCopias();
