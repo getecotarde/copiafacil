@@ -245,33 +245,12 @@
   <div class="auth-box">
     <div class="auth-logo">🖨️ <em>CópiaFácil</em></div>
     <p class="auth-sub">Sistema de Solicitação de Matrizes - GETECO /Tarde</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
-      <button class="auth-tab" onclick="switchTab('cadastro')">Primeiro acesso</button>
-    </div>
+
     <div id="painelLogin">
       <div class="fg"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
       <div class="fg"><label>Senha</label><input type="password" id="loginSenha" placeholder="Sua senha" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
       <p class="auth-erro" id="loginErro"></p>
       <button class="btn-primary" id="btnLogin" onclick="fazerLogin()">Entrar</button>
-    </div>
-    <div id="painelCadastro" style="display:none">
-      <div class="fg"><label>Nome completo *</label><input type="text" id="cadNome" placeholder="Ex.: Maria da Silva" /></div>
-      <div class="fg"><label>E-mail *</label><input type="email" id="cadEmail" placeholder="seu@email.com" /></div>
-      <div class="fg">
-        <label>Disciplina *</label>
-        <select id="cadDisciplina">
-          <option value="">— Selecione —</option>
-          <option value="portugues">Português</option><option value="matematica">Matemática</option>
-          <option value="ciencias">Ciências</option><option value="historia">História</option>
-          <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
-          <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-          <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option><input type="password" id="cadSenha" placeholder="Mínimo 6 caracteres" /></div>
-      <div class="fg"><label>Confirme a senha *</label><input type="password" id="cadSenhaConf" placeholder="Repita a senha" onkeydown="if(event.key==='Enter') fazerCadastro()" /></div>
-      <div class="senha-req">🔒 Mínimo de <strong>6 caracteres</strong>. Guarde sua senha com cuidado.</div>
-      <p class="auth-erro" id="cadErro"></p>
-      <p class="auth-info" id="cadInfo"></p>
-      <button class="btn-primary" id="btnCadastro" onclick="fazerCadastro()">Criar conta</button>
     </div>
   </div>
 </div>
@@ -489,6 +468,7 @@
             <option value="Entregue">Entregue</option>
             <option value="Cancelado">Cancelado</option>
           </select>
+          <button class="btn-secondary" onclick="limparFiltrosMeca()" style="white-space:nowrap;">✕ Limpar</button>
         </div>
         <div id="mecaContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
       </div>
@@ -507,9 +487,11 @@
       <div class="coord-tabs">
         <button class="coord-tab active" onclick="switchCoordTab('nova',this)">➕ Nova Solicitação</button>
         <button class="coord-tab" onclick="switchCoordTab('solicitacoes',this)">📄 Solicitações</button>
+        <button class="coord-tab" onclick="switchCoordTab('resumo',this)">📊 Resumo Geral</button>
         <button class="coord-tab" onclick="switchCoordTab('professores',this)">👩‍🏫 Professores</button>
         <button class="coord-tab" onclick="switchCoordTab('mecanografia',this)">🖨️ Mecanografia</button>
-        <button class="coord-tab" onclick="switchCoordTab('resumo',this)">📊 Resumo Semanal</button>
+        <button class="coord-tab" onclick="switchCoordTab('admcopias',this)">📊 Adm. Cópias</button>
+        <button class="coord-tab" onclick="switchCoordTab('pedagogico',this)">📚 Pedagógico</button>
       </div>
 
       <!-- TAB NOVA -->
@@ -628,14 +610,7 @@
             <select id="filterProfessor" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;max-width:180px;" onchange="renderSolicitacoes()">
               <option value="">Todos os professores</option>
             </select>
-            <select id="filterDisciplina" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
-              <option value="">Todas as disciplinas</option>
-              <option value="portugues">Português</option><option value="matematica">Matemática</option>
-              <option value="ciencias">Ciências</option><option value="historia">História</option>
-              <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
-              <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-              <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option>
-            </select>
+
             <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
               <option value="">Todos os status</option>
               <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
@@ -644,6 +619,7 @@
             <button class="btn-secondary" onclick="exportarSolicitacoesExcel()" title="Exportar tabela para Excel" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">
               📊 Exportar Excel
             </button>
+            <button class="btn-secondary" onclick="limparFiltrosSolicitacoes()" style="white-space:nowrap;">✕ Limpar</button>
           </div>
           <div id="coordContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
@@ -654,19 +630,13 @@
         <div style="display:flex;justify-content:space-between;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;">
           <div style="display:flex;gap:.5rem;flex:1;min-width:220px;flex-wrap:wrap;">
             <input type="text" id="profFilterText" placeholder="🔍 Buscar por nome ou e-mail…" oninput="renderProfessores()" style="flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
-            <select id="profFilterDisc" onchange="renderProfessores()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
-              <option value="">Todas as disciplinas</option>
-              <option value="portugues">Português</option><option value="matematica">Matemática</option>
-              <option value="ciencias">Ciências</option><option value="historia">História</option>
-              <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
-              <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-              <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option>
-            </select>
+
             <select id="profFilterStatus" onchange="renderProfessores()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
               <option value="">Todos</option>
               <option value="aprovado">Aprovados</option>
               <option value="pendente">Pendentes</option>
             </select>
+            <button class="btn-secondary" onclick="limparFiltrosProfessores()" style="white-space:nowrap;">✕ Limpar</button>
           </div>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
             <label class="btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;" title="Importar lista de professores via CSV">
@@ -742,57 +712,313 @@
 
       <!-- TAB RESUMO SEMANAL -->
       <div class="tab-panel" id="tab-resumo">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
-          <div>
-            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">Resumo de Cópias</div>
-            <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Solicitações agrupadas por professor no período selecionado</div>
+        <!-- Sub-abas do Resumo Geral -->
+        <div style="display:flex;gap:.3rem;margin-bottom:1.2rem;border-bottom:2px solid var(--border);">
+          <button class="coord-tab active" id="resumoSubTab-periodo" onclick="switchResumoSub('periodo',this)" style="font-size:.82rem;padding:.45rem .9rem;">📅 Por Período</button>
+          <button class="coord-tab" id="resumoSubTab-mensal" onclick="switchResumoSub('mensal',this)" style="font-size:.82rem;padding:.45rem .9rem;">🗓️ Por Mês</button>
+        </div>
+
+        <!-- SUB-PAINEL: POR PERÍODO -->
+        <div id="resumoSub-periodo">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">Resumo de Cópias — Por Período</div>
+              <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Solicitações agrupadas por professor no período selecionado</div>
+            </div>
+            <div style="display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;">
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
+                <input type="date" id="resumoDe" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Até</label>
+                <input type="date" id="resumoAte" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
+                <select id="resumoStatus" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()">
+                  <option value="">Todos</option>
+                  <option value="Aguardando">Aguardando</option>
+                  <option value="Em produção">Em produção</option>
+                  <option value="Pronto">Pronto</option>
+                  <option value="Entregue">Entregue</option>
+                  <option value="Cancelado">Cancelado</option>
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
+                <select id="resumoProfessor" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
+                  <option value="">Todos</option>
+                </select>
+              </div>
+
+              <button class="btn-secondary" onclick="setResumoSemana()">Esta semana</button>
+              <button class="btn-secondary" onclick="limparFiltrosResumo()">✕ Limpar</button>
+            </div>
           </div>
-          <div style="display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;">
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
-              <input type="date" id="resumoDe" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
-            </div>
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Até</label>
-              <input type="date" id="resumoAte" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
-            </div>
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
-              <select id="resumoStatus" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()">
-                <option value="">Todos</option>
-                <option value="Aguardando">Aguardando</option>
-                <option value="Em produção">Em produção</option>
-                <option value="Pronto">Pronto</option>
-                <option value="Entregue">Entregue</option>
-                <option value="Cancelado">Cancelado</option>
-              </select>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
-              <select id="resumoProfessor" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
-                <option value="">Todos</option>
-              </select>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Disciplina</label>
-              <select id="resumoDisciplina" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
-                <option value="">Todas</option>
-              </select>
-            </div>
-            <button class="btn-secondary" onclick="setResumoSemana()" style="">Esta semana</button>
+          <div id="resumoTotais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div id="resumoContainer"><div class="empty-state"><div class="emoji">📊</div><p>Selecione um período para ver o resumo.</p></div></div>
           </div>
         </div>
 
-        <!-- TOTALIZADOR -->
-        <div id="resumoTotais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
+        <!-- SUB-PAINEL: POR MÊS -->
+        <div id="resumoSub-mensal" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">Resumo de Cópias — Por Mês</div>
+              <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Navegue mês a mês e veja o consolidado de cópias</div>
+            </div>
+            <div style="display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;">
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
+                <select id="resumoMensalProf" onchange="renderResumoMensal()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;">
+                  <option value="">Todos</option>
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
+                <select id="resumoMensalStatus" onchange="renderResumoMensal()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;">
+                  <option value="">Todos</option>
+                  <option value="Aguardando">Aguardando</option>
+                  <option value="Em produção">Em produção</option>
+                  <option value="Pronto">Pronto</option>
+                  <option value="Entregue">Entregue</option>
+                  <option value="Cancelado">Cancelado</option>
+                </select>
+              </div>
+              <button class="btn-secondary" onclick="resumoMensalIrHoje()">Mês atual</button>
+              <button class="btn-secondary" onclick="limparFiltrosResumoMensal()">✕ Limpar</button>
+            </div>
+          </div>
 
-        <!-- TABELA POR PROFESSOR -->
-        <div class="card" style="padding:0;overflow:hidden;">
-          <div id="resumoContainer"><div class="empty-state"><div class="emoji">📊</div><p>Selecione um período para ver o resumo.</p></div></div>
+          <!-- Navegador de mês -->
+          <div style="background:linear-gradient(135deg,var(--primary) 0%,#2a5a3a 100%);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <button onclick="resumoMensalNav(-1)" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;width:36px;height:36px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
+              <div style="min-width:160px;text-align:center;">
+                <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.55);">Período consultado</div>
+                <div id="resumoMensalLabel" style="font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;margin-top:.1rem;">—</div>
+              </div>
+              <button onclick="resumoMensalNav(1)" id="btnResumoMensalProx" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;width:36px;height:36px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">›</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+              <div>
+                <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Total de Cópias</div>
+                <div id="resumoMensalTotalCopias" style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--accent);line-height:1;">—</div>
+              </div>
+              <div style="width:1px;height:36px;background:rgba(255,255,255,.15);"></div>
+              <div>
+                <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Solicitações</div>
+                <div id="resumoMensalTotalSolic" style="font-family:'Syne',sans-serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;">—</div>
+              </div>
+              <div style="width:1px;height:36px;background:rgba(255,255,255,.15);"></div>
+              <div>
+                <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Professores</div>
+                <div id="resumoMensalTotalProfs" style="font-family:'Syne',sans-serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div id="resumoMensalContainer"><div class="empty-state"><div class="emoji">🗓️</div><p>Carregando…</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB ADM. CÓPIAS -->
+      <div class="tab-panel" id="tab-admcopias">
+        <div class="card" style="padding:1.5rem 2rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem;">
+            <div>
+              <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">📊 Perfil Administrativo — Cópias</h3>
+              <p style="font-size:.88rem;color:var(--muted);">Este perfil permite consultar relatórios de cópias por professor e período.</p>
+            </div>
+            <div style="display:flex;gap:.5rem;">
+              <button class="btn-secondary" onclick="togglePainelSenhasAdm('copias')">🔑 Ver senhas</button>
+              <button class="btn-action" onclick="abrirModalAdm('copias')">+ Criar acesso</button>
+            </div>
+          </div>
+          <!-- PAINEL DE SENHAS ADM CÓPIAS -->
+          <div id="painelSenhasAdmCopias" style="display:none;margin-bottom:1.5rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos Adm. Cópias</span>
+              <div style="display:flex;gap:.5rem;">
+                <button onclick="baixarCredsAdm('copias')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+                <button onclick="togglePainelSenhasAdm('copias')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
+                <thead><tr>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Nome</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">E-mail</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Senha inicial</th>
+                </tr></thead>
+                <tbody id="tabelaSenhasAdmCopiasBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="admCopiasGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+        </div>
+      </div>
+
+      <!-- TAB PEDAGÓGICO -->
+      <div class="tab-panel" id="tab-pedagogico">
+        <div class="card" style="padding:1.5rem 2rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem;">
+            <div>
+              <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">📚 Perfil Pedagógico</h3>
+              <p style="font-size:.88rem;color:var(--muted);">Este perfil permite consultar arquivos e links postados pelos professores.</p>
+            </div>
+            <div style="display:flex;gap:.5rem;">
+              <button class="btn-secondary" onclick="togglePainelSenhasAdm('pedagogico')">🔑 Ver senhas</button>
+              <button class="btn-action" onclick="abrirModalAdm('pedagogico')">+ Criar acesso</button>
+            </div>
+          </div>
+          <!-- PAINEL DE SENHAS PEDAGÓGICO -->
+          <div id="painelSenhasAdmPedagogico" style="display:none;margin-bottom:1.5rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos Pedagógico</span>
+              <div style="display:flex;gap:.5rem;">
+                <button onclick="baixarCredsAdm('pedagogico')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+                <button onclick="togglePainelSenhasAdm('pedagogico')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
+                <thead><tr>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Nome</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">E-mail</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Senha inicial</th>
+                </tr></thead>
+                <tbody id="tabelaSenhasAdmPedagogicoBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="admPedagogicoGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
     </div>
 
+  </main>
+</div>
+
+<!-- PAGE ADMIN CÓPIAS -->
+<div id="telaAdminCopias" style="display:none;">
+  <header>
+    <div class="logo">🖨️ <span>CópiaFácil</span></div>
+    <div class="header-right">
+      <span class="perfil-badge" style="background:#7c3aed;color:#fff;">📊 Adm. Cópias</span>
+      <button class="btn-sair" onclick="sair()">Sair</button>
+    </div>
+  </header>
+  <main>
+    <div class="page-header"><h1>Relatório de Cópias por Professor</h1><p>Filtre e consulte quantidades de cópias produzidas por professor e período.</p></div>
+
+    <!-- Filtros -->
+    <div class="card" style="margin-bottom:1.2rem;">
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:flex-end;">
+        <div style="display:flex;flex-direction:column;gap:.25rem;flex:1;min-width:160px;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
+          <select id="adm1FilterProf" onchange="renderAdmCopias()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
+            <option value="">Todos os professores</option>
+          </select>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
+          <input type="date" id="adm1FilterDe" onchange="renderAdmCopias()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Até</label>
+          <input type="date" id="adm1FilterAte" onchange="renderAdmCopias()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
+          <select id="adm1FilterStatus" onchange="renderAdmCopias()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
+            <option value="">Todos</option>
+            <option value="Aguardando">Aguardando</option>
+            <option value="Em produção">Em produção</option>
+            <option value="Pronto">Pronto</option>
+            <option value="Entregue">Entregue</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:.4rem;align-self:flex-end;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="adm1SetSemana()">Esta semana</button>
+          <button class="btn-secondary" onclick="adm1SetMes()">Este mês</button>
+          <button class="btn-secondary" onclick="limparAdm1()">✕ Limpar</button>
+          <button class="btn-action" onclick="exportarAdm1()">📊 Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Totalizadores -->
+    <div id="adm1Totais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
+
+    <!-- Tabela agrupada -->
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div id="adm1Container"><div class="empty-state"><div class="emoji">📊</div><p>Use os filtros acima para consultar.</p></div></div>
+    </div>
+  </main>
+</div>
+
+<!-- PAGE ADMIN ARQUIVOS -->
+<div id="telaAdminArquivos" style="display:none;">
+  <header>
+    <div class="logo">🖨️ <span>CópiaFácil</span></div>
+    <div class="header-right">
+      <span class="perfil-badge" style="background:#0f766e;color:#fff;">📚 Pedagógico</span>
+      <button class="btn-sair" onclick="sair()">Sair</button>
+    </div>
+  </header>
+  <main>
+    <div class="page-header"><h1>Arquivos e Links por Professor</h1><p>Consulte todos os arquivos e links enviados pelos professores.</p></div>
+
+    <!-- Filtros -->
+    <div class="card" style="margin-bottom:1.2rem;">
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:flex-end;">
+        <div style="display:flex;flex-direction:column;gap:.25rem;flex:1;min-width:160px;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">🔍 Buscar</label>
+          <input type="text" id="adm2FilterText" placeholder="Título, turmas, arquivo…" oninput="renderAdmArquivos()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;flex:1;min-width:140px;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
+          <select id="adm2FilterProf" onchange="renderAdmArquivos()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
+            <option value="">Todos os professores</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
+          <input type="date" id="adm2FilterDe" onchange="renderAdmArquivos()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Até</label>
+          <input type="date" id="adm2FilterAte" onchange="renderAdmArquivos()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Tipo</label>
+          <select id="adm2FilterTipo" onchange="renderAdmArquivos()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
+            <option value="">Todos</option>
+            <option value="arquivo">Arquivos</option>
+            <option value="link">Links Drive</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:.4rem;align-self:flex-end;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="limparAdm2()">✕ Limpar</button>
+          <button class="btn-action" onclick="exportarAdm2()">📊 Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Totalizadores -->
+    <div id="adm2Totais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
+
+    <!-- Tabela -->
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div id="adm2Container"><div class="empty-state"><div class="emoji">📁</div><p>Use os filtros acima para consultar.</p></div></div>
+    </div>
   </main>
 </div>
 
@@ -867,6 +1093,28 @@
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModalMeca()">Cancelar</button>
       <button class="btn-action" id="btnSalvarMeca" onclick="salvarMeca()">Criar acesso</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADMINISTRATIVO -->
+<div class="modal-overlay" id="modalAdmOverlay" onclick="closeModalAdm(event)">
+  <div class="modal">
+    <h2 id="modalAdmTitulo">Criar Acesso</h2>
+    <div class="mfg"><label>Nome completo *</label><input type="text" id="admNome" placeholder="Ex.: Ana Coordenadora" oninput="previewSenhaAdm()" /></div>
+    <div class="mfg"><label>E-mail *</label><input type="email" id="admEmail" placeholder="usuario@escola.com" /></div>
+    <div class="mfg">
+      <label>Senha inicial (gerada automaticamente)</label>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <input type="text" id="admSenhaGerada" readonly style="font-family:monospace;font-weight:700;letter-spacing:.1em;background:#f0ede6;color:var(--primary);flex:1;" placeholder="Digite o nome para gerar" />
+        <button type="button" onclick="previewSenhaAdm()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.5rem .9rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;">↻ Prévia</button>
+      </div>
+      <span class="hint">Baseada nas 5 primeiras letras do nome + caractere especial.</span>
+    </div>
+    <p class="auth-erro" id="modalAdmErro"></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModalAdm()">Cancelar</button>
+      <button class="btn-action" id="btnSalvarAdm" onclick="salvarAdm()">Criar acesso</button>
     </div>
   </div>
 </div>
@@ -1012,10 +1260,12 @@ async function iniciarApp() {
 
 // ── SAIR ──
 async function sair() {
-  await db.auth.signOut();
+  await db.auth.signOut().catch(()=>{});
   currentUser=null;perfilAtual=null;professorData=null;allSolic=[];allProfs=[];currentSolicId=null;
   document.getElementById('telaApp').style.display='none';
   document.getElementById('telaPendente').style.display='none';
+  document.getElementById('telaAdminCopias').style.display='none';
+  document.getElementById('telaAdminArquivos').style.display='none';
   document.getElementById('telaAuth').style.display='flex';
   document.getElementById('loginEmail').value='';
   document.getElementById('loginSenha').value='';
@@ -1041,6 +1291,169 @@ function showPage(id,btn) {
 }
 
 // ── COORD TABS ──
+// ── LIMPAR FILTROS ──
+function limparFiltrosSolicitacoes(){
+  document.getElementById('filterText').value='';
+  document.getElementById('filterProfessor').value='';
+  document.getElementById('filterStatus').value='';
+  renderSolicitacoes();
+}
+function limparFiltrosProfessores(){
+  document.getElementById('profFilterText').value='';
+  document.getElementById('profFilterStatus').value='';
+  renderProfessores();
+}
+function limparFiltrosMeca(){
+  document.getElementById('mecaFilterText').value='';
+  document.getElementById('mecaFilterProfessor').value='';
+  document.getElementById('mecaFilterStatus').value='';
+  renderMeca();
+}
+function limparFiltrosResumo(){
+  document.getElementById('resumoDe').value='';
+  document.getElementById('resumoAte').value='';
+  document.getElementById('resumoStatus').value='';
+  document.getElementById('resumoProfessor').value='';
+  renderResumo();
+}
+function limparFiltrosResumoMensal(){
+  document.getElementById('resumoMensalProf').value='';
+  document.getElementById('resumoMensalStatus').value='';
+  renderResumoMensal();
+}
+
+// ── SUB-ABAS DO RESUMO GERAL ──
+function switchResumoSub(sub, btn){
+  ['periodo','mensal'].forEach(s=>{
+    const el=document.getElementById('resumoSub-'+s);
+    if(el) el.style.display = s===sub ? 'block' : 'none';
+    const b=document.getElementById('resumoSubTab-'+s);
+    if(b) b.classList.toggle('active', s===sub);
+  });
+  if(sub==='mensal'){
+    populateResumoMensalFiltros();
+    renderResumoMensal();
+  }
+}
+
+// ── RESUMO MENSAL ──
+let _resumoMensalOffset = 0; // 0 = mês atual
+
+function resumoMensalNav(delta){
+  const agora = new Date();
+  _resumoMensalOffset += delta;
+  // não avança além do mês atual
+  if(_resumoMensalOffset > 0) _resumoMensalOffset = 0;
+  const btnProx = document.getElementById('btnResumoMensalProx');
+  if(btnProx){
+    btnProx.disabled = _resumoMensalOffset >= 0;
+    btnProx.style.opacity = _resumoMensalOffset >= 0 ? '.35' : '1';
+    btnProx.style.cursor = _resumoMensalOffset >= 0 ? 'default' : 'pointer';
+  }
+  renderResumoMensal();
+}
+
+function resumoMensalIrHoje(){
+  _resumoMensalOffset = 0;
+  const btnProx = document.getElementById('btnResumoMensalProx');
+  if(btnProx){ btnProx.disabled=true; btnProx.style.opacity='.35'; }
+  renderResumoMensal();
+}
+
+function populateResumoMensalFiltros(){
+  const sel = document.getElementById('resumoMensalProf');
+  if(!sel) return;
+  const cur = sel.value;
+  const profs = [...new Set(allSolic.map(d=>d.professor||'').filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">Todos</option>' + profs.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  if(cur) sel.value = cur;
+}
+
+function renderResumoMensal(){
+  const agora = new Date();
+  const alvo = new Date(agora.getFullYear(), agora.getMonth() + _resumoMensalOffset, 1);
+  const mesAlvo = alvo.getMonth();
+  const anoAlvo = alvo.getFullYear();
+  const nomeMes = alvo.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const label = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+  const labelEl = document.getElementById('resumoMensalLabel');
+  if(labelEl) labelEl.textContent = label;
+
+  const profFiltro = (document.getElementById('resumoMensalProf')||{}).value || '';
+  const stFiltro = (document.getElementById('resumoMensalStatus')||{}).value || '';
+
+  const filtered = allSolic.filter(d=>{
+    const dt = new Date(d.data_solicitacao);
+    const dentroMes = dt.getMonth()===mesAlvo && dt.getFullYear()===anoAlvo;
+    const dentroProf = !profFiltro || d.professor===profFiltro;
+    const dentroSt = !stFiltro || d.status===stFiltro;
+    return dentroMes && dentroProf && dentroSt;
+  });
+
+  const totalCopias = filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const totalSolic = filtered.length;
+  const totalProfs = new Set(filtered.map(d=>d.professor)).size;
+
+  const elCopias = document.getElementById('resumoMensalTotalCopias');
+  const elSolic = document.getElementById('resumoMensalTotalSolic');
+  const elProfs = document.getElementById('resumoMensalTotalProfs');
+  if(elCopias) elCopias.textContent = totalCopias.toLocaleString('pt-BR');
+  if(elSolic) elSolic.textContent = totalSolic;
+  if(elProfs) elProfs.textContent = totalProfs;
+
+  // Botão próximo
+  const btnProx = document.getElementById('btnResumoMensalProx');
+  if(btnProx){
+    btnProx.disabled = _resumoMensalOffset >= 0;
+    btnProx.style.opacity = _resumoMensalOffset >= 0 ? '.35' : '1';
+    btnProx.style.cursor = _resumoMensalOffset >= 0 ? 'default' : 'pointer';
+  }
+
+  const container = document.getElementById('resumoMensalContainer');
+  if(!container) return;
+  if(!filtered.length){
+    container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação neste mês.</p></div>';
+    return;
+  }
+
+  // Agrupa por professor
+  const porProf={};
+  filtered.forEach(d=>{
+    const k=d.professor||'—';
+    if(!porProf[k]) porProf[k]={professor:k,disciplina:d.disciplina,solicitacoes:[],totalCopias:0};
+    porProf[k].solicitacoes.push(d);
+    porProf[k].totalCopias+=(d.total_copias||d.copias||0);
+  });
+  const rows=Object.values(porProf).sort((a,b)=>b.totalCopias-a.totalCopias);
+
+  container.innerHTML=`<table>
+    <thead><tr>
+      <th>Professor(a)</th>
+      <th>Disciplina</th>
+      <th style="text-align:center;">Solicitações</th>
+      <th style="text-align:center;">Total de Cópias</th>
+      <th>Títulos</th>
+      <th>Status</th>
+    </tr></thead>
+    <tbody>
+      ${rows.map(r=>`<tr>
+        <td><strong>${esc(r.professor)}</strong></td>
+        <td>${esc(disciplinaDisplay[r.disciplina]||r.disciplina||'—')}</td>
+        <td style="text-align:center;">${r.solicitacoes.length}</td>
+        <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${r.totalCopias.toLocaleString('pt-BR')}</td>
+        <td style="max-width:220px;">${r.solicitacoes.map(s=>`<div style="font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;" title="${esc(s.titulo)}">• ${esc(s.titulo)}</div>`).join('')}</td>
+        <td>${r.solicitacoes.map(s=>`<div style="margin-bottom:.2rem;"><span class="badge ${statusClass[s.status]||'badge-pending'}" style="font-size:.68rem;">${esc(s.status)}</span></div>`).join('')}</td>
+      </tr>`).join('')}
+      <tr style="background:#f5f0e8;border-top:2px solid var(--border);">
+        <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);" colspan="2">TOTAL DO MÊS</td>
+        <td style="text-align:center;font-weight:700;">${totalSolic}</td>
+        <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:800;color:var(--accent2);font-size:1rem;">${totalCopias.toLocaleString('pt-BR')}</td>
+        <td colspan="2"></td>
+      </tr>
+    </tbody>
+  </table>`;
+}
+
 function switchCoordTab(tab,btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.coord-tab').forEach(b=>b.classList.remove('active'));
@@ -1048,19 +1461,25 @@ function switchCoordTab(tab,btn) {
   if(panel) panel.classList.add('active');
   if(btn) btn.classList.add('active');
   if(tab==='mecanografia') renderMecaGerenciar();
+  if(tab==='admcopias') renderAdmGerenciar('copias');
+  if(tab==='pedagogico') renderAdmGerenciar('pedagogico');
   if(tab==='resumo') {
     // Garante que allSolic está carregado antes de renderizar
     if(allSolic.length === 0) {
       db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false}).then(({data}) => {
         allSolic = data || [];
         populateResumoFiltros();
+        populateResumoMensalFiltros();
         setResumoSemana();
         renderResumo();
+        resumoMensalIrHoje();
       });
     } else {
       populateResumoFiltros();
+      populateResumoMensalFiltros();
       setResumoSemana();
       renderResumo();
+      resumoMensalIrHoje();
     }
   }
 }
@@ -1084,7 +1503,6 @@ function renderResumo(){
   const ate=document.getElementById('resumoAte').value;
   const stFiltro=document.getElementById('resumoStatus').value;
   const profFiltro=(document.getElementById('resumoProfessor').value||'').toLowerCase();
-  const discFiltro=(document.getElementById('resumoDisciplina').value||'').toLowerCase();
   const totaisEl=document.getElementById('resumoTotais');
   const container=document.getElementById('resumoContainer');
 
@@ -1098,8 +1516,7 @@ function renderResumo(){
     const dentroData=dt>=deDate&&dt<=ateDate;
     const dentroStatus=!stFiltro||d.status===stFiltro;
     const dentroProf=!profFiltro||(d.professor||'').toLowerCase()===profFiltro;
-    const dentroDisc=!discFiltro||(d.disciplina||'').toLowerCase()===discFiltro;
-    return dentroData&&dentroStatus&&dentroProf&&dentroDisc;
+    return dentroData&&dentroStatus&&dentroProf;
   });
 
   // Totalizadores gerais
@@ -1157,18 +1574,12 @@ function renderResumo(){
 
 function populateResumoFiltros(){
   const selProf=document.getElementById('resumoProfessor');
-  const selDisc=document.getElementById('resumoDisciplina');
-  if(!selProf||!selDisc)return;
+  if(!selProf)return;
   const curProf=selProf.value;
-  const curDisc=selDisc.value;
   // Professores únicos
   const profs=[...new Set(allSolic.map(d=>d.professor||'').filter(Boolean))].sort();
   selProf.innerHTML='<option value="">Todos</option>'+profs.map(p=>`<option value="${esc(p.toLowerCase())}">${esc(p)}</option>`).join('');
   if(curProf)selProf.value=curProf;
-  // Disciplinas únicas
-  const discs=[...new Set(allSolic.map(d=>d.disciplina||'').filter(Boolean))].sort();
-  selDisc.innerHTML='<option value="">Todas</option>'+discs.map(d=>`<option value="${esc(d.toLowerCase())}">${esc(d)}</option>`).join('');
-  if(curDisc)selDisc.value=curDisc;
 }
 
 // ── SOLICITANTE ──
@@ -1783,12 +2194,10 @@ function renderSolicitacoes(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
   const prof=(document.getElementById('filterProfessor')||{}).value||'';
-  const disc=(document.getElementById('filterDisciplina')||{}).value||'';
   const filtered=allSolic.filter(d=>{
     const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
-    const mDisc=!disc||(d.disciplina||'').toLowerCase()===disc;
-    return mTxt&&mProf&&mDisc&&(!st||d.status===st);
+    return mTxt&&mProf&&(!st||d.status===st);
   });
   const container=document.getElementById('coordContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
@@ -1814,17 +2223,23 @@ function renderSolicitacoes(){
   }
 
   const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead>`;
+  const visiveis=filtered.slice(0,3);
+  const demais=filtered.slice(3);
 
-  let html=`
-    <div>
-      <button onclick="toggleCoordDemais()" id="btnCoordDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
-        <span>📋 Ver solicitações (${filtered.length})</span>
-        <span id="iconCoordDemais" style="transition:transform .25s;">▼</span>
-      </button>
-      <div id="coordDemaisPanel" style="display:none;overflow:hidden;">
-        <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${filtered.map(rowHtml).join('')}</tbody></table>
-      </div>
-    </div>`;
+  let html=`<table>${thead}<tbody>${visiveis.map(rowHtml).join('')}</tbody></table>`;
+
+  if(demais.length>0){
+    html+=`
+      <div style="border-top:1.5px solid var(--border);">
+        <button onclick="toggleCoordDemais()" id="btnCoordDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
+          <span>📋 Ver demais solicitações (${demais.length})</span>
+          <span id="iconCoordDemais" style="transition:transform .25s;">▼</span>
+        </button>
+        <div id="coordDemaisPanel" style="display:none;overflow:hidden;">
+          <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${demais.map(rowHtml).join('')}</tbody></table>
+        </div>
+      </div>`;
+  }
 
   container.innerHTML=html;
 }
@@ -1839,7 +2254,7 @@ function toggleCoordDemais(){
   const spans=btn.querySelectorAll('span');
   if(spans[0]){
     const n=parseInt(spans[0].textContent.match(/\d+/));
-    spans[0].textContent=open?`📋 Ocultar solicitações (${n})`:`📋 Ver solicitações (${n})`;
+    spans[0].textContent=open?`📋 Ocultar demais solicitações (${n})`:`📋 Ver demais solicitações (${n})`;
   }
 }
 
@@ -1848,12 +2263,10 @@ function exportarSolicitacoesExcel(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
   const prof=(document.getElementById('filterProfessor')||{}).value||'';
-  const disc=(document.getElementById('filterDisciplina')||{}).value||'';
   const filtered=allSolic.filter(d=>{
     const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
-    const mDisc=!disc||(d.disciplina||'').toLowerCase()===disc;
-    return mTxt&&mProf&&mDisc&&(!st||d.status===st);
+    return mTxt&&mProf&&(!st||d.status===st);
   });
   if(filtered.length===0){showToast('⚠️ Nenhuma solicitação para exportar.',true);return;}
 
@@ -1893,14 +2306,12 @@ function renderProfessores(){
   if(allProfs.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">👥</div><p>Nenhum professor cadastrado.</p></div>';return;}
 
   const txt=(document.getElementById('profFilterText').value||'').toLowerCase();
-  const disc=document.getElementById('profFilterDisc').value;
   const stFilter=document.getElementById('profFilterStatus').value;
 
   const filtered=allProfs.filter(p=>{
     const matchTxt=!txt||(p.nome||'').toLowerCase().includes(txt)||(p.email||'').toLowerCase().includes(txt);
-    const matchDisc=!disc||p.disciplina===disc;
     const matchSt=!stFilter||(stFilter==='aprovado'?p.aprovado:!p.aprovado);
-    return matchTxt&&matchDisc&&matchSt;
+    return matchTxt&&matchSt;
   });
 
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">🔍</div><p>Nenhum professor encontrado.</p></div>';return;}
@@ -1908,71 +2319,83 @@ function renderProfessores(){
   const pendentes=filtered.filter(p=>!p.aprovado);
   const aprovados=filtered.filter(p=>p.aprovado);
 
-  function rowHtml(p){
-    return `<tr>
-      <td><strong>${esc(p.nome)}</strong></td><td>${esc(p.email)}</td>
-      <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td><td>${fmtDate(p.criado_em)}</td>
-      <td>${p.aprovado?'<span class="badge badge-done">✔ Aprovado</span>':'<span class="badge badge-waiting">⏳ Pendente</span>'}</td>
-      <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
-        ${!p.aprovado?`<button class="btn-approve" onclick="aprovarProfessor('${p.id}',true)">✔ Aprovar</button>`:''}
-        <button class="btn-edit" onclick="abrirModalProfessor('${p.id}')">✏️ Editar</button>
-        <button class="btn-danger" onclick="excluirProfessor('${p.id}')">${p.aprovado?'🗑 Excluir':'🗑'}</button>
-      </td>
-    </tr>`;
+  function cardHtml(p, idx){
+    const sid='prof-card-'+p.id;
+    const solics=allSolic.filter(s=>(s.professor||'').toLowerCase()===p.nome.toLowerCase());
+    const totalCopias=solics.reduce((acc,s)=>acc+(s.total_copias||s.copias||0),0);
+    return `
+      <div style="border-bottom:1.5px solid var(--border);">
+        <button onclick="toggleProfCard('${sid}')" style="width:100%;padding:.75rem 1.2rem;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.8rem;font-family:'DM Sans',sans-serif;text-align:left;" id="${sid}-btn">
+          <div style="display:flex;align-items:center;gap:.8rem;flex:1;min-width:0;">
+            <div style="width:34px;height:34px;border-radius:50%;background:${p.aprovado?'var(--primary)':'#f0e8d0'};color:${p.aprovado?'#fff':'#a06000'};display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;flex-shrink:0;">${(p.nome||'?')[0].toUpperCase()}</div>
+            <div style="min-width:0;">
+              <div style="font-weight:600;font-size:.9rem;color:var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.nome)}</div>
+              <div style="font-size:.75rem;color:var(--muted);">${esc(disciplinaDisplay[p.disciplina]||p.disciplina)} &nbsp;·&nbsp; ${esc(p.email)}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0;">
+            ${p.aprovado?`<span class="badge badge-done" style="font-size:.7rem;">✔ Aprovado</span>`:`<span class="badge badge-waiting" style="font-size:.7rem;">⏳ Pendente</span>`}
+            ${totalCopias>0?`<span style="font-size:.72rem;color:var(--muted);white-space:nowrap;">📄 ${totalCopias.toLocaleString('pt-BR')} cópias</span>`:''}
+            <span id="${sid}-icon" style="font-size:.75rem;color:var(--muted);transition:transform .25s;">▼</span>
+          </div>
+        </button>
+        <div id="${sid}" style="display:none;padding:.2rem 1.2rem 1rem 1.2rem;background:#fafaf7;border-top:1px solid var(--border);">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;margin-bottom:.8rem;margin-top:.6rem;">
+            <div style="background:var(--bg);border-radius:7px;padding:.5rem .8rem;"><div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.15rem;">E-mail</div><div style="font-size:.84rem;">${esc(p.email)}</div></div>
+            <div style="background:var(--bg);border-radius:7px;padding:.5rem .8rem;"><div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.15rem;">Disciplina</div><div style="font-size:.84rem;">${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</div></div>
+            <div style="background:var(--bg);border-radius:7px;padding:.5rem .8rem;"><div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.15rem;">Cadastrado em</div><div style="font-size:.84rem;">${fmtDate(p.criado_em)}</div></div>
+            <div style="background:var(--bg);border-radius:7px;padding:.5rem .8rem;"><div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.15rem;">Total de cópias</div><div style="font-size:.84rem;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${totalCopias.toLocaleString('pt-BR')}</div></div>
+          </div>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+            ${!p.aprovado?`<button class="btn-approve" onclick="aprovarProfessor('${p.id}',true)">✔ Aprovar</button>`:''}
+            <button class="btn-edit" onclick="abrirModalProfessor('${p.id}')">✏️ Editar</button>
+            <button class="btn-danger" onclick="excluirProfessor('${p.id}')">🗑 Excluir</button>
+          </div>
+        </div>
+      </div>`;
   }
-
-  const thead=`<thead><tr><th>Nome</th><th>E-mail</th><th>Disciplina</th><th>Cadastrado em</th><th>Status</th><th>Ações</th></tr></thead>`;
 
   let html='';
 
-  // Pendentes sempre visíveis no topo se existirem
   if(pendentes.length>0){
-    html+=`
-      <div style="background:#fff3d6;border-bottom:1.5px solid var(--border);padding:.55rem 1.2rem;display:flex;align-items:center;gap:.5rem;">
-        <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#a06000;">⏳ Pendentes de aprovação (${pendentes.length})</span>
-      </div>
-      <table>${thead}<tbody>${pendentes.map(rowHtml).join('')}</tbody></table>`;
+    html+=`<div style="background:#fff3d6;border-bottom:1.5px solid var(--border);padding:.55rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;">
+      <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#a06000;">⏳ Pendentes de aprovação (${pendentes.length})</span>
+      <button onclick="toggleGrupo('grupo-pendentes','icon-pendentes')" style="font-size:.75rem;font-weight:600;color:#a06000;background:none;border:1.5px solid #e8c870;border-radius:6px;padding:.2rem .6rem;cursor:pointer;">Expandir / Recolher <span id="icon-pendentes">▼</span></button>
+    </div>
+    <div id="grupo-pendentes" style="display:block;">
+      ${pendentes.map((p,i)=>cardHtml(p,i)).join('')}
+    </div>`;
   }
 
-  // Aprovados: primeiros 4 visíveis, demais retráteis
   if(aprovados.length>0){
-    const visiveis=aprovados.slice(0,4);
-    const demais=aprovados.slice(4);
-    if(pendentes.length>0){
-      html+=`<div style="background:var(--bg);border-top:2px solid var(--border);border-bottom:1.5px solid var(--border);padding:.55rem 1.2rem;">
-        <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);">✔ Aprovados (${aprovados.length})</span>
-      </div>`;
-    }
-    html+=`<table>${thead}<tbody>${visiveis.map(rowHtml).join('')}</tbody></table>`;
-    if(demais.length>0){
-      html+=`
-        <div style="border-top:1.5px solid var(--border);">
-          <button onclick="toggleProfDemais()" id="btnProfDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
-            <span>👩‍🏫 Ver mais professores (${demais.length})</span>
-            <span id="iconProfDemais" style="transition:transform .25s;">▼</span>
-          </button>
-          <div id="profDemaisPanel" style="display:none;">
-            <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${demais.map(rowHtml).join('')}</tbody></table>
-          </div>
-        </div>`;
-    }
+    html+=`<div style="background:var(--bg);border-top:${pendentes.length>0?'2px':'0px'} solid var(--border);border-bottom:1.5px solid var(--border);padding:.55rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;">
+      <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);">✔ Aprovados (${aprovados.length})</span>
+      <button onclick="toggleGrupo('grupo-aprovados','icon-aprovados')" style="font-size:.75rem;font-weight:600;color:var(--primary);background:none;border:1.5px solid var(--border);border-radius:6px;padding:.2rem .6rem;cursor:pointer;">Expandir / Recolher <span id="icon-aprovados">▼</span></button>
+    </div>
+    <div id="grupo-aprovados" style="display:block;">
+      ${aprovados.map((p,i)=>cardHtml(p,i)).join('')}
+    </div>`;
   }
 
   container.innerHTML=html;
 }
 
-function toggleProfDemais(){
-  const panel=document.getElementById('profDemaisPanel');
-  const icon=document.getElementById('iconProfDemais');
-  const btn=document.getElementById('btnProfDemais');
-  const open=panel.style.display==='none';
-  panel.style.display=open?'block':'none';
-  icon.style.transform=open?'rotate(180deg)':'rotate(0deg)';
-  const span=btn.querySelector('span');
-  if(span){
-    const n=parseInt(span.textContent.match(/\d+/));
-    span.textContent=open?`👩‍🏫 Ocultar professores (${n})`:`👩‍🏫 Ver mais professores (${n})`;
-  }
+function toggleGrupo(panelId, iconId){
+  const panel=document.getElementById(panelId);
+  const icon=document.getElementById(iconId);
+  if(!panel)return;
+  const open=panel.style.display!=='none';
+  panel.style.display=open?'none':'block';
+  if(icon)icon.textContent=open?'▶':'▼';
+}
+
+function toggleProfCard(sid){
+  const panel=document.getElementById(sid);
+  const icon=document.getElementById(sid+'-icon');
+  if(!panel)return;
+  const open=panel.style.display!=='none';
+  panel.style.display=open?'none':'block';
+  if(icon)icon.style.transform=open?'rotate(0deg)':'rotate(180deg)';
 }
 
 // ── MODAL PROFESSOR ──
@@ -2406,13 +2829,406 @@ function mecaPrint(id){
   links.forEach(url=>window.open(url,"_blank"));
 }
 
+// ── PERFIS ADMINISTRATIVOS ──
+// Usuários criados pela coordenação na tabela 'administrativo'
+// tipo: 'copias' | 'pedagogico'
+
+// Sobrescreve fazerLogin para detectar também os perfis admin
+async function fazerLogin() {
+  const email=document.getElementById('loginEmail').value.trim();
+  const senha=document.getElementById('loginSenha').value;
+  const erroEl=document.getElementById('loginErro');
+  const btn=document.getElementById('btnLogin');
+  erroEl.style.display='none';
+  if (!email||!senha){erroEl.textContent='⚠️ Preencha e-mail e senha.';erroEl.style.display='block';return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Entrando…';
+  try {
+    const {data,error}=await db.auth.signInWithPassword({email,password:senha});
+    if (error) throw error;
+    currentUser=data.user;
+    if (senha===SENHA_COORD){perfilAtual='coordenacao';await iniciarApp();return;}
+    // Verifica mecanografia
+    const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
+    if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
+    // Verifica administrativo
+    const {data:adm}=await db.from('administrativo').select('*').eq('id',currentUser.id).maybeSingle();
+    if(adm){
+      perfilAtual = adm.tipo==='pedagogico' ? 'admArquivos' : 'admCopias';
+      if(adm.senha_inicial){
+        // mostra senha se for primeiro acesso (opcional)
+      }
+      if(perfilAtual==='admCopias') await iniciarAdmCopias();
+      else await iniciarAdmArquivos();
+      return;
+    }
+    // Professor
+    const {data:prof,error:profErr}=await db.from('professores').select('*').eq('id',currentUser.id).single();
+    if (profErr||!prof) throw new Error('Perfil não encontrado.');
+    if (!prof.aprovado){
+      await db.auth.signOut();
+      document.getElementById('telaAuth').style.display='none';
+      document.getElementById('telaPendente').style.display='flex';
+      return;
+    }
+    professorData=prof;perfilAtual='professor';await iniciarApp();
+  } catch(err) {
+    erroEl.textContent=err.message.includes('Invalid login')?'❌ E-mail ou senha incorretos.':'❌ '+err.message;
+    erroEl.style.display='block';
+  } finally {btn.disabled=false;btn.innerHTML='Entrar';}
+}
+
+// ── GERENCIAR ADMINISTRATIVO (coord) ──
+let _admTipoAtual = 'copias'; // 'copias' | 'pedagogico'
+
+function abrirModalAdm(tipo){
+  _admTipoAtual=tipo;
+  const label=tipo==='pedagogico'?'Pedagógico':'Adm. Cópias';
+  document.getElementById('modalAdmTitulo').textContent=`📊 Criar Acesso — ${label}`;
+  document.getElementById('admNome').value='';
+  document.getElementById('admEmail').value='';
+  document.getElementById('admSenhaGerada').value='';
+  document.getElementById('modalAdmErro').style.display='none';
+  document.getElementById('modalAdmOverlay').classList.add('open');
+}
+
+function closeModalAdm(e){
+  if(!e||e.target===document.getElementById('modalAdmOverlay'))
+    document.getElementById('modalAdmOverlay').classList.remove('open');
+}
+
+function previewSenhaAdm(){
+  const nome=document.getElementById('admNome').value.trim();
+  document.getElementById('admSenhaGerada').value=nome?gerarSenhaPorNome(nome):'';
+}
+
+async function salvarAdm(){
+  const nome=document.getElementById('admNome').value.trim();
+  const email=document.getElementById('admEmail').value.trim();
+  const erroEl=document.getElementById('modalAdmErro');
+  const btn=document.getElementById('btnSalvarAdm');
+  erroEl.style.display='none';
+  if(!nome||!email){erroEl.textContent='⚠️ Preencha nome e e-mail.';erroEl.style.display='block';return;}
+  const senha=gerarSenhaPorNome(nome);
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
+  try{
+    const {data,error}=await db.auth.signUp({email,password:senha});
+    if(error)throw error;
+    const uid=data.user.id;
+    const {error:insErr}=await db.from('administrativo').insert([{id:uid,email,nome,tipo:_admTipoAtual,senha_inicial:senha}]);
+    if(insErr)throw insErr;
+    await db.auth.signOut();
+    const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+    if(!loginErr)currentUser=sessao.user;
+    closeModalAdm();
+    await renderAdmGerenciar(_admTipoAtual);
+    showToast(`✅ Acesso criado! Senha: ${senha}`);
+  }catch(err){
+    erroEl.textContent=err.message.includes('already registered')?'⚠️ Este e-mail já está cadastrado.':'❌ Erro: '+err.message;
+    erroEl.style.display='block';
+  }finally{btn.disabled=false;btn.innerHTML='Criar acesso';}
+}
+
+async function renderAdmGerenciar(tipo){
+  const containerId=tipo==='pedagogico'?'admPedagogicoGerenciar':'admCopiasGerenciar';
+  const container=document.getElementById(containerId);
+  if(!container)return;
+  const {data:lista}=await db.from('administrativo').select('id,email,nome,senha_inicial,criado_em').eq('tipo',tipo);
+  if(!lista||lista.length===0){
+    container.innerHTML=`<div style="text-align:center;padding:2rem 1rem;">
+      <div style="font-size:2.5rem;margin-bottom:.8rem;">${tipo==='pedagogico'?'📚':'📊'}</div>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.2rem;">Nenhum acesso criado ainda.</p>
+      <button class="btn-action" onclick="abrirModalAdm('${tipo}')">+ Criar acesso</button>
+    </div>`;
+    return;
+  }
+  container.innerHTML=`
+    <div style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;">
+      ${lista.length} acesso${lista.length!==1?'s':''} cadastrado${lista.length!==1?'s':''}.
+      Use o botão <strong>🔑 Ver senhas</strong> para consultar credenciais.
+    </div>
+    <table>
+      <thead><tr>
+        <th>Nome</th><th>E-mail</th><th>Criado em</th><th>Ações</th>
+      </tr></thead>
+      <tbody>${lista.map(m=>`
+        <tr>
+          <td>${esc(m.nome||'—')}</td>
+          <td>${esc(m.email||'—')}</td>
+          <td>${m.criado_em?fmtDate(m.criado_em):'—'}</td>
+          <td><button class="btn-danger" onclick="excluirAdm('${m.id}','${tipo}')">🗑 Remover acesso</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div style="margin-top:1.2rem;display:flex;justify-content:flex-end;">
+      <button class="btn-action" onclick="abrirModalAdm('${tipo}')">+ Criar outro acesso</button>
+    </div>`;
+}
+
+async function excluirAdm(id, tipo){
+  if(!confirm('Remover este acesso? O usuário perderá o acesso à plataforma.'))return;
+  const {error}=await db.from('administrativo').delete().eq('id',id);
+  if(error){showToast('❌ Erro ao remover.',true);return;}
+  await renderAdmGerenciar(tipo);
+  showToast('🗑 Acesso removido.');
+}
+
+async function togglePainelSenhasAdm(tipo){
+  const panelId=tipo==='pedagogico'?'painelSenhasAdmPedagogico':'painelSenhasAdmCopias';
+  const tbodyId=tipo==='pedagogico'?'tabelaSenhasAdmPedagogicoBody':'tabelaSenhasAdmCopiasBody';
+  const p=document.getElementById(panelId);
+  if(p.style.display==='block'){p.style.display='none';return;}
+  const tbody=document.getElementById(tbodyId);
+  tbody.innerHTML=`<tr><td colspan="3" style="padding:1rem;text-align:center;"><span class="spinner"></span> Carregando…</td></tr>`;
+  p.style.display='block';
+  const {data:lista}=await db.from('administrativo').select('nome,email,senha_inicial,criado_em').eq('tipo',tipo).order('criado_em',{ascending:true});
+  const itens=lista||[];
+  if(!itens.length){
+    tbody.innerHTML=`<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:var(--muted);">Nenhum acesso cadastrado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=itens.map(m=>{
+    const sid=`senha-adm-${tipo}-${esc((m.email||'u').replace(/[^a-z0-9]/gi,'_'))}`;
+    return `<tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:.7rem 1rem;">${esc(m.nome||'—')}</td>
+      <td style="padding:.7rem 1rem;">${esc(m.email||'—')}</td>
+      <td style="padding:.7rem 1rem;">
+        <div class="senha-cell">
+          <span class="senha-mask" id="${sid}">••••••</span>
+          <button class="btn-eye" onclick="toggleSenha(this,'${esc(m.senha_inicial||'')}','${sid}')">👁</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function baixarCredsAdm(tipo){
+  // trigger download from the already-rendered table
+  db.from('administrativo').select('nome,email,senha_inicial,criado_em').eq('tipo',tipo).then(({data:lista})=>{
+    const itens=lista||[];
+    if(!itens.length){showToast('⚠️ Nenhum dado para exportar.',true);return;}
+    const csv='\uFEFF'+'Nome;E-mail;Senha inicial;Criado em\r\n'
+      +itens.map(m=>`"${m.nome||''}"; "${m.email||''}"; "${m.senha_inicial||''}"; "${m.criado_em?fmtDate(m.criado_em):''}"`).join('\r\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');
+    const stamp=new Date().toISOString().slice(0,10);
+    a.href=url;a.download=`senhas_${tipo}_${stamp}.csv`;
+    document.body.appendChild(a);a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+    showToast('📊 CSV exportado!');
+  });
+}
+
+async function iniciarAdmCopias(){
+  document.getElementById('telaAuth').style.display='none';
+  // Carrega dados de solicitações
+  const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
+  allSolic=solic||[];
+  // Popula filtro de professor
+  const profs=[...new Set(allSolic.map(d=>d.professor).filter(Boolean))].sort();
+  const sel=document.getElementById('adm1FilterProf');
+  sel.innerHTML='<option value="">Todos os professores</option>'+profs.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  renderAdmCopias();
+  document.getElementById('telaAdminCopias').style.display='block';
+}
+
+async function iniciarAdmArquivos(){
+  document.getElementById('telaAuth').style.display='none';
+  const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
+  allSolic=solic||[];
+  const profs=[...new Set(allSolic.map(d=>d.professor).filter(Boolean))].sort();
+  const sel=document.getElementById('adm2FilterProf');
+  sel.innerHTML='<option value="">Todos os professores</option>'+profs.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  renderAdmArquivos();
+  document.getElementById('telaAdminArquivos').style.display='block';
+}
+
+function adm1FilteredData(){
+  const prof=document.getElementById('adm1FilterProf').value;
+  const de=document.getElementById('adm1FilterDe').value;
+  const ate=document.getElementById('adm1FilterAte').value;
+  const st=document.getElementById('adm1FilterStatus').value;
+  return allSolic.filter(d=>{
+    const mProf=!prof||d.professor===prof;
+    const dt=new Date(d.data_solicitacao);
+    const mDe=!de||dt>=new Date(de+'T00:00:00');
+    const mAte=!ate||dt<=new Date(ate+'T23:59:59');
+    const mSt=!st||d.status===st;
+    return mProf&&mDe&&mAte&&mSt;
+  });
+}
+
+function renderAdmCopias(){
+  const filtered=adm1FilteredData();
+  const totaisEl=document.getElementById('adm1Totais');
+  const container=document.getElementById('adm1Container');
+  const totalCopias=filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const totalSolic=filtered.length;
+  const totalProfs=new Set(filtered.map(d=>d.professor)).size;
+  totaisEl.innerHTML=`
+    <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${totalCopias.toLocaleString('pt-BR')}</div><div class="slabel">Total de Cópias</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:var(--primary);"></div><div class="num">${totalSolic}</div><div class="slabel">Solicitações</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#7c3aed;"></div><div class="num">${totalProfs}</div><div class="slabel">Professores</div></div>`;
+  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação encontrada.</p></div>';return;}
+
+  // Agrupa por professor
+  const porProf={};
+  filtered.forEach(d=>{
+    const k=d.professor||'—';
+    if(!porProf[k])porProf[k]={professor:k,disciplina:d.disciplina,solicitacoes:[],totalCopias:0};
+    porProf[k].solicitacoes.push(d);
+    porProf[k].totalCopias+=(d.total_copias||d.copias||0);
+  });
+  const rows=Object.values(porProf).sort((a,b)=>b.totalCopias-a.totalCopias);
+
+  container.innerHTML=`<table>
+    <thead><tr>
+      <th>Professor(a)</th><th>Disciplina</th>
+      <th style="text-align:center;">Solicitações</th>
+      <th style="text-align:center;">Total de Cópias</th>
+      <th>Última solicitação</th>
+      <th>Status predominante</th>
+    </tr></thead>
+    <tbody>${rows.map(r=>{
+      const ultima=r.solicitacoes[0];
+      const statusCounts={};
+      r.solicitacoes.forEach(s=>{statusCounts[s.status]=(statusCounts[s.status]||0)+1;});
+      const topStatus=Object.entries(statusCounts).sort((a,b)=>b[1]-a[1])[0]||['—',0];
+      return `<tr>
+        <td><strong>${esc(r.professor)}</strong></td>
+        <td>${esc(disciplinaDisplay[r.disciplina]||r.disciplina||'—')}</td>
+        <td style="text-align:center;">${r.solicitacoes.length}</td>
+        <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${r.totalCopias.toLocaleString('pt-BR')}</td>
+        <td style="font-size:.82rem;color:var(--muted);">${ultima?fmtDate(ultima.data_solicitacao):'—'}</td>
+        <td><span class="badge ${statusClass[topStatus[0]]||'badge-pending'}">${esc(topStatus[0])}</span></td>
+      </tr>`;
+    }).join('')}
+    <tr style="background:#f5f0e8;border-top:2px solid var(--border);">
+      <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);" colspan="2">TOTAL GERAL</td>
+      <td style="text-align:center;font-weight:700;">${totalSolic}</td>
+      <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:800;color:var(--accent2);font-size:1rem;">${totalCopias.toLocaleString('pt-BR')}</td>
+      <td colspan="2"></td>
+    </tr>
+    </tbody></table>`;
+}
+
+function adm1SetSemana(){
+  const hoje=new Date();const dow=hoje.getDay();
+  const seg=new Date(hoje);seg.setDate(hoje.getDate()-(dow===0?6:dow-1));
+  const sex=new Date(seg);sex.setDate(seg.getDate()+6);
+  document.getElementById('adm1FilterDe').value=seg.toISOString().slice(0,10);
+  document.getElementById('adm1FilterAte').value=sex.toISOString().slice(0,10);
+  renderAdmCopias();
+}
+function adm1SetMes(){
+  const hoje=new Date();
+  const ini=new Date(hoje.getFullYear(),hoje.getMonth(),1);
+  const fim=new Date(hoje.getFullYear(),hoje.getMonth()+1,0);
+  document.getElementById('adm1FilterDe').value=ini.toISOString().slice(0,10);
+  document.getElementById('adm1FilterAte').value=fim.toISOString().slice(0,10);
+  renderAdmCopias();
+}
+function limparAdm1(){
+  ['adm1FilterProf','adm1FilterDe','adm1FilterAte','adm1FilterStatus'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  renderAdmCopias();
+}
+function exportarAdm1(){
+  const filtered=adm1FilteredData();
+  if(!filtered.length){showToast('⚠️ Nenhum dado para exportar.',true);return;}
+  const cols=['Professor(a)','Disciplina','Título','Turmas','Cópias','Laudas','Total de Cópias','Data Solicitação','Prazo','Status'];
+  const rows=filtered.map(d=>[d.professor,d.disciplina,d.titulo,d.turmas,d.copias,d.laudas,d.total_copias||d.copias,d.data_solicitacao?fmtDate(d.data_solicitacao):'',d.prazo_entrega?fmtDate(d.prazo_entrega):'',d.status].map(v=>'\"'+String(v||'').replace(/"/g,'""')+'\"').join(';'));
+  const csv='\uFEFF'+[cols.map(c=>'\"'+c+'\"').join(';'),...rows].join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='relatorio_copias_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+  showToast('📊 Exportação concluída!');
+}
+
+// ── ADM ARQUIVOS ──
+function adm2FilteredData(){
+  const txt=(document.getElementById('adm2FilterText').value||'').toLowerCase();
+  const prof=document.getElementById('adm2FilterProf').value;
+  const de=document.getElementById('adm2FilterDe').value;
+  const ate=document.getElementById('adm2FilterAte').value;
+  const tipo=document.getElementById('adm2FilterTipo').value;
+  return allSolic.filter(d=>{
+    const temArq=d.arquivo_url||d.arquivo_url2;
+    const temLink=d.drive_link1||d.drive_link2;
+    if(!temArq&&!temLink)return false;
+    if(tipo==='arquivo'&&!temArq)return false;
+    if(tipo==='link'&&!temLink)return false;
+    const mProf=!prof||d.professor===prof;
+    const mTxt=!txt||(d.titulo||'').toLowerCase().includes(txt)||(d.professor||'').toLowerCase().includes(txt)||(d.arquivo||'').toLowerCase().includes(txt);
+    const dt=new Date(d.data_solicitacao);
+    const mDe=!de||dt>=new Date(de+'T00:00:00');
+    const mAte=!ate||dt<=new Date(ate+'T23:59:59');
+    return mProf&&mTxt&&mDe&&mAte;
+  });
+}
+
+function renderAdmArquivos(){
+  const filtered=adm2FilteredData();
+  const totaisEl=document.getElementById('adm2Totais');
+  const container=document.getElementById('adm2Container');
+  const totalArqs=filtered.reduce((s,d)=>s+[d.arquivo_url,d.arquivo_url2].filter(Boolean).length,0);
+  const totalLinks=filtered.reduce((s,d)=>s+[d.drive_link1,d.drive_link2].filter(Boolean).length,0);
+  const totalProfs=new Set(filtered.map(d=>d.professor)).size;
+  totaisEl.innerHTML=`
+    <div class="stat-card"><div class="accent-dot" style="background:#0f766e;"></div><div class="num">${filtered.length}</div><div class="slabel">Solicitações com anexo</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:var(--primary);"></div><div class="num">${totalArqs}</div><div class="slabel">Arquivos enviados</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#4285f4;"></div><div class="num">${totalLinks}</div><div class="slabel">Links do Drive</div></div>`;
+  if(!filtered.length){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhum arquivo ou link encontrado.</p></div>';return;}
+  container.innerHTML=`<table>
+    <thead><tr>
+      <th>Professor(a)</th><th>Título</th><th>Data</th>
+      <th>Arquivo 1</th><th>Drive 1</th><th>Arquivo 2</th><th>Drive 2</th><th>Status</th>
+    </tr></thead>
+    <tbody>${filtered.map(d=>`<tr>
+      <td><strong>${esc(d.professor)}</strong></td>
+      <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
+      <td style="font-size:.82rem;">${fmtDate(d.data_solicitacao)}</td>
+      <td>${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 ${esc(d.arquivo||'Baixar')}</a>`:'<span style="color:var(--muted);font-size:.8rem;">—</span>'}</td>
+      <td>${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive</a>`:'—'}</td>
+      <td>${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 ${esc(d.arquivo2||'Baixar')}</a>`:'—'}</td>
+      <td>${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive</a>`:'—'}</td>
+      <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+function limparAdm2(){
+  ['adm2FilterText','adm2FilterProf','adm2FilterDe','adm2FilterAte','adm2FilterTipo'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  renderAdmArquivos();
+}
+
+function exportarAdm2(){
+  const filtered=adm2FilteredData();
+  if(!filtered.length){showToast('⚠️ Nenhum dado para exportar.',true);return;}
+  const cols=['Professor(a)','Título','Data','Arquivo 1 URL','Drive 1','Arquivo 2 URL','Drive 2','Status'];
+  const rows=filtered.map(d=>[d.professor,d.titulo,d.data_solicitacao?fmtDate(d.data_solicitacao):'',d.arquivo_url||'',d.drive_link1||'',d.arquivo_url2||'',d.drive_link2||'',d.status].map(v=>'\"'+String(v||'').replace(/"/g,'""')+'\"').join(';'));
+  const csv='\uFEFF'+[cols.map(c=>'\"'+c+'\"').join(';'),...rows].join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='relatorio_arquivos_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+  showToast('📊 Exportação concluída!');
+}
+
 // ── AUTO LOGIN ──
 db.auth.getSession().then(async({data:{session}})=>{
   if(!session)return;
   currentUser=session.user;
-  // Mecanografia — detecta pela tabela
   const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
   if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
+  const {data:adm}=await db.from('administrativo').select('*').eq('id',currentUser.id).maybeSingle();
+  if(adm){
+    perfilAtual = adm.tipo==='pedagogico' ? 'admArquivos' : 'admCopias';
+    if(perfilAtual==='admCopias') await iniciarAdmCopias();
+    else await iniciarAdmArquivos();
+    return;
+  }
   const {data:prof}=await db.from('professores').select('*').eq('id',currentUser.id).single();
   if(prof){
     if(!prof.aprovado){document.getElementById('telaAuth').style.display='none';document.getElementById('telaPendente').style.display='flex';return;}
