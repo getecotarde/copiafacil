@@ -1097,7 +1097,8 @@
     <div class="mfg" id="mpSenhaGroup">
       <label>Senha inicial (gerada automaticamente)</label>
       <div style="display:flex;align-items:center;gap:.6rem;">
-        <input type="text" id="mpSenhaGerada" readonly style="font-family:monospace;font-weight:700;letter-spacing:.1em;background:#f0ede6;color:var(--primary);flex:1;" placeholder="Será gerada ao salvar" />
+        <input type="password" id="mpSenhaGerada" readonly style="font-family:monospace;font-weight:700;letter-spacing:.1em;background:#f0ede6;color:var(--primary);flex:1;" placeholder="Será gerada ao salvar" />
+        <button type="button" id="btnVerSenhaModal" onclick="toggleSenhaModal()" class="btn-eye" title="Mostrar senha" style="padding:.5rem .7rem;font-size:.9rem;">👁</button>
         <button type="button" onclick="previewSenhaProf()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.5rem .9rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;">↻ Prévia</button>
       </div>
       <span class="hint">Baseada nas 5 primeiras letras do nome + caractere especial.</span>
@@ -1897,6 +1898,16 @@ async function submitForm(modo){
   finally{btn.disabled=false;btn.innerHTML='✔ Enviar Solicitação';}
 }
 // ── TOGGLE SENHA (visível / oculta) ──
+function toggleSenhaModal() {
+  const input = document.getElementById('mpSenhaGerada');
+  const btn = document.getElementById('btnVerSenhaModal');
+  if (!input) return;
+  const visible = input.type === 'text';
+  input.type = visible ? 'password' : 'text';
+  btn.textContent = visible ? '👁' : '🙈';
+  btn.title = visible ? 'Mostrar senha' : 'Ocultar senha';
+}
+
 function toggleSenha(btn, senha, spanId) {
   const span = document.getElementById(spanId);
   if (!span) return;
@@ -2499,6 +2510,8 @@ function abrirModalProfessor(profId) {
     document.getElementById('mpEmailHint').textContent = 'O e-mail não pode ser alterado.';
     document.getElementById('mpDisciplina').value = prof.disciplina;
     document.getElementById('mpSenhaGerada').value = prof.senha_inicial||'(não registrada)';
+    document.getElementById('mpSenhaGerada').type = 'password';
+    const btnV = document.getElementById('btnVerSenhaModal'); if(btnV){btnV.textContent='👁';btnV.title='Mostrar senha';}
     document.getElementById('mpSenhaGroup').style.display = 'block';
   } else {
     document.getElementById('modalProfTitulo').textContent = '➕ Adicionar Professor';
@@ -2507,6 +2520,8 @@ function abrirModalProfessor(profId) {
     document.getElementById('mpEmailHint').textContent = '';
     document.getElementById('mpDisciplina').value = '';
     document.getElementById('mpSenhaGerada').value = '';
+    document.getElementById('mpSenhaGerada').type = 'password';
+    const btnV2 = document.getElementById('btnVerSenhaModal'); if(btnV2){btnV2.textContent='👁';btnV2.title='Mostrar senha';}
     document.getElementById('mpSenhaGroup').style.display = 'block';
   }
 
