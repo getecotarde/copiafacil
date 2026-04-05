@@ -468,6 +468,7 @@
             <option value="Entregue">Entregue</option>
             <option value="Cancelado">Cancelado</option>
           </select>
+          <button class="btn-secondary" onclick="limparFiltrosMeca()" style="white-space:nowrap;">✕ Limpar</button>
         </div>
         <div id="mecaContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
       </div>
@@ -486,7 +487,7 @@
       <div class="coord-tabs">
         <button class="coord-tab active" onclick="switchCoordTab('nova',this)">➕ Nova Solicitação</button>
         <button class="coord-tab" onclick="switchCoordTab('solicitacoes',this)">📄 Solicitações</button>
-        <button class="coord-tab" onclick="switchCoordTab('resumo',this)">📊 Resumo Semanal</button>
+        <button class="coord-tab" onclick="switchCoordTab('resumo',this)">📊 Resumo Geral</button>
         <button class="coord-tab" onclick="switchCoordTab('professores',this)">👩‍🏫 Professores</button>
         <button class="coord-tab" onclick="switchCoordTab('mecanografia',this)">🖨️ Mecanografia</button>
         <button class="coord-tab" onclick="switchCoordTab('admcopias',this)">📊 Adm. Cópias</button>
@@ -625,6 +626,7 @@
             <button class="btn-secondary" onclick="exportarSolicitacoesExcel()" title="Exportar tabela para Excel" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">
               📊 Exportar Excel
             </button>
+            <button class="btn-secondary" onclick="limparFiltrosSolicitacoes()" style="white-space:nowrap;">✕ Limpar</button>
           </div>
           <div id="coordContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
@@ -648,6 +650,7 @@
               <option value="aprovado">Aprovados</option>
               <option value="pendente">Pendentes</option>
             </select>
+            <button class="btn-secondary" onclick="limparFiltrosProfessores()" style="white-space:nowrap;">✕ Limpar</button>
           </div>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
             <label class="btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;" title="Importar lista de professores via CSV">
@@ -723,53 +726,122 @@
 
       <!-- TAB RESUMO SEMANAL -->
       <div class="tab-panel" id="tab-resumo">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
-          <div>
-            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">Resumo de Cópias</div>
-            <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Solicitações agrupadas por professor no período selecionado</div>
+        <!-- Sub-abas do Resumo Geral -->
+        <div style="display:flex;gap:.3rem;margin-bottom:1.2rem;border-bottom:2px solid var(--border);">
+          <button class="coord-tab active" id="resumoSubTab-periodo" onclick="switchResumoSub('periodo',this)" style="font-size:.82rem;padding:.45rem .9rem;">📅 Por Período</button>
+          <button class="coord-tab" id="resumoSubTab-mensal" onclick="switchResumoSub('mensal',this)" style="font-size:.82rem;padding:.45rem .9rem;">🗓️ Por Mês</button>
+        </div>
+
+        <!-- SUB-PAINEL: POR PERÍODO -->
+        <div id="resumoSub-periodo">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">Resumo de Cópias — Por Período</div>
+              <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Solicitações agrupadas por professor no período selecionado</div>
+            </div>
+            <div style="display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;">
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
+                <input type="date" id="resumoDe" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Até</label>
+                <input type="date" id="resumoAte" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
+                <select id="resumoStatus" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()">
+                  <option value="">Todos</option>
+                  <option value="Aguardando">Aguardando</option>
+                  <option value="Em produção">Em produção</option>
+                  <option value="Pronto">Pronto</option>
+                  <option value="Entregue">Entregue</option>
+                  <option value="Cancelado">Cancelado</option>
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
+                <select id="resumoProfessor" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
+                  <option value="">Todos</option>
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Disciplina</label>
+                <select id="resumoDisciplina" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
+                  <option value="">Todas</option>
+                </select>
+              </div>
+              <button class="btn-secondary" onclick="setResumoSemana()">Esta semana</button>
+              <button class="btn-secondary" onclick="limparFiltrosResumo()">✕ Limpar</button>
+            </div>
           </div>
-          <div style="display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;">
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
-              <input type="date" id="resumoDe" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
-            </div>
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Até</label>
-              <input type="date" id="resumoAte" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
-            </div>
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
-              <select id="resumoStatus" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()">
-                <option value="">Todos</option>
-                <option value="Aguardando">Aguardando</option>
-                <option value="Em produção">Em produção</option>
-                <option value="Pronto">Pronto</option>
-                <option value="Entregue">Entregue</option>
-                <option value="Cancelado">Cancelado</option>
-              </select>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
-              <select id="resumoProfessor" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
-                <option value="">Todos</option>
-              </select>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:.2rem;">
-              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Disciplina</label>
-              <select id="resumoDisciplina" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
-                <option value="">Todas</option>
-              </select>
-            </div>
-            <button class="btn-secondary" onclick="setResumoSemana()" style="">Esta semana</button>
+          <div id="resumoTotais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div id="resumoContainer"><div class="empty-state"><div class="emoji">📊</div><p>Selecione um período para ver o resumo.</p></div></div>
           </div>
         </div>
 
-        <!-- TOTALIZADOR -->
-        <div id="resumoTotais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
+        <!-- SUB-PAINEL: POR MÊS -->
+        <div id="resumoSub-mensal" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">Resumo de Cópias — Por Mês</div>
+              <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Navegue mês a mês e veja o consolidado de cópias</div>
+            </div>
+            <div style="display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;">
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
+                <select id="resumoMensalProf" onchange="renderResumoMensal()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;">
+                  <option value="">Todos</option>
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
+                <select id="resumoMensalStatus" onchange="renderResumoMensal()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;">
+                  <option value="">Todos</option>
+                  <option value="Aguardando">Aguardando</option>
+                  <option value="Em produção">Em produção</option>
+                  <option value="Pronto">Pronto</option>
+                  <option value="Entregue">Entregue</option>
+                  <option value="Cancelado">Cancelado</option>
+                </select>
+              </div>
+              <button class="btn-secondary" onclick="resumoMensalIrHoje()">Mês atual</button>
+              <button class="btn-secondary" onclick="limparFiltrosResumoMensal()">✕ Limpar</button>
+            </div>
+          </div>
 
-        <!-- TABELA POR PROFESSOR -->
-        <div class="card" style="padding:0;overflow:hidden;">
-          <div id="resumoContainer"><div class="empty-state"><div class="emoji">📊</div><p>Selecione um período para ver o resumo.</p></div></div>
+          <!-- Navegador de mês -->
+          <div style="background:linear-gradient(135deg,var(--primary) 0%,#2a5a3a 100%);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <button onclick="resumoMensalNav(-1)" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;width:36px;height:36px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
+              <div style="min-width:160px;text-align:center;">
+                <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.55);">Período consultado</div>
+                <div id="resumoMensalLabel" style="font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;margin-top:.1rem;">—</div>
+              </div>
+              <button onclick="resumoMensalNav(1)" id="btnResumoMensalProx" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;width:36px;height:36px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">›</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+              <div>
+                <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Total de Cópias</div>
+                <div id="resumoMensalTotalCopias" style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--accent);line-height:1;">—</div>
+              </div>
+              <div style="width:1px;height:36px;background:rgba(255,255,255,.15);"></div>
+              <div>
+                <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Solicitações</div>
+                <div id="resumoMensalTotalSolic" style="font-family:'Syne',sans-serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;">—</div>
+              </div>
+              <div style="width:1px;height:36px;background:rgba(255,255,255,.15);"></div>
+              <div>
+                <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Professores</div>
+                <div id="resumoMensalTotalProfs" style="font-family:'Syne',sans-serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div id="resumoMensalContainer"><div class="empty-state"><div class="emoji">🗓️</div><p>Carregando…</p></div></div>
+          </div>
         </div>
       </div>
 
@@ -1248,6 +1320,172 @@ function showPage(id,btn) {
 }
 
 // ── COORD TABS ──
+// ── LIMPAR FILTROS ──
+function limparFiltrosSolicitacoes(){
+  document.getElementById('filterText').value='';
+  document.getElementById('filterProfessor').value='';
+  document.getElementById('filterDisciplina').value='';
+  document.getElementById('filterStatus').value='';
+  renderSolicitacoes();
+}
+function limparFiltrosProfessores(){
+  document.getElementById('profFilterText').value='';
+  document.getElementById('profFilterDisc').value='';
+  document.getElementById('profFilterStatus').value='';
+  renderProfessores();
+}
+function limparFiltrosMeca(){
+  document.getElementById('mecaFilterText').value='';
+  document.getElementById('mecaFilterProfessor').value='';
+  document.getElementById('mecaFilterStatus').value='';
+  renderMeca();
+}
+function limparFiltrosResumo(){
+  document.getElementById('resumoDe').value='';
+  document.getElementById('resumoAte').value='';
+  document.getElementById('resumoStatus').value='';
+  document.getElementById('resumoProfessor').value='';
+  document.getElementById('resumoDisciplina').value='';
+  renderResumo();
+}
+function limparFiltrosResumoMensal(){
+  document.getElementById('resumoMensalProf').value='';
+  document.getElementById('resumoMensalStatus').value='';
+  renderResumoMensal();
+}
+
+// ── SUB-ABAS DO RESUMO GERAL ──
+function switchResumoSub(sub, btn){
+  ['periodo','mensal'].forEach(s=>{
+    const el=document.getElementById('resumoSub-'+s);
+    if(el) el.style.display = s===sub ? 'block' : 'none';
+    const b=document.getElementById('resumoSubTab-'+s);
+    if(b) b.classList.toggle('active', s===sub);
+  });
+  if(sub==='mensal'){
+    populateResumoMensalFiltros();
+    renderResumoMensal();
+  }
+}
+
+// ── RESUMO MENSAL ──
+let _resumoMensalOffset = 0; // 0 = mês atual
+
+function resumoMensalNav(delta){
+  const agora = new Date();
+  _resumoMensalOffset += delta;
+  // não avança além do mês atual
+  if(_resumoMensalOffset > 0) _resumoMensalOffset = 0;
+  const btnProx = document.getElementById('btnResumoMensalProx');
+  if(btnProx){
+    btnProx.disabled = _resumoMensalOffset >= 0;
+    btnProx.style.opacity = _resumoMensalOffset >= 0 ? '.35' : '1';
+    btnProx.style.cursor = _resumoMensalOffset >= 0 ? 'default' : 'pointer';
+  }
+  renderResumoMensal();
+}
+
+function resumoMensalIrHoje(){
+  _resumoMensalOffset = 0;
+  const btnProx = document.getElementById('btnResumoMensalProx');
+  if(btnProx){ btnProx.disabled=true; btnProx.style.opacity='.35'; }
+  renderResumoMensal();
+}
+
+function populateResumoMensalFiltros(){
+  const sel = document.getElementById('resumoMensalProf');
+  if(!sel) return;
+  const cur = sel.value;
+  const profs = [...new Set(allSolic.map(d=>d.professor||'').filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">Todos</option>' + profs.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  if(cur) sel.value = cur;
+}
+
+function renderResumoMensal(){
+  const agora = new Date();
+  const alvo = new Date(agora.getFullYear(), agora.getMonth() + _resumoMensalOffset, 1);
+  const mesAlvo = alvo.getMonth();
+  const anoAlvo = alvo.getFullYear();
+  const nomeMes = alvo.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const label = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+  const labelEl = document.getElementById('resumoMensalLabel');
+  if(labelEl) labelEl.textContent = label;
+
+  const profFiltro = (document.getElementById('resumoMensalProf')||{}).value || '';
+  const stFiltro = (document.getElementById('resumoMensalStatus')||{}).value || '';
+
+  const filtered = allSolic.filter(d=>{
+    const dt = new Date(d.data_solicitacao);
+    const dentroMes = dt.getMonth()===mesAlvo && dt.getFullYear()===anoAlvo;
+    const dentroProf = !profFiltro || d.professor===profFiltro;
+    const dentroSt = !stFiltro || d.status===stFiltro;
+    return dentroMes && dentroProf && dentroSt;
+  });
+
+  const totalCopias = filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const totalSolic = filtered.length;
+  const totalProfs = new Set(filtered.map(d=>d.professor)).size;
+
+  const elCopias = document.getElementById('resumoMensalTotalCopias');
+  const elSolic = document.getElementById('resumoMensalTotalSolic');
+  const elProfs = document.getElementById('resumoMensalTotalProfs');
+  if(elCopias) elCopias.textContent = totalCopias.toLocaleString('pt-BR');
+  if(elSolic) elSolic.textContent = totalSolic;
+  if(elProfs) elProfs.textContent = totalProfs;
+
+  // Botão próximo
+  const btnProx = document.getElementById('btnResumoMensalProx');
+  if(btnProx){
+    btnProx.disabled = _resumoMensalOffset >= 0;
+    btnProx.style.opacity = _resumoMensalOffset >= 0 ? '.35' : '1';
+    btnProx.style.cursor = _resumoMensalOffset >= 0 ? 'default' : 'pointer';
+  }
+
+  const container = document.getElementById('resumoMensalContainer');
+  if(!container) return;
+  if(!filtered.length){
+    container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação neste mês.</p></div>';
+    return;
+  }
+
+  // Agrupa por professor
+  const porProf={};
+  filtered.forEach(d=>{
+    const k=d.professor||'—';
+    if(!porProf[k]) porProf[k]={professor:k,disciplina:d.disciplina,solicitacoes:[],totalCopias:0};
+    porProf[k].solicitacoes.push(d);
+    porProf[k].totalCopias+=(d.total_copias||d.copias||0);
+  });
+  const rows=Object.values(porProf).sort((a,b)=>b.totalCopias-a.totalCopias);
+
+  container.innerHTML=`<table>
+    <thead><tr>
+      <th>Professor(a)</th>
+      <th>Disciplina</th>
+      <th style="text-align:center;">Solicitações</th>
+      <th style="text-align:center;">Total de Cópias</th>
+      <th>Títulos</th>
+      <th>Status</th>
+    </tr></thead>
+    <tbody>
+      ${rows.map(r=>`<tr>
+        <td><strong>${esc(r.professor)}</strong></td>
+        <td>${esc(disciplinaDisplay[r.disciplina]||r.disciplina||'—')}</td>
+        <td style="text-align:center;">${r.solicitacoes.length}</td>
+        <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${r.totalCopias.toLocaleString('pt-BR')}</td>
+        <td style="max-width:220px;">${r.solicitacoes.map(s=>`<div style="font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;" title="${esc(s.titulo)}">• ${esc(s.titulo)}</div>`).join('')}</td>
+        <td>${r.solicitacoes.map(s=>`<div style="margin-bottom:.2rem;"><span class="badge ${statusClass[s.status]||'badge-pending'}" style="font-size:.68rem;">${esc(s.status)}</span></div>`).join('')}</td>
+      </tr>`).join('')}
+      <tr style="background:#f5f0e8;border-top:2px solid var(--border);">
+        <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);" colspan="2">TOTAL DO MÊS</td>
+        <td style="text-align:center;font-weight:700;">${totalSolic}</td>
+        <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:800;color:var(--accent2);font-size:1rem;">${totalCopias.toLocaleString('pt-BR')}</td>
+        <td colspan="2"></td>
+      </tr>
+    </tbody>
+  </table>`;
+}
+
 function switchCoordTab(tab,btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.coord-tab').forEach(b=>b.classList.remove('active'));
@@ -1263,13 +1501,17 @@ function switchCoordTab(tab,btn) {
       db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false}).then(({data}) => {
         allSolic = data || [];
         populateResumoFiltros();
+        populateResumoMensalFiltros();
         setResumoSemana();
         renderResumo();
+        resumoMensalIrHoje();
       });
     } else {
       populateResumoFiltros();
+      populateResumoMensalFiltros();
       setResumoSemana();
       renderResumo();
+      resumoMensalIrHoje();
     }
   }
 }
