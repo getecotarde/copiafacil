@@ -569,8 +569,19 @@
         </div>
         <div class="card" style="padding:0;overflow:hidden;">
           <div style="padding:1rem 1.5rem;border-bottom:1.5px solid var(--border);display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
-            <input type="text" id="filterText" placeholder="🔍  Buscar…" style="flex:1;min-width:180px;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderSolicitacoes()" />
-            <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
+            <input type="text" id="filterText" placeholder="🔍  Buscar…" style="flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderSolicitacoes()" />
+            <select id="filterProfessor" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;max-width:180px;" onchange="renderSolicitacoes()">
+              <option value="">Todos os professores</option>
+            </select>
+            <select id="filterDisciplina" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
+              <option value="">Todas as disciplinas</option>
+              <option value="portugues">Português</option><option value="matematica">Matemática</option>
+              <option value="ciencias">Ciências</option><option value="historia">História</option>
+              <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
+              <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
+              <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option>
+            </select>
+            <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
               <option value="">Todos os status</option>
               <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
               <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
@@ -1568,7 +1579,7 @@ async function loadCoord(){
   const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
   allSolic=solic||[];renderStats();renderSolicitacoes();
   const {data:profs}=await db.from('professores').select('*').order('criado_em',{ascending:false});
-  allProfs=profs||[];renderProfessores();populateSolicitante();
+  allProfs=profs||[];renderProfessores();populateSolicitante();populateFilterProfessor();
   await renderMecaGerenciar();
 }
 
@@ -1583,13 +1594,26 @@ function renderStats(){
     <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
 }
 
+// ── POPULATE PROFESSOR FILTER ──
+function populateFilterProfessor(){
+  const sel=document.getElementById('filterProfessor');
+  if(!sel)return;
+  const atual=sel.value;
+  const nomes=[...new Set(allSolic.map(d=>d.professor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  sel.innerHTML='<option value="">Todos os professores</option>'+nomes.map(n=>`<option value="${esc(n)}"${atual===n?'selected':''}>${esc(n)}</option>`).join('');
+}
+
 // ── RENDER SOLICITAÇÕES ──
 function renderSolicitacoes(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
+  const prof=(document.getElementById('filterProfessor')||{}).value||'';
+  const disc=(document.getElementById('filterDisciplina')||{}).value||'';
   const filtered=allSolic.filter(d=>{
-    const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
-    return m&&(!st||d.status===st);
+    const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
+    const mProf=!prof||d.professor===prof;
+    const mDisc=!disc||(d.disciplina||'').toLowerCase()===disc;
+    return mTxt&&mProf&&mDisc&&(!st||d.status===st);
   });
   const container=document.getElementById('coordContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
@@ -1615,10 +1639,10 @@ function renderSolicitacoes(){
   }
 
   const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead>`;
-  const ultima=filtered[0];
-  const demais=filtered.slice(1);
+  const visiveis=filtered.slice(0,3);
+  const demais=filtered.slice(3);
 
-  let html=`<table>${thead}<tbody>${rowHtml(ultima)}</tbody></table>`;
+  let html=`<table>${thead}<tbody>${visiveis.map(rowHtml).join('')}</tbody></table>`;
 
   if(demais.length>0){
     html+=`
@@ -1654,9 +1678,13 @@ function toggleCoordDemais(){
 function exportarSolicitacoesExcel(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
+  const prof=(document.getElementById('filterProfessor')||{}).value||'';
+  const disc=(document.getElementById('filterDisciplina')||{}).value||'';
   const filtered=allSolic.filter(d=>{
-    const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
-    return m&&(!st||d.status===st);
+    const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
+    const mProf=!prof||d.professor===prof;
+    const mDisc=!disc||(d.disciplina||'').toLowerCase()===disc;
+    return mTxt&&mProf&&mDisc&&(!st||d.status===st);
   });
   if(filtered.length===0){showToast('⚠️ Nenhuma solicitação para exportar.',true);return;}
 
@@ -1737,16 +1765,16 @@ function renderProfessores(){
       <table>${thead}<tbody>${pendentes.map(rowHtml).join('')}</tbody></table>`;
   }
 
-  // Aprovados: primeiro visível, demais retráteis
+  // Aprovados: primeiros 4 visíveis, demais retráteis
   if(aprovados.length>0){
-    const primeiro=aprovados[0];
-    const demais=aprovados.slice(1);
+    const visiveis=aprovados.slice(0,4);
+    const demais=aprovados.slice(4);
     if(pendentes.length>0){
       html+=`<div style="background:var(--bg);border-top:2px solid var(--border);border-bottom:1.5px solid var(--border);padding:.55rem 1.2rem;">
         <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);">✔ Aprovados (${aprovados.length})</span>
       </div>`;
     }
-    html+=`<table>${thead}<tbody>${rowHtml(primeiro)}</tbody></table>`;
+    html+=`<table>${thead}<tbody>${visiveis.map(rowHtml).join('')}</tbody></table>`;
     if(demais.length>0){
       html+=`
         <div style="border-top:1.5px solid var(--border);">
