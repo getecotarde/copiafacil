@@ -447,24 +447,8 @@
 
       <!-- TAB NOVA -->
       <div class="tab-panel active" id="tab-nova">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
-          <div style="font-size:.88rem;color:var(--muted);">Crie uma solicitação em nome próprio ou de um professor.</div>
-          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
-            <button class="btn-secondary" onclick="toggleEmailImport()" id="btnEmailImport" style="display:inline-flex;align-items:center;gap:.4rem;">📧 Importar do e-mail</button>
-            <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
-          </div>
-        </div>
-
-        <!-- PAINEL IMPORTAR E-MAIL -->
-        <div id="emailImportPanel" style="display:none;margin-bottom:1.2rem;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.05);">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--primary);margin-bottom:.5rem;">📧 Importar solicitação do e-mail</div>
-          <div style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem;">Cole abaixo o texto do e-mail recebido. A IA vai identificar as informações e preencher o formulário automaticamente.</div>
-          <textarea id="emailTexto" placeholder="Cole aqui o texto do e-mail…" style="width:100%;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;resize:vertical;min-height:120px;transition:border-color .2s;" onfocus="this.style.borderColor='var(--primary)';" onblur="this.style.borderColor='var(--border)';"></textarea>
-          <div style="display:flex;gap:.6rem;margin-top:.7rem;align-items:center;flex-wrap:wrap;">
-            <button class="btn-action" id="btnProcessarEmail" onclick="processarEmailIA()">✨ Preencher formulário</button>
-            <button class="btn-secondary" onclick="toggleEmailImport()">Cancelar</button>
-            <span id="emailImportStatus" style="font-size:.82rem;color:var(--muted);"></span>
-          </div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
+          <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
         </div>
         <div class="form-layout">
           <!-- COLUNA ESQUERDA -->
@@ -569,8 +553,14 @@
         </div>
         <div class="card" style="padding:0;overflow:hidden;">
           <div style="padding:1rem 1.5rem;border-bottom:1.5px solid var(--border);display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
-            <input type="text" id="filterText" placeholder="🔍  Buscar…" style="flex:1;min-width:180px;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderSolicitacoes()" />
-            <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
+            <input type="text" id="filterText" placeholder="🔍  Buscar…" style="flex:1;min-width:150px;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderSolicitacoes()" />
+            <select id="filterProf" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;max-width:180px;" onchange="renderSolicitacoes()">
+              <option value="">Todos os professores</option>
+            </select>
+            <select id="filterDisc" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
+              <option value="">Todas as disciplinas</option>
+            </select>
+            <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
               <option value="">Todos os status</option>
               <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
               <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
@@ -585,32 +575,14 @@
 
       <!-- TAB PROFESSORES -->
       <div class="tab-panel" id="tab-professores">
-        <div style="display:flex;justify-content:space-between;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;">
-          <div style="display:flex;gap:.5rem;flex:1;min-width:220px;flex-wrap:wrap;">
-            <input type="text" id="profFilterText" placeholder="🔍 Buscar por nome ou e-mail…" oninput="renderProfessores()" style="flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
-            <select id="profFilterDisc" onchange="renderProfessores()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
-              <option value="">Todas as disciplinas</option>
-              <option value="portugues">Português</option><option value="matematica">Matemática</option>
-              <option value="ciencias">Ciências</option><option value="historia">História</option>
-              <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
-              <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-              <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option>
-            </select>
-            <select id="profFilterStatus" onchange="renderProfessores()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
-              <option value="">Todos</option>
-              <option value="aprovado">Aprovados</option>
-              <option value="pendente">Pendentes</option>
-            </select>
-          </div>
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
-            <label class="btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;" title="Importar lista de professores via CSV">
-              📥 Importar CSV
-              <input type="file" id="csvImportInput" accept=".csv" style="display:none;" onchange="importarProfessoresCSV(this)" />
-            </label>
-            <button class="btn-secondary" onclick="baixarModeloCSV()" title="Baixar modelo de planilha para preenchimento">📄 Baixar modelo</button>
-            <button class="btn-secondary" id="btnVerSenhas" onclick="togglePainelSenhas()" title="Ver senhas geradas na última importação">🔑 Ver senhas</button>
-            <button class="btn-action" onclick="abrirModalProfessor()">+ Adicionar Professor</button>
-          </div>
+        <div style="display:flex;justify-content:flex-end;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;">
+          <label class="btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;" title="Importar lista de professores via CSV">
+            📥 Importar CSV
+            <input type="file" id="csvImportInput" accept=".csv" style="display:none;" onchange="importarProfessoresCSV(this)" />
+          </label>
+          <button class="btn-secondary" onclick="baixarModeloCSV()" title="Baixar modelo de planilha para preenchimento">📄 Baixar modelo</button>
+          <button class="btn-secondary" id="btnVerSenhas" onclick="togglePainelSenhas()" title="Ver senhas geradas na última importação">🔑 Ver senhas</button>
+          <button class="btn-action" onclick="abrirModalProfessor()">+ Adicionar Professor</button>
         </div>
         <!-- PAINEL DE SENHAS -->
         <div id="painelSenhas" style="display:none;margin-bottom:1rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
@@ -643,33 +615,8 @@
       <!-- TAB MECANOGRAFIA -->
       <div class="tab-panel" id="tab-mecanografia">
         <div class="card" style="padding:1.5rem 2rem;">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem;">
-            <div>
-              <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">🖨️ Acesso da Mecanografia</h3>
-              <p style="font-size:.88rem;color:var(--muted);">Este perfil permite visualizar solicitações, baixar arquivos, imprimir e atualizar o status das cópias.</p>
-            </div>
-            <button class="btn-secondary" onclick="togglePainelSenhasMeca()">🔑 Ver senhas</button>
-          </div>
-          <!-- PAINEL DE SENHAS MECANOGRAFIA -->
-          <div id="painelSenhasMeca" style="display:none;margin-bottom:1.5rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
-              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos de Mecanografia</span>
-              <div style="display:flex;gap:.5rem;">
-                <button onclick="baixarCredsMeca()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
-                <button onclick="togglePainelSenhasMeca()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
-              </div>
-            </div>
-            <div style="overflow-x:auto;">
-              <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
-                <thead><tr>
-                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">E-mail</th>
-                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Senha inicial</th>
-                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Criado em</th>
-                </tr></thead>
-                <tbody id="tabelaSenhasMecaBody"></tbody>
-              </table>
-            </div>
-          </div>
+          <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">🖨️ Acesso da Mecanografia</h3>
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.5rem;">Este perfil permite visualizar solicitações, baixar arquivos, imprimir e atualizar o status das cópias.</p>
           <div id="mecaGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
@@ -1566,7 +1513,7 @@ async function togglePainelSenhas(){
 // ── COORD LOAD ──
 async function loadCoord(){
   const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
-  allSolic=solic||[];renderStats();renderSolicitacoes();
+  allSolic=solic||[];renderStats();populateSolicFiltros();renderSolicitacoes();
   const {data:profs}=await db.from('professores').select('*').order('criado_em',{ascending:false});
   allProfs=profs||[];renderProfessores();populateSolicitante();
   await renderMecaGerenciar();
@@ -1584,12 +1531,30 @@ function renderStats(){
 }
 
 // ── RENDER SOLICITAÇÕES ──
+function populateSolicFiltros(){
+  const selProf=document.getElementById('filterProf');
+  const selDisc=document.getElementById('filterDisc');
+  if(!selProf||!selDisc)return;
+  const curProf=selProf.value;
+  const curDisc=selDisc.value;
+  const profs=[...new Set(allSolic.map(d=>d.professor||'').filter(Boolean))].sort();
+  selProf.innerHTML='<option value="">Todos os professores</option>'+profs.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  if(curProf)selProf.value=curProf;
+  const discs=[...new Set(allSolic.map(d=>d.disciplina||'').filter(Boolean))].sort();
+  selDisc.innerHTML='<option value="">Todas as disciplinas</option>'+discs.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');
+  if(curDisc)selDisc.value=curDisc;
+}
+
 function renderSolicitacoes(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
+  const profFiltro=(document.getElementById('filterProf').value||'');
+  const discFiltro=(document.getElementById('filterDisc').value||'');
   const filtered=allSolic.filter(d=>{
     const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
-    return m&&(!st||d.status===st);
+    const mp=!profFiltro||d.professor===profFiltro;
+    const md=!discFiltro||d.disciplina===discFiltro;
+    return m&&mp&&md&&(!st||d.status===st);
   });
   const container=document.getElementById('coordContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
@@ -1615,16 +1580,16 @@ function renderSolicitacoes(){
   }
 
   const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead>`;
-  const ultima=filtered[0];
-  const demais=filtered.slice(1);
+  const visiveis=filtered.slice(0,4);
+  const demais=filtered.slice(4);
 
-  let html=`<table>${thead}<tbody>${rowHtml(ultima)}</tbody></table>`;
+  let html=`<table>${thead}<tbody>${visiveis.map(rowHtml).join('')}</tbody></table>`;
 
   if(demais.length>0){
     html+=`
       <div style="border-top:1.5px solid var(--border);">
         <button onclick="toggleCoordDemais()" id="btnCoordDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
-          <span>📋 Ver demais solicitações (${demais.length})</span>
+          <span>📋 Ver mais solicitações (${demais.length})</span>
           <span id="iconCoordDemais" style="transition:transform .25s;">▼</span>
         </button>
         <div id="coordDemaisPanel" style="display:none;overflow:hidden;">
@@ -1643,10 +1608,10 @@ function toggleCoordDemais(){
   const open=panel.style.display==='none';
   panel.style.display=open?'block':'none';
   icon.style.transform=open?'rotate(180deg)':'rotate(0deg)';
-  const spans=btn.querySelectorAll('span');
-  if(spans[0]){
-    const n=parseInt(spans[0].textContent.match(/\d+/));
-    spans[0].textContent=open?`📋 Ocultar demais solicitações (${n})`:`📋 Ver demais solicitações (${n})`;
+  const span=btn.querySelector('span');
+  if(span){
+    const n=parseInt(span.textContent.match(/\d+/));
+    span.textContent=open?`📋 Ocultar solicitações (${n})`:`📋 Ver mais solicitações (${n})`;
   }
 }
 
@@ -1654,9 +1619,13 @@ function toggleCoordDemais(){
 function exportarSolicitacoesExcel(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
+  const profFiltro=(document.getElementById('filterProf').value||'');
+  const discFiltro=(document.getElementById('filterDisc').value||'');
   const filtered=allSolic.filter(d=>{
     const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
-    return m&&(!st||d.status===st);
+    const mp=!profFiltro||d.professor===profFiltro;
+    const md=!discFiltro||d.disciplina===discFiltro;
+    return m&&mp&&md&&(!st||d.status===st);
   });
   if(filtered.length===0){showToast('⚠️ Nenhuma solicitação para exportar.',true);return;}
 
@@ -1694,88 +1663,35 @@ function exportarSolicitacoesExcel(){
 function renderProfessores(){
   const container=document.getElementById('profContainer');
   if(allProfs.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">👥</div><p>Nenhum professor cadastrado.</p></div>';return;}
-
-  const txt=(document.getElementById('profFilterText').value||'').toLowerCase();
-  const disc=document.getElementById('profFilterDisc').value;
-  const stFilter=document.getElementById('profFilterStatus').value;
-
-  const filtered=allProfs.filter(p=>{
-    const matchTxt=!txt||(p.nome||'').toLowerCase().includes(txt)||(p.email||'').toLowerCase().includes(txt);
-    const matchDisc=!disc||p.disciplina===disc;
-    const matchSt=!stFilter||(stFilter==='aprovado'?p.aprovado:!p.aprovado);
-    return matchTxt&&matchDisc&&matchSt;
-  });
-
-  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">🔍</div><p>Nenhum professor encontrado.</p></div>';return;}
-
-  const pendentes=filtered.filter(p=>!p.aprovado);
-  const aprovados=filtered.filter(p=>p.aprovado);
-
-  function rowHtml(p){
-    return `<tr>
-      <td><strong>${esc(p.nome)}</strong></td><td>${esc(p.email)}</td>
-      <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td><td>${fmtDate(p.criado_em)}</td>
-      <td>${p.aprovado?'<span class="badge badge-done">✔ Aprovado</span>':'<span class="badge badge-waiting">⏳ Pendente</span>'}</td>
-      <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
-        ${!p.aprovado?`<button class="btn-approve" onclick="aprovarProfessor('${p.id}',true)">✔ Aprovar</button>`:''}
-        <button class="btn-edit" onclick="abrirModalProfessor('${p.id}')">✏️ Editar</button>
-        <button class="btn-danger" onclick="excluirProfessor('${p.id}')">${p.aprovado?'🗑 Excluir':'🗑'}</button>
-      </td>
-    </tr>`;
-  }
-
-  const thead=`<thead><tr><th>Nome</th><th>E-mail</th><th>Disciplina</th><th>Cadastrado em</th><th>Status</th><th>Ações</th></tr></thead>`;
-
-  let html='';
-
-  // Pendentes sempre visíveis no topo se existirem
-  if(pendentes.length>0){
-    html+=`
-      <div style="background:#fff3d6;border-bottom:1.5px solid var(--border);padding:.55rem 1.2rem;display:flex;align-items:center;gap:.5rem;">
-        <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#a06000;">⏳ Pendentes de aprovação (${pendentes.length})</span>
-      </div>
-      <table>${thead}<tbody>${pendentes.map(rowHtml).join('')}</tbody></table>`;
-  }
-
-  // Aprovados: primeiro visível, demais retráteis
-  if(aprovados.length>0){
-    const primeiro=aprovados[0];
-    const demais=aprovados.slice(1);
-    if(pendentes.length>0){
-      html+=`<div style="background:var(--bg);border-top:2px solid var(--border);border-bottom:1.5px solid var(--border);padding:.55rem 1.2rem;">
-        <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);">✔ Aprovados (${aprovados.length})</span>
-      </div>`;
-    }
-    html+=`<table>${thead}<tbody>${rowHtml(primeiro)}</tbody></table>`;
-    if(demais.length>0){
-      html+=`
-        <div style="border-top:1.5px solid var(--border);">
-          <button onclick="toggleProfDemais()" id="btnProfDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
-            <span>👩‍🏫 Ver mais professores (${demais.length})</span>
-            <span id="iconProfDemais" style="transition:transform .25s;">▼</span>
-          </button>
-          <div id="profDemaisPanel" style="display:none;">
-            <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${demais.map(rowHtml).join('')}</tbody></table>
-          </div>
-        </div>`;
-    }
-  }
-
-  container.innerHTML=html;
-}
-
-function toggleProfDemais(){
-  const panel=document.getElementById('profDemaisPanel');
-  const icon=document.getElementById('iconProfDemais');
-  const btn=document.getElementById('btnProfDemais');
-  const open=panel.style.display==='none';
-  panel.style.display=open?'block':'none';
-  icon.style.transform=open?'rotate(180deg)':'rotate(0deg)';
-  const span=btn.querySelector('span');
-  if(span){
-    const n=parseInt(span.textContent.match(/\d+/));
-    span.textContent=open?`👩‍🏫 Ocultar professores (${n})`:`👩‍🏫 Ver mais professores (${n})`;
-  }
+  const pendentes=allProfs.filter(p=>!p.aprovado);
+  const aprovados=allProfs.filter(p=>p.aprovado);
+  container.innerHTML=`
+    <table>
+      <thead><tr><th>Nome</th><th>E-mail</th><th>Disciplina</th><th>Cadastrado em</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody>
+        ${pendentes.map(p=>`
+          <tr>
+            <td><strong>${esc(p.nome)}</strong></td><td>${esc(p.email)}</td>
+            <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td><td>${fmtDate(p.criado_em)}</td>
+            <td><span class="badge badge-waiting">⏳ Pendente</span></td>
+            <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
+              <button class="btn-approve" onclick="aprovarProfessor('${p.id}',true)">✔ Aprovar</button>
+              <button class="btn-edit" onclick="abrirModalProfessor('${p.id}')">✏️ Editar</button>
+              <button class="btn-danger" onclick="excluirProfessor('${p.id}')">🗑</button>
+            </td>
+          </tr>`).join('')}
+        ${aprovados.map(p=>`
+          <tr>
+            <td><strong>${esc(p.nome)}</strong></td><td>${esc(p.email)}</td>
+            <td>${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td><td>${fmtDate(p.criado_em)}</td>
+            <td><span class="badge badge-done">✔ Aprovado</span></td>
+            <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
+              <button class="btn-edit" onclick="abrirModalProfessor('${p.id}')">✏️ Editar</button>
+              <button class="btn-danger" onclick="excluirProfessor('${p.id}')">🗑 Excluir</button>
+            </td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
 }
 
 // ── MODAL PROFESSOR ──
@@ -1966,17 +1882,17 @@ async function renderMecaGerenciar(){
       </div>`;
     return;
   }
-  // Guarda lista para o painel de senhas
-  window._lastCredsMeca=lista;
   container.innerHTML=`
-    <div style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;">
-      ${lista.length} acesso${lista.length!==1?'s':''} cadastrado${lista.length!==1?'s':''}.
-      Use o botão <strong>🔑 Ver senhas</strong> acima para consultar credenciais.
-    </div>
     <table>
-      <thead><tr><th>Criado em</th><th>Ações</th></tr></thead>
+      <thead><tr><th>E-mail</th><th>Senha inicial</th><th>Criado em</th><th>Ações</th></tr></thead>
       <tbody>${lista.map(m=>`
         <tr>
+          <td><strong>${esc(m.email||'—')}</strong></td>
+          <td>
+            ${m.senha_inicial
+              ? `<span style="font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);background:#f0ede6;padding:.2rem .6rem;border-radius:5px;">${esc(m.senha_inicial)}</span>`
+              : `<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+          </td>
           <td>${m.criado_em?fmtDate(m.criado_em):'—'}</td>
           <td><button class="btn-danger" onclick="excluirMeca('${m.id}')">🗑 Remover acesso</button></td>
         </tr>`).join('')}
@@ -1990,42 +1906,6 @@ async function renderMecaGerenciar(){
 function previewSenhaMeca(){
   const nome=document.getElementById('mecaNome').value.trim();
   document.getElementById('mecaSenhaGerada').value=nome?gerarSenhaPorNome(nome):'';
-}
-
-async function togglePainelSenhasMeca(){
-  const p=document.getElementById('painelSenhasMeca');
-  if(p.style.display==='block'){p.style.display='none';return;}
-  const tbody=document.getElementById('tabelaSenhasMecaBody');
-  tbody.innerHTML=`<tr><td colspan="3" style="padding:1rem;text-align:center;"><span class="spinner"></span> Carregando…</td></tr>`;
-  p.style.display='block';
-  const {data:lista}=await db.from('mecanografia').select('email,senha_inicial,criado_em').order('criado_em',{ascending:true});
-  const itens=lista||[];
-  window._lastCredsMeca=itens;
-  if(itens.length===0){
-    tbody.innerHTML=`<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:var(--muted);">Nenhum acesso cadastrado.</td></tr>`;
-    return;
-  }
-  tbody.innerHTML=itens.map(m=>`
-    <tr style="border-bottom:1px solid var(--border);">
-      <td style="padding:.7rem 1rem;">${esc(m.email||'—')}</td>
-      <td style="padding:.7rem 1rem;font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);">${esc(m.senha_inicial||'—')}</td>
-      <td style="padding:.7rem 1rem;">${m.criado_em?fmtDate(m.criado_em):'—'}</td>
-    </tr>`).join('');
-}
-
-function baixarCredsMeca(){
-  const itens=window._lastCredsMeca||[];
-  if(!itens.length){showToast('⚠️ Nenhum dado para exportar.',true);return;}
-  const csv='\uFEFF'+'E-mail;Senha inicial;Criado em\r\n'
-    +itens.map(m=>`"${m.email||''}";"${m.senha_inicial||''}";"${m.criado_em?fmtDate(m.criado_em):''}"`).join('\r\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  const stamp=new Date().toISOString().slice(0,10);
-  a.href=url;a.download=`senhas_mecanografia_${stamp}.csv`;
-  document.body.appendChild(a);a.click();
-  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
-  showToast('📊 CSV exportado!');
 }
 
 function abrirModalMeca(){
