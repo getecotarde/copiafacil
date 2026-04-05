@@ -215,6 +215,12 @@
   .retro-box label { display: flex; align-items: center; gap: .6rem; cursor: pointer; flex: 1; min-width: 200px; }
   .retro-box input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
 
+  /* ── SENHA TOGGLE ── */
+  .senha-cell { display: flex; align-items: center; gap: .5rem; }
+  .senha-mask { font-family: monospace; font-weight: 700; letter-spacing: .08em; color: var(--primary); }
+  .btn-eye { background: none; border: 1.5px solid var(--border); border-radius: 6px; cursor: pointer; font-size: .82rem; padding: .18rem .5rem; color: var(--muted); transition: all .15s; line-height: 1.4; flex-shrink: 0; }
+  .btn-eye:hover { border-color: var(--primary); color: var(--primary); background: rgba(26,58,42,.06); }
+
   @media (max-width: 900px) {
     .form-layout, .form-layout-wide { grid-template-columns: 1fr; }
     .anexos-grid { grid-template-columns: 1fr; }
@@ -388,6 +394,55 @@
         <div><h1>Minhas Solicitações</h1><p>Acompanhe o status dos seus pedidos.</p></div>
         <button class="btn-secondary" onclick="showPage('solicitar')">+ Nova Solicitação</button>
       </div>
+
+      <!-- CONTADOR MENSAL -->
+      <div id="contadorMensal" style="background:linear-gradient(135deg,var(--primary) 0%,#2a5a3a 100%);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;">
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <span style="font-size:1.8rem;">📊</span>
+          <div>
+            <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.65);margin-bottom:.15rem;" id="contadorMesLabel">Cópias em —</div>
+            <div style="display:flex;align-items:baseline;gap:.5rem;">
+              <span id="contadorNum" style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--accent);line-height:1;">—</span>
+              <span style="font-size:.85rem;color:rgba(255,255,255,.7);">cópias totais</span>
+            </div>
+          </div>
+          <div style="width:1px;height:40px;background:rgba(255,255,255,.2);flex-shrink:0;display:none;" id="contadorDivider"></div>
+          <div id="contadorSolic" style="display:none;">
+            <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.65);margin-bottom:.15rem;">Solicitações</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;color:#fff;" id="contadorSolicNum">—</div>
+          </div>
+        </div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.55);max-width:220px;line-height:1.5;" id="contadorInfo">Em breve serão estabelecidos limites mensais de cópias.</div>
+      </div>
+
+      <!-- FILTROS -->
+      <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:.9rem 1.2rem;margin-bottom:1rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;">
+        <div style="display:flex;flex-direction:column;gap:.25rem;flex:1;min-width:160px;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">🔍 Buscar</label>
+          <input type="text" id="minhasFilterText" placeholder="Título, turmas, observações…" oninput="renderMinhasFiltered()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
+          <input type="date" id="minhasFilterDe" onchange="renderMinhasFiltered()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Até</label>
+          <input type="date" id="minhasFilterAte" onchange="renderMinhasFiltered()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
+          <select id="minhasFilterStatus" onchange="renderMinhasFiltered()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
+            <option value="">Todos</option>
+            <option value="Aguardando">Aguardando</option>
+            <option value="Em produção">Em produção</option>
+            <option value="Pronto">Pronto</option>
+            <option value="Entregue">Entregue</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+        <button onclick="limparFiltrosMinhas()" class="btn-secondary" style="align-self:flex-end;white-space:nowrap;">✕ Limpar</button>
+      </div>
+
       <div id="minhasContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
     </div>
 
@@ -1386,13 +1441,85 @@ async function submitForm(modo){
   }catch(err){console.error(err);showToast('❌ Erro: '+err.message,true);}
   finally{btn.disabled=false;btn.innerHTML='✔ Enviar Solicitação';}
 }
+// ── TOGGLE SENHA (visível / oculta) ──
+function toggleSenha(btn, senha, spanId) {
+  const span = document.getElementById(spanId);
+  if (!span) return;
+  const visible = span.textContent !== '••••••';
+  if (visible) {
+    span.textContent = '••••••';
+    span.style.fontFamily = 'monospace';
+    span.style.color = 'var(--primary)';
+    btn.textContent = '👁';
+    btn.title = 'Mostrar senha';
+  } else {
+    span.textContent = senha || '—';
+    span.style.fontFamily = 'monospace';
+    span.style.color = 'var(--primary)';
+    btn.textContent = '🙈';
+    btn.title = 'Ocultar senha';
+  }
+}
+
 // ── MINHAS SOLICITAÇÕES ──
+let _minhasData = [];
+
 async function loadMinhas(){
   const container=document.getElementById('minhasContainer');
   container.innerHTML='<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
   const {data,error}=await db.from('solicitacoes').select('*').ilike('professor',professorData.nome).order('data_solicitacao',{ascending:false});
-  if(error||!data||data.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Você ainda não tem solicitações.</p></div>';return;}
-  container.innerHTML=data.map(d=>`
+  if(error||!data||data.length===0){
+    container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Você ainda não tem solicitações.</p></div>';
+    atualizarContadorMensal([]);
+    return;
+  }
+  _minhasData = data;
+  atualizarContadorMensal(data);
+  renderMinhasFiltered();
+}
+
+function atualizarContadorMensal(data) {
+  const agora = new Date();
+  const mesAtual = agora.getMonth();
+  const anoAtual = agora.getFullYear();
+  const nomeMes = agora.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+
+  const doMes = data.filter(d => {
+    const dt = new Date(d.data_solicitacao);
+    return dt.getMonth() === mesAtual && dt.getFullYear() === anoAtual && d.status !== 'Cancelado';
+  });
+
+  const totalCopias = doMes.reduce((s,d) => s + (d.total_copias || d.copias || 0), 0);
+
+  document.getElementById('contadorMesLabel').textContent = 'Cópias em ' + nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+  document.getElementById('contadorNum').textContent = totalCopias.toLocaleString('pt-BR');
+  document.getElementById('contadorDivider').style.display = 'block';
+  document.getElementById('contadorSolic').style.display = 'block';
+  document.getElementById('contadorSolicNum').textContent = doMes.length;
+}
+
+function renderMinhasFiltered() {
+  const data = _minhasData;
+  const txt = (document.getElementById('minhasFilterText').value || '').toLowerCase();
+  const de = document.getElementById('minhasFilterDe').value;
+  const ate = document.getElementById('minhasFilterAte').value;
+  const st = document.getElementById('minhasFilterStatus').value;
+
+  const filtered = data.filter(d => {
+    const mTxt = !txt || (d.titulo||'').toLowerCase().includes(txt) || (d.turmas||'').toLowerCase().includes(txt) || (d.obs||'').toLowerCase().includes(txt);
+    const mStatus = !st || d.status === st;
+    const dt = new Date(d.data_solicitacao);
+    const mDe = !de || dt >= new Date(de + 'T00:00:00');
+    const mAte = !ate || dt <= new Date(ate + 'T23:59:59');
+    return mTxt && mStatus && mDe && mAte;
+  });
+
+  const container = document.getElementById('minhasContainer');
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação encontrada.</p></div>';
+    return;
+  }
+  container.innerHTML = filtered.map(d=>`
     <div class="minha-card">
       <div>
         <div class="mc-titulo">${esc(d.titulo)}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</div>
@@ -1412,6 +1539,14 @@ async function loadMinhas(){
         ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 2</a>`:''}
       </div>
     </div>`).join('');
+}
+
+function limparFiltrosMinhas() {
+  document.getElementById('minhasFilterText').value = '';
+  document.getElementById('minhasFilterDe').value = '';
+  document.getElementById('minhasFilterAte').value = '';
+  document.getElementById('minhasFilterStatus').value = '';
+  renderMinhasFiltered();
 }
 
 // ── COORD LOAD COM LOADER ──
@@ -1535,7 +1670,12 @@ async function importarProfessoresCSV(input){
         <td style="padding:.7rem 1rem;">${esc(c.nome)}</td>
         <td style="padding:.7rem 1rem;">${esc(c.email)}</td>
         <td style="padding:.7rem 1rem;">${esc(c.disciplina)}</td>
-        <td style="padding:.7rem 1rem;font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);">${esc(c.senha)}</td>
+        <td style="padding:.7rem 1rem;">
+          <div class="senha-cell">
+            <span class="senha-mask" id="senha-csv-${esc(c.email.replace(/[^a-z0-9]/gi,'_'))}">••••••</span>
+            <button class="btn-eye" onclick="toggleSenha(this,'${esc(c.senha)}','senha-csv-${esc(c.email.replace(/[^a-z0-9]/gi,'_'))}')">👁</button>
+          </div>
+        </td>
       </tr>`).join('');
     document.getElementById('btnVerSenhas').style.display='inline-flex';
   }
@@ -1564,7 +1704,12 @@ async function togglePainelSenhas(){
       <td style="padding:.7rem 1rem;">${esc(p.nome)}</td>
       <td style="padding:.7rem 1rem;">${esc(p.email)}</td>
       <td style="padding:.7rem 1rem;">${esc(disciplinaDisplay[p.disciplina]||p.disciplina)}</td>
-      <td style="padding:.7rem 1rem;font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);">${esc(p.senha_inicial)}</td>
+      <td style="padding:.7rem 1rem;">
+        <div class="senha-cell">
+          <span class="senha-mask" id="senha-prof-${esc(p.email.replace(/[^a-z0-9]/gi,'_'))}">••••••</span>
+          <button class="btn-eye" onclick="toggleSenha(this,'${esc(p.senha_inicial)}','senha-prof-${esc(p.email.replace(/[^a-z0-9]/gi,'_'))}')">👁</button>
+        </div>
+      </td>
     </tr>`).join('');
 }
 
@@ -2030,7 +2175,12 @@ async function togglePainelSenhasMeca(){
   tbody.innerHTML=itens.map(m=>`
     <tr style="border-bottom:1px solid var(--border);">
       <td style="padding:.7rem 1rem;">${esc(m.email||'—')}</td>
-      <td style="padding:.7rem 1rem;font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);">${esc(m.senha_inicial||'—')}</td>
+      <td style="padding:.7rem 1rem;">
+        <div class="senha-cell">
+          <span class="senha-mask" id="senha-meca-${esc((m.email||'meca').replace(/[^a-z0-9]/gi,'_'))}">••••••</span>
+          <button class="btn-eye" onclick="toggleSenha(this,'${esc(m.senha_inicial||'')}','senha-meca-${esc((m.email||'meca').replace(/[^a-z0-9]/gi,'_'))}')">👁</button>
+        </div>
+      </td>
       <td style="padding:.7rem 1rem;">${m.criado_em?fmtDate(m.criado_em):'—'}</td>
     </tr>`).join('');
 }
