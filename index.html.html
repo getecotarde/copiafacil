@@ -245,33 +245,12 @@
   <div class="auth-box">
     <div class="auth-logo">🖨️ <em>CópiaFácil</em></div>
     <p class="auth-sub">Sistema de Solicitação de Matrizes - GETECO /Tarde</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
-      <button class="auth-tab" onclick="switchTab('cadastro')">Primeiro acesso</button>
-    </div>
+
     <div id="painelLogin">
       <div class="fg"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
       <div class="fg"><label>Senha</label><input type="password" id="loginSenha" placeholder="Sua senha" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
       <p class="auth-erro" id="loginErro"></p>
       <button class="btn-primary" id="btnLogin" onclick="fazerLogin()">Entrar</button>
-    </div>
-    <div id="painelCadastro" style="display:none">
-      <div class="fg"><label>Nome completo *</label><input type="text" id="cadNome" placeholder="Ex.: Maria da Silva" /></div>
-      <div class="fg"><label>E-mail *</label><input type="email" id="cadEmail" placeholder="seu@email.com" /></div>
-      <div class="fg">
-        <label>Disciplina *</label>
-        <select id="cadDisciplina">
-          <option value="">— Selecione —</option>
-          <option value="portugues">Português</option><option value="matematica">Matemática</option>
-          <option value="ciencias">Ciências</option><option value="historia">História</option>
-          <option value="geografia">Geografia</option><option value="ingles">Inglês</option>
-          <option value="arte">Arte</option><option value="educacao fisica">Educação Física</option>
-          <option value="ensino religioso">Ensino Religioso</option><option value="coordenacao">Coordenação</option><option value="outra">Outra</option><input type="password" id="cadSenha" placeholder="Mínimo 6 caracteres" /></div>
-      <div class="fg"><label>Confirme a senha *</label><input type="password" id="cadSenhaConf" placeholder="Repita a senha" onkeydown="if(event.key==='Enter') fazerCadastro()" /></div>
-      <div class="senha-req">🔒 Mínimo de <strong>6 caracteres</strong>. Guarde sua senha com cuidado.</div>
-      <p class="auth-erro" id="cadErro"></p>
-      <p class="auth-info" id="cadInfo"></p>
-      <button class="btn-primary" id="btnCadastro" onclick="fazerCadastro()">Criar conta</button>
     </div>
   </div>
 </div>
