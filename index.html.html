@@ -2208,8 +2208,9 @@ async function mecaUpdateStatus(id,newStatus){
 
 function mecaPrint(id){
   const item=allSolic.find(d=>d.id===id);if(!item)return;
-  if(!item.arquivo_url){showToast('⚠️ Esta solicitação não possui arquivo anexado.',true);return;}
-  window.open(item.arquivo_url,'_blank');
+  const links=[item.arquivo_url,item.drive_link1,item.arquivo_url2,item.drive_link2].filter(Boolean);
+  if(links.length===0){showToast("⚠️ Esta solicitação não possui arquivo anexado.",true);return;}
+  links.forEach(url=>window.open(url,"_blank"));
 }
 
 // ── AUTO LOGIN ──
