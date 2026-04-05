@@ -413,8 +413,11 @@
       </div>
       <div class="card" style="padding:0;overflow:hidden;">
         <div style="padding:1rem 1.5rem;border-bottom:1.5px solid var(--border);display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
-          <input type="text" id="mecaFilterText" placeholder="🔍  Buscar…" style="flex:1;min-width:180px;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderMeca()" />
-          <select id="mecaFilterStatus" style="font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderMeca()">
+          <input type="text" id="mecaFilterText" placeholder="🔍  Buscar…" style="flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderMeca()" />
+          <select id="mecaFilterProfessor" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;max-width:200px;" onchange="renderMeca()">
+            <option value="">Todos os professores</option>
+          </select>
+          <select id="mecaFilterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderMeca()">
             <option value="">Todos os status</option>
             <option value="Aguardando">Aguardando</option>
             <option value="Em produção">Em produção</option>
@@ -2100,7 +2103,7 @@ async function excluirMeca(id){
 async function loadMeca(){
   const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
   allSolic=solic||[];
-  renderMecaStats();renderMeca();
+  renderMecaStats();populateMecaFilterProfessor();renderMeca();
 }
 
 function renderMecaStats(){
@@ -2113,12 +2116,22 @@ function renderMecaStats(){
     <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
 }
 
+function populateMecaFilterProfessor(){
+  const sel=document.getElementById('mecaFilterProfessor');
+  if(!sel)return;
+  const atual=sel.value;
+  const nomes=[...new Set(allSolic.map(d=>d.professor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  sel.innerHTML='<option value="">Todos os professores</option>'+nomes.map(n=>`<option value="${esc(n)}"${atual===n?'selected':''}>${esc(n)}</option>`).join('');
+}
+
 function renderMeca(){
   const txt=(document.getElementById('mecaFilterText').value||'').toLowerCase();
   const st=document.getElementById('mecaFilterStatus').value;
+  const prof=(document.getElementById('mecaFilterProfessor')||{}).value||'';
   const filtered=allSolic.filter(d=>{
     const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
-    return m&&(!st||d.status===st);
+    const mProf=!prof||d.professor===prof;
+    return m&&mProf&&(!st||d.status===st);
   });
   const container=document.getElementById('mecaContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
