@@ -245,14 +245,6 @@
   <div class="auth-box">
     <div class="auth-logo">🖨️ <em>CópiaFácil</em></div>
     <p class="auth-sub">Sistema de Solicitação de Matrizes - GETECO /Tarde</p>
-    <div style="background:#e8f0eb;border:1.5px solid #b8d4bf;border-radius:10px;padding:.7rem 1rem;margin-bottom:1.2rem;font-size:.78rem;color:var(--primary);">
-      <div style="font-weight:700;margin-bottom:.3rem;">🗂️ Perfis disponíveis:</div>
-      <div>• <strong>Professores</strong> — use e-mail e senha cadastrados</div>
-      <div>• <strong>Coordenação</strong> — senha: <code style="background:rgba(0,0,0,.07);padding:.1rem .4rem;border-radius:4px;">galodoido</code></div>
-      <div>• <strong>Mecanografia</strong> — use e-mail e senha do acesso criado</div>
-      <div style="margin-top:.4rem;padding-top:.4rem;border-top:1px solid #b8d4bf;">• <strong>Adm. Cópias</strong> — qualquer e-mail + senha: <code style="background:rgba(0,0,0,.07);padding:.1rem .4rem;border-radius:4px;">admincopias</code></div>
-      <div>• <strong>Adm. Arquivos</strong> — qualquer e-mail + senha: <code style="background:rgba(0,0,0,.07);padding:.1rem .4rem;border-radius:4px;">adminarquivos</code></div>
-    </div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
       <button class="auth-tab" onclick="switchTab('cadastro')">Primeiro acesso</button>
@@ -518,6 +510,8 @@
         <button class="coord-tab" onclick="switchCoordTab('resumo',this)">📊 Resumo Semanal</button>
         <button class="coord-tab" onclick="switchCoordTab('professores',this)">👩‍🏫 Professores</button>
         <button class="coord-tab" onclick="switchCoordTab('mecanografia',this)">🖨️ Mecanografia</button>
+        <button class="coord-tab" onclick="switchCoordTab('admcopias',this)">📊 Adm. Cópias</button>
+        <button class="coord-tab" onclick="switchCoordTab('pedagogico',this)">📚 Pedagógico</button>
       </div>
 
       <!-- TAB NOVA -->
@@ -799,6 +793,80 @@
           <div id="resumoContainer"><div class="empty-state"><div class="emoji">📊</div><p>Selecione um período para ver o resumo.</p></div></div>
         </div>
       </div>
+
+      <!-- TAB ADM. CÓPIAS -->
+      <div class="tab-panel" id="tab-admcopias">
+        <div class="card" style="padding:1.5rem 2rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem;">
+            <div>
+              <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">📊 Perfil Administrativo — Cópias</h3>
+              <p style="font-size:.88rem;color:var(--muted);">Este perfil permite consultar relatórios de cópias por professor e período.</p>
+            </div>
+            <div style="display:flex;gap:.5rem;">
+              <button class="btn-secondary" onclick="togglePainelSenhasAdm('copias')">🔑 Ver senhas</button>
+              <button class="btn-action" onclick="abrirModalAdm('copias')">+ Criar acesso</button>
+            </div>
+          </div>
+          <!-- PAINEL DE SENHAS ADM CÓPIAS -->
+          <div id="painelSenhasAdmCopias" style="display:none;margin-bottom:1.5rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos Adm. Cópias</span>
+              <div style="display:flex;gap:.5rem;">
+                <button onclick="baixarCredsAdm('copias')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+                <button onclick="togglePainelSenhasAdm('copias')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
+                <thead><tr>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Nome</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">E-mail</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Senha inicial</th>
+                </tr></thead>
+                <tbody id="tabelaSenhasAdmCopiasBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="admCopiasGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+        </div>
+      </div>
+
+      <!-- TAB PEDAGÓGICO -->
+      <div class="tab-panel" id="tab-pedagogico">
+        <div class="card" style="padding:1.5rem 2rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem;">
+            <div>
+              <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">📚 Perfil Pedagógico</h3>
+              <p style="font-size:.88rem;color:var(--muted);">Este perfil permite consultar arquivos e links postados pelos professores.</p>
+            </div>
+            <div style="display:flex;gap:.5rem;">
+              <button class="btn-secondary" onclick="togglePainelSenhasAdm('pedagogico')">🔑 Ver senhas</button>
+              <button class="btn-action" onclick="abrirModalAdm('pedagogico')">+ Criar acesso</button>
+            </div>
+          </div>
+          <!-- PAINEL DE SENHAS PEDAGÓGICO -->
+          <div id="painelSenhasAdmPedagogico" style="display:none;margin-bottom:1.5rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos Pedagógico</span>
+              <div style="display:flex;gap:.5rem;">
+                <button onclick="baixarCredsAdm('pedagogico')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+                <button onclick="togglePainelSenhasAdm('pedagogico')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
+                <thead><tr>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Nome</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">E-mail</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Senha inicial</th>
+                </tr></thead>
+                <tbody id="tabelaSenhasAdmPedagogicoBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="admPedagogicoGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -879,7 +947,7 @@
   <header>
     <div class="logo">🖨️ <span>CópiaFácil</span></div>
     <div class="header-right">
-      <span class="perfil-badge" style="background:#0f766e;color:#fff;">📁 Adm. Arquivos</span>
+      <span class="perfil-badge" style="background:#0f766e;color:#fff;">📚 Pedagógico</span>
       <button class="btn-sair" onclick="sair()">Sair</button>
     </div>
   </header>
@@ -1003,6 +1071,28 @@
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModalMeca()">Cancelar</button>
       <button class="btn-action" id="btnSalvarMeca" onclick="salvarMeca()">Criar acesso</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADMINISTRATIVO -->
+<div class="modal-overlay" id="modalAdmOverlay" onclick="closeModalAdm(event)">
+  <div class="modal">
+    <h2 id="modalAdmTitulo">Criar Acesso</h2>
+    <div class="mfg"><label>Nome completo *</label><input type="text" id="admNome" placeholder="Ex.: Ana Coordenadora" oninput="previewSenhaAdm()" /></div>
+    <div class="mfg"><label>E-mail *</label><input type="email" id="admEmail" placeholder="usuario@escola.com" /></div>
+    <div class="mfg">
+      <label>Senha inicial (gerada automaticamente)</label>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <input type="text" id="admSenhaGerada" readonly style="font-family:monospace;font-weight:700;letter-spacing:.1em;background:#f0ede6;color:var(--primary);flex:1;" placeholder="Digite o nome para gerar" />
+        <button type="button" onclick="previewSenhaAdm()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.5rem .9rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;">↻ Prévia</button>
+      </div>
+      <span class="hint">Baseada nas 5 primeiras letras do nome + caractere especial.</span>
+    </div>
+    <p class="auth-erro" id="modalAdmErro"></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModalAdm()">Cancelar</button>
+      <button class="btn-action" id="btnSalvarAdm" onclick="salvarAdm()">Criar acesso</button>
     </div>
   </div>
 </div>
@@ -1148,10 +1238,12 @@ async function iniciarApp() {
 
 // ── SAIR ──
 async function sair() {
-  await db.auth.signOut();
+  await db.auth.signOut().catch(()=>{});
   currentUser=null;perfilAtual=null;professorData=null;allSolic=[];allProfs=[];currentSolicId=null;
   document.getElementById('telaApp').style.display='none';
   document.getElementById('telaPendente').style.display='none';
+  document.getElementById('telaAdminCopias').style.display='none';
+  document.getElementById('telaAdminArquivos').style.display='none';
   document.getElementById('telaAuth').style.display='flex';
   document.getElementById('loginEmail').value='';
   document.getElementById('loginSenha').value='';
@@ -1184,6 +1276,8 @@ function switchCoordTab(tab,btn) {
   if(panel) panel.classList.add('active');
   if(btn) btn.classList.add('active');
   if(tab==='mecanografia') renderMecaGerenciar();
+  if(tab==='admcopias') renderAdmGerenciar('copias');
+  if(tab==='pedagogico') renderAdmGerenciar('pedagogico');
   if(tab==='resumo') {
     // Garante que allSolic está carregado antes de renderizar
     if(allSolic.length === 0) {
@@ -2561,43 +2655,11 @@ function mecaPrint(id){
 }
 
 // ── PERFIS ADMINISTRATIVOS ──
-// Senhas fixas dos perfis admin (controladas pela coordenação)
-const SENHA_ADM_COPIAS   = 'admincopias';
-const SENHA_ADM_ARQUIVOS = 'adminarquivos';
+// Usuários criados pela coordenação na tabela 'administrativo'
+// tipo: 'copias' | 'pedagogico'
 
 // Sobrescreve fazerLogin para detectar também os perfis admin
-const _fazerLoginOriginal = fazerLogin;
 async function fazerLogin() {
-  const email=document.getElementById('loginEmail').value.trim();
-  const senha=document.getElementById('loginSenha').value;
-  if (senha===SENHA_ADM_COPIAS) {
-    const erroEl=document.getElementById('loginErro');
-    const btn=document.getElementById('btnLogin');
-    erroEl.style.display='none';
-    btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Entrando…';
-    try {
-      const {data,error}=await db.auth.signInWithPassword({email,password:senha}).catch(()=>({data:null,error:{message:'auth'}}));
-      // Permite login sem auth real se senha bate (perfil admin é virtual)
-    } catch(e){}
-    perfilAtual='admCopias';
-    await iniciarAdmCopias();
-    btn.disabled=false;btn.innerHTML='Entrar';
-    return;
-  }
-  if (senha===SENHA_ADM_ARQUIVOS) {
-    const btn=document.getElementById('btnLogin');
-    btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Entrando…';
-    perfilAtual='admArquivos';
-    await iniciarAdmArquivos();
-    btn.disabled=false;btn.innerHTML='Entrar';
-    return;
-  }
-  // fallback para login normal
-  await _fazerLoginOriginal_real();
-}
-
-// Guarda o login real antes de sobrescrever
-async function _fazerLoginOriginal_real() {
   const email=document.getElementById('loginEmail').value.trim();
   const senha=document.getElementById('loginSenha').value;
   const erroEl=document.getElementById('loginErro');
@@ -2610,8 +2672,21 @@ async function _fazerLoginOriginal_real() {
     if (error) throw error;
     currentUser=data.user;
     if (senha===SENHA_COORD){perfilAtual='coordenacao';await iniciarApp();return;}
+    // Verifica mecanografia
     const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
     if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
+    // Verifica administrativo
+    const {data:adm}=await db.from('administrativo').select('*').eq('id',currentUser.id).maybeSingle();
+    if(adm){
+      perfilAtual = adm.tipo==='pedagogico' ? 'admArquivos' : 'admCopias';
+      if(adm.senha_inicial){
+        // mostra senha se for primeiro acesso (opcional)
+      }
+      if(perfilAtual==='admCopias') await iniciarAdmCopias();
+      else await iniciarAdmArquivos();
+      return;
+    }
+    // Professor
     const {data:prof,error:profErr}=await db.from('professores').select('*').eq('id',currentUser.id).single();
     if (profErr||!prof) throw new Error('Perfil não encontrado.');
     if (!prof.aprovado){
@@ -2625,6 +2700,146 @@ async function _fazerLoginOriginal_real() {
     erroEl.textContent=err.message.includes('Invalid login')?'❌ E-mail ou senha incorretos.':'❌ '+err.message;
     erroEl.style.display='block';
   } finally {btn.disabled=false;btn.innerHTML='Entrar';}
+}
+
+// ── GERENCIAR ADMINISTRATIVO (coord) ──
+let _admTipoAtual = 'copias'; // 'copias' | 'pedagogico'
+
+function abrirModalAdm(tipo){
+  _admTipoAtual=tipo;
+  const label=tipo==='pedagogico'?'Pedagógico':'Adm. Cópias';
+  document.getElementById('modalAdmTitulo').textContent=`📊 Criar Acesso — ${label}`;
+  document.getElementById('admNome').value='';
+  document.getElementById('admEmail').value='';
+  document.getElementById('admSenhaGerada').value='';
+  document.getElementById('modalAdmErro').style.display='none';
+  document.getElementById('modalAdmOverlay').classList.add('open');
+}
+
+function closeModalAdm(e){
+  if(!e||e.target===document.getElementById('modalAdmOverlay'))
+    document.getElementById('modalAdmOverlay').classList.remove('open');
+}
+
+function previewSenhaAdm(){
+  const nome=document.getElementById('admNome').value.trim();
+  document.getElementById('admSenhaGerada').value=nome?gerarSenhaPorNome(nome):'';
+}
+
+async function salvarAdm(){
+  const nome=document.getElementById('admNome').value.trim();
+  const email=document.getElementById('admEmail').value.trim();
+  const erroEl=document.getElementById('modalAdmErro');
+  const btn=document.getElementById('btnSalvarAdm');
+  erroEl.style.display='none';
+  if(!nome||!email){erroEl.textContent='⚠️ Preencha nome e e-mail.';erroEl.style.display='block';return;}
+  const senha=gerarSenhaPorNome(nome);
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
+  try{
+    const {data,error}=await db.auth.signUp({email,password:senha});
+    if(error)throw error;
+    const uid=data.user.id;
+    const {error:insErr}=await db.from('administrativo').insert([{id:uid,email,nome,tipo:_admTipoAtual,senha_inicial:senha}]);
+    if(insErr)throw insErr;
+    await db.auth.signOut();
+    const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+    if(!loginErr)currentUser=sessao.user;
+    closeModalAdm();
+    await renderAdmGerenciar(_admTipoAtual);
+    showToast(`✅ Acesso criado! Senha: ${senha}`);
+  }catch(err){
+    erroEl.textContent=err.message.includes('already registered')?'⚠️ Este e-mail já está cadastrado.':'❌ Erro: '+err.message;
+    erroEl.style.display='block';
+  }finally{btn.disabled=false;btn.innerHTML='Criar acesso';}
+}
+
+async function renderAdmGerenciar(tipo){
+  const containerId=tipo==='pedagogico'?'admPedagogicoGerenciar':'admCopiasGerenciar';
+  const container=document.getElementById(containerId);
+  if(!container)return;
+  const {data:lista}=await db.from('administrativo').select('id,email,nome,senha_inicial,criado_em').eq('tipo',tipo);
+  if(!lista||lista.length===0){
+    container.innerHTML=`<div style="text-align:center;padding:2rem 1rem;">
+      <div style="font-size:2.5rem;margin-bottom:.8rem;">${tipo==='pedagogico'?'📚':'📊'}</div>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.2rem;">Nenhum acesso criado ainda.</p>
+      <button class="btn-action" onclick="abrirModalAdm('${tipo}')">+ Criar acesso</button>
+    </div>`;
+    return;
+  }
+  container.innerHTML=`
+    <div style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;">
+      ${lista.length} acesso${lista.length!==1?'s':''} cadastrado${lista.length!==1?'s':''}.
+      Use o botão <strong>🔑 Ver senhas</strong> para consultar credenciais.
+    </div>
+    <table>
+      <thead><tr>
+        <th>Nome</th><th>E-mail</th><th>Criado em</th><th>Ações</th>
+      </tr></thead>
+      <tbody>${lista.map(m=>`
+        <tr>
+          <td>${esc(m.nome||'—')}</td>
+          <td>${esc(m.email||'—')}</td>
+          <td>${m.criado_em?fmtDate(m.criado_em):'—'}</td>
+          <td><button class="btn-danger" onclick="excluirAdm('${m.id}','${tipo}')">🗑 Remover acesso</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div style="margin-top:1.2rem;display:flex;justify-content:flex-end;">
+      <button class="btn-action" onclick="abrirModalAdm('${tipo}')">+ Criar outro acesso</button>
+    </div>`;
+}
+
+async function excluirAdm(id, tipo){
+  if(!confirm('Remover este acesso? O usuário perderá o acesso à plataforma.'))return;
+  const {error}=await db.from('administrativo').delete().eq('id',id);
+  if(error){showToast('❌ Erro ao remover.',true);return;}
+  await renderAdmGerenciar(tipo);
+  showToast('🗑 Acesso removido.');
+}
+
+async function togglePainelSenhasAdm(tipo){
+  const panelId=tipo==='pedagogico'?'painelSenhasAdmPedagogico':'painelSenhasAdmCopias';
+  const tbodyId=tipo==='pedagogico'?'tabelaSenhasAdmPedagogicoBody':'tabelaSenhasAdmCopiasBody';
+  const p=document.getElementById(panelId);
+  if(p.style.display==='block'){p.style.display='none';return;}
+  const tbody=document.getElementById(tbodyId);
+  tbody.innerHTML=`<tr><td colspan="3" style="padding:1rem;text-align:center;"><span class="spinner"></span> Carregando…</td></tr>`;
+  p.style.display='block';
+  const {data:lista}=await db.from('administrativo').select('nome,email,senha_inicial,criado_em').eq('tipo',tipo).order('criado_em',{ascending:true});
+  const itens=lista||[];
+  if(!itens.length){
+    tbody.innerHTML=`<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:var(--muted);">Nenhum acesso cadastrado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=itens.map(m=>{
+    const sid=`senha-adm-${tipo}-${esc((m.email||'u').replace(/[^a-z0-9]/gi,'_'))}`;
+    return `<tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:.7rem 1rem;">${esc(m.nome||'—')}</td>
+      <td style="padding:.7rem 1rem;">${esc(m.email||'—')}</td>
+      <td style="padding:.7rem 1rem;">
+        <div class="senha-cell">
+          <span class="senha-mask" id="${sid}">••••••</span>
+          <button class="btn-eye" onclick="toggleSenha(this,'${esc(m.senha_inicial||'')}','${sid}')">👁</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function baixarCredsAdm(tipo){
+  // trigger download from the already-rendered table
+  db.from('administrativo').select('nome,email,senha_inicial,criado_em').eq('tipo',tipo).then(({data:lista})=>{
+    const itens=lista||[];
+    if(!itens.length){showToast('⚠️ Nenhum dado para exportar.',true);return;}
+    const csv='\uFEFF'+'Nome;E-mail;Senha inicial;Criado em\r\n'
+      +itens.map(m=>`"${m.nome||''}"; "${m.email||''}"; "${m.senha_inicial||''}"; "${m.criado_em?fmtDate(m.criado_em):''}"`).join('\r\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');
+    const stamp=new Date().toISOString().slice(0,10);
+    a.href=url;a.download=`senhas_${tipo}_${stamp}.csv`;
+    document.body.appendChild(a);a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+    showToast('📊 CSV exportado!');
+  });
 }
 
 async function iniciarAdmCopias(){
@@ -2828,27 +3043,19 @@ function exportarAdm2(){
   showToast('📊 Exportação concluída!');
 }
 
-// Patch sair() to also hide admin screens
-const _sairOriginal = sair;
-async function sair() {
-  document.getElementById('telaAdminCopias').style.display='none';
-  document.getElementById('telaAdminArquivos').style.display='none';
-  perfilAtual=null;
-  await db.auth.signOut().catch(()=>{});
-  currentUser=null;professorData=null;allSolic=[];allProfs=[];currentSolicId=null;
-  document.getElementById('telaApp').style.display='none';
-  document.getElementById('telaPendente').style.display='none';
-  document.getElementById('telaAuth').style.display='flex';
-  document.getElementById('loginEmail').value='';
-  document.getElementById('loginSenha').value='';
-  document.getElementById('loginErro').style.display='none';
-}
+// ── AUTO LOGIN ──
 db.auth.getSession().then(async({data:{session}})=>{
   if(!session)return;
   currentUser=session.user;
-  // Mecanografia — detecta pela tabela
   const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
   if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
+  const {data:adm}=await db.from('administrativo').select('*').eq('id',currentUser.id).maybeSingle();
+  if(adm){
+    perfilAtual = adm.tipo==='pedagogico' ? 'admArquivos' : 'admCopias';
+    if(perfilAtual==='admCopias') await iniciarAdmCopias();
+    else await iniciarAdmArquivos();
+    return;
+  }
   const {data:prof}=await db.from('professores').select('*').eq('id',currentUser.id).single();
   if(prof){
     if(!prof.aprovado){document.getElementById('telaAuth').style.display='none';document.getElementById('telaPendente').style.display='flex';return;}
