@@ -614,10 +614,6 @@
             </select>
           </div>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
-            <label class="btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;" title="Importar lista de professores via CSV">
-              📥 Importar CSV
-              <input type="file" id="csvImportInput" accept=".csv" style="display:none;" onchange="importarProfessoresCSV(this)" />
-            </label>
             <button class="btn-secondary" onclick="baixarModeloCSV()" title="Baixar modelo de planilha para preenchimento">📄 Baixar modelo</button>
             <button class="btn-secondary" id="btnVerSenhas" onclick="togglePainelSenhas()" title="Ver senhas geradas na última importação">🔑 Ver senhas</button>
             <button class="btn-action" onclick="abrirModalProfessor()">+ Adicionar Professor</button>
