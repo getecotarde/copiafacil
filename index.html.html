@@ -396,23 +396,32 @@
       </div>
 
       <!-- CONTADOR MENSAL -->
-      <div id="contadorMensal" style="background:linear-gradient(135deg,var(--primary) 0%,#2a5a3a 100%);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;">
-        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-          <span style="font-size:1.8rem;">📊</span>
+      <div style="background:linear-gradient(135deg,var(--primary) 0%,#2a5a3a 100%);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:space-between;">
+        <!-- navegação de mês -->
+        <div style="display:flex;align-items:center;gap:.5rem;">
+          <button onclick="contadorNavMes(-1)" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">‹</button>
+          <div style="min-width:130px;text-align:center;">
+            <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.55);">Cópias solicitadas</div>
+            <div id="contadorMesLabel" style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:rgba(255,255,255,.9);margin-top:.1rem;">—</div>
+          </div>
+          <button onclick="contadorNavMes(1)" id="btnContadorProx" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">›</button>
+        </div>
+        <!-- números -->
+        <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
           <div>
-            <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.65);margin-bottom:.15rem;" id="contadorMesLabel">Cópias em —</div>
-            <div style="display:flex;align-items:baseline;gap:.5rem;">
+            <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Total de cópias</div>
+            <div style="display:flex;align-items:baseline;gap:.4rem;">
               <span id="contadorNum" style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--accent);line-height:1;">—</span>
-              <span style="font-size:.85rem;color:rgba(255,255,255,.7);">cópias totais</span>
             </div>
           </div>
-          <div style="width:1px;height:40px;background:rgba(255,255,255,.2);flex-shrink:0;display:none;" id="contadorDivider"></div>
-          <div id="contadorSolic" style="display:none;">
-            <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.65);margin-bottom:.15rem;">Solicitações</div>
-            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;color:#fff;" id="contadorSolicNum">—</div>
+          <div style="width:1px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0;"></div>
+          <div>
+            <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Solicitações</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;" id="contadorSolicNum">—</div>
           </div>
         </div>
-        <div style="font-size:.75rem;color:rgba(255,255,255,.55);max-width:220px;line-height:1.5;" id="contadorInfo">Em breve serão estabelecidos limites mensais de cópias.</div>
+        <!-- botão voltar ao mês atual -->
+        <button id="btnContadorHoje" onclick="contadorIrHoje()" style="display:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;padding:.35rem .8rem;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1.5px solid rgba(255,255,255,.2);border-radius:8px;cursor:pointer;white-space:nowrap;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">↩ Mês atual</button>
       </div>
 
       <!-- FILTROS -->
@@ -1465,6 +1474,7 @@ function toggleSenha(btn, senha, spanId) {
 let _minhasData = [];
 
 async function loadMinhas(){
+  _contadorOffset = 0;
   const container=document.getElementById('minhasContainer');
   container.innerHTML='<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
   const {data,error}=await db.from('solicitacoes').select('*').ilike('professor',professorData.nome).order('data_solicitacao',{ascending:false});
@@ -1478,24 +1488,50 @@ async function loadMinhas(){
   renderMinhasFiltered();
 }
 
+let _contadorOffset = 0; // 0 = mês atual, -1 = mês anterior, etc.
+
+function contadorNavMes(delta) {
+  const agora = new Date();
+  _contadorOffset += delta;
+  // não deixa avançar além do mês atual
+  if (_contadorOffset > 0) _contadorOffset = 0;
+  atualizarContadorMensal(_minhasData);
+}
+
+function contadorIrHoje() {
+  _contadorOffset = 0;
+  atualizarContadorMensal(_minhasData);
+}
+
 function atualizarContadorMensal(data) {
   const agora = new Date();
-  const mesAtual = agora.getMonth();
-  const anoAtual = agora.getFullYear();
-  const nomeMes = agora.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+  const alvo = new Date(agora.getFullYear(), agora.getMonth() + _contadorOffset, 1);
+  const mesAlvo = alvo.getMonth();
+  const anoAlvo = alvo.getFullYear();
+  const nomeMes = alvo.toLocaleDateString('pt-BR', {month: 'long', year: 'numeric'});
 
   const doMes = data.filter(d => {
     const dt = new Date(d.data_solicitacao);
-    return dt.getMonth() === mesAtual && dt.getFullYear() === anoAtual && d.status !== 'Cancelado';
+    return dt.getMonth() === mesAlvo && dt.getFullYear() === anoAlvo && d.status !== 'Cancelado';
   });
 
-  const totalCopias = doMes.reduce((s,d) => s + (d.total_copias || d.copias || 0), 0);
+  const totalCopias = doMes.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
+  const label = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
 
-  document.getElementById('contadorMesLabel').textContent = 'Cópias em ' + nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+  document.getElementById('contadorMesLabel').textContent = label;
   document.getElementById('contadorNum').textContent = totalCopias.toLocaleString('pt-BR');
-  document.getElementById('contadorDivider').style.display = 'block';
-  document.getElementById('contadorSolic').style.display = 'block';
   document.getElementById('contadorSolicNum').textContent = doMes.length;
+
+  // botão "avançar" desabilitado se já no mês atual
+  const btnProx = document.getElementById('btnContadorProx');
+  if (btnProx) {
+    btnProx.disabled = _contadorOffset >= 0;
+    btnProx.style.opacity = _contadorOffset >= 0 ? '.35' : '1';
+    btnProx.style.cursor = _contadorOffset >= 0 ? 'default' : 'pointer';
+  }
+  // botão "mês atual" visível só quando navegando para o passado
+  const btnHoje = document.getElementById('btnContadorHoje');
+  if (btnHoje) btnHoje.style.display = _contadorOffset < 0 ? 'inline-block' : 'none';
 }
 
 function renderMinhasFiltered() {
