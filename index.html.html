@@ -1804,13 +1804,13 @@ function previewSenhaProf(){
   document.getElementById('mpSenhaGerada').value=gerarSenhaPorNome(nome);
 }
 
-function abrirModalProfessor(id) {
-  editandoProfId = id || null;
+function abrirModalProfessor(profId) {
+  editandoProfId = profId || null;
   const erroEl = document.getElementById('modalProfErro');
   erroEl.style.display='none';
 
-  if (id) {
-    const prof = allProfs.find(p=>p.id===id);
+  if (profId) {
+    const prof = allProfs.find(p=>p.id===profId);
     if (!prof) return;
     document.getElementById('modalProfTitulo').textContent = '✏️ Editar Professor';
     document.getElementById('mpNome').value      = prof.nome;
@@ -1822,7 +1822,7 @@ function abrirModalProfessor(id) {
     document.getElementById('mpSenhaGroup').style.display = 'block';
   } else {
     document.getElementById('modalProfTitulo').textContent = '➕ Adicionar Professor';
-    ['mpNome','mpEmail'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('mpNome').value = '';document.getElementById('mpEmail').value = '';
     document.getElementById('mpEmail').readOnly  = false;
     document.getElementById('mpEmailHint').textContent = '';
     document.getElementById('mpDisciplina').value = '';
