@@ -449,7 +449,22 @@
       <div class="tab-panel active" id="tab-nova">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
           <div style="font-size:.88rem;color:var(--muted);">Crie uma solicitação em nome próprio ou de um professor.</div>
-          <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
+          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+            <button class="btn-secondary" onclick="toggleEmailImport()" id="btnEmailImport" style="display:inline-flex;align-items:center;gap:.4rem;">📧 Importar do e-mail</button>
+            <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
+          </div>
+        </div>
+
+        <!-- PAINEL IMPORTAR E-MAIL -->
+        <div id="emailImportPanel" style="display:none;margin-bottom:1.2rem;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.05);">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--primary);margin-bottom:.5rem;">📧 Importar solicitação do e-mail</div>
+          <div style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem;">Cole abaixo o texto do e-mail recebido. A IA vai identificar as informações e preencher o formulário automaticamente.</div>
+          <textarea id="emailTexto" placeholder="Cole aqui o texto do e-mail…" style="width:100%;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;resize:vertical;min-height:120px;transition:border-color .2s;" onfocus="this.style.borderColor='var(--primary)';" onblur="this.style.borderColor='var(--border)';"></textarea>
+          <div style="display:flex;gap:.6rem;margin-top:.7rem;align-items:center;flex-wrap:wrap;">
+            <button class="btn-action" id="btnProcessarEmail" onclick="processarEmailIA()">✨ Preencher formulário</button>
+            <button class="btn-secondary" onclick="toggleEmailImport()">Cancelar</button>
+            <span id="emailImportStatus" style="font-size:.82rem;color:var(--muted);"></span>
+          </div>
         </div>
         <div class="form-layout">
           <!-- COLUNA ESQUERDA -->
@@ -618,12 +633,12 @@
 
       <!-- TAB RESUMO SEMANAL -->
       <div class="tab-panel" id="tab-resumo">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
           <div>
             <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">Resumo de Cópias</div>
             <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Solicitações agrupadas por professor no período selecionado</div>
           </div>
-          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+          <div style="display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;">
             <div style="display:flex;flex-direction:column;gap:.2rem;">
               <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">De</label>
               <input type="date" id="resumoDe" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
@@ -643,7 +658,19 @@
                 <option value="Cancelado">Cancelado</option>
               </select>
             </div>
-            <button class="btn-secondary" onclick="setResumoSemana()" style="margin-top:1.1rem;">Esta semana</button>
+            <div style="display:flex;flex-direction:column;gap:.2rem;">
+              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
+              <select id="resumoProfessor" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
+                <option value="">Todos</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:.2rem;">
+              <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Disciplina</label>
+              <select id="resumoDisciplina" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;" onchange="renderResumo()">
+                <option value="">Todas</option>
+              </select>
+            </div>
+            <button class="btn-secondary" onclick="setResumoSemana()" style="">Esta semana</button>
           </div>
         </div>
 
@@ -914,10 +941,12 @@ function switchCoordTab(tab,btn) {
     if(allSolic.length === 0) {
       db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false}).then(({data}) => {
         allSolic = data || [];
+        populateResumoFiltros();
         setResumoSemana();
         renderResumo();
       });
     } else {
+      populateResumoFiltros();
       setResumoSemana();
       renderResumo();
     }
@@ -942,6 +971,8 @@ function renderResumo(){
   const de=document.getElementById('resumoDe').value;
   const ate=document.getElementById('resumoAte').value;
   const stFiltro=document.getElementById('resumoStatus').value;
+  const profFiltro=(document.getElementById('resumoProfessor').value||'').toLowerCase();
+  const discFiltro=(document.getElementById('resumoDisciplina').value||'').toLowerCase();
   const totaisEl=document.getElementById('resumoTotais');
   const container=document.getElementById('resumoContainer');
 
@@ -954,7 +985,9 @@ function renderResumo(){
     const dt=new Date(d.data_solicitacao);
     const dentroData=dt>=deDate&&dt<=ateDate;
     const dentroStatus=!stFiltro||d.status===stFiltro;
-    return dentroData&&dentroStatus;
+    const dentroProf=!profFiltro||(d.professor||'').toLowerCase()===profFiltro;
+    const dentroDisc=!discFiltro||(d.disciplina||'').toLowerCase()===discFiltro;
+    return dentroData&&dentroStatus&&dentroProf&&dentroDisc;
   });
 
   // Totalizadores gerais
@@ -1008,6 +1041,22 @@ function renderResumo(){
         </tr>
       </tbody>
     </table>`;
+}
+
+function populateResumoFiltros(){
+  const selProf=document.getElementById('resumoProfessor');
+  const selDisc=document.getElementById('resumoDisciplina');
+  if(!selProf||!selDisc)return;
+  const curProf=selProf.value;
+  const curDisc=selDisc.value;
+  // Professores únicos
+  const profs=[...new Set(allSolic.map(d=>d.professor||'').filter(Boolean))].sort();
+  selProf.innerHTML='<option value="">Todos</option>'+profs.map(p=>`<option value="${esc(p.toLowerCase())}">${esc(p)}</option>`).join('');
+  if(curProf)selProf.value=curProf;
+  // Disciplinas únicas
+  const discs=[...new Set(allSolic.map(d=>d.disciplina||'').filter(Boolean))].sort();
+  selDisc.innerHTML='<option value="">Todas</option>'+discs.map(d=>`<option value="${esc(d.toLowerCase())}">${esc(d)}</option>`).join('');
+  if(curDisc)selDisc.value=curDisc;
 }
 
 // ── SOLICITANTE ──
@@ -1099,6 +1148,99 @@ function calcTotal(modo){
     box.textContent='—';
     box.style.background='#e8f0eb';
     box.style.color='var(--primary)';
+  }
+}
+
+// ── IMPORTAR E-MAIL ──
+function toggleEmailImport(){
+  const panel=document.getElementById('emailImportPanel');
+  const visible=panel.style.display!=='none';
+  panel.style.display=visible?'none':'block';
+  if(!visible){
+    document.getElementById('emailTexto').value='';
+    document.getElementById('emailImportStatus').textContent='';
+    setTimeout(()=>document.getElementById('emailTexto').focus(),100);
+  }
+}
+
+async function processarEmailIA(){
+  const texto=document.getElementById('emailTexto').value.trim();
+  if(!texto){showToast('⚠️ Cole o texto do e-mail primeiro.',true);return;}
+  const btn=document.getElementById('btnProcessarEmail');
+  const status=document.getElementById('emailImportStatus');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Processando…';
+  status.textContent='';
+
+  // Monta lista de professores para ajudar a IA a identificar o nome correto
+  const nomesProfessores=allProfs.filter(p=>p.aprovado).map(p=>p.nome).join(', ');
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{
+          role:'user',
+          content:`Você é um assistente que extrai informações de e-mails de solicitação de cópias escolares.
+
+Professores cadastrados no sistema: ${nomesProfessores||'(nenhum cadastrado ainda)'}
+
+Extraia as informações abaixo do e-mail e retorne SOMENTE um JSON válido, sem texto antes ou depois, sem markdown:
+{
+  "professor": "nome exato do professor (tente casar com a lista acima, ou deixe vazio se não encontrado)",
+  "titulo": "título da matriz ou documento",
+  "turmas": "turmas atendidas",
+  "copias": número inteiro de cópias (quantidade de alunos/destinatários),
+  "laudas": número inteiro de laudas (páginas do documento),
+  "obs": "observações adicionais ou null se não houver"
+}
+
+Se alguma informação não estiver no e-mail, use null para strings e 0 para números.
+
+E-mail:
+${texto}`
+        }]
+      })
+    });
+
+    const data=await response.json();
+    const rawText=data.content.map(i=>i.text||'').join('');
+    const clean=rawText.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+
+    // Preenche o formulário
+    let preenchidos=[];
+
+    // Tenta casar professor com lista
+    if(parsed.professor){
+      const match=allProfs.find(p=>p.aprovado&&p.nome.toLowerCase().includes(parsed.professor.toLowerCase()));
+      if(match){
+        document.getElementById('coordSolicitante').value=match.id;
+        onSolicitanteChange();
+        preenchidos.push('Professor');
+      } else {
+        // Deixa como coordenação mas mostra o nome no obs
+        status.textContent=`⚠️ Professor "${parsed.professor}" não encontrado na lista — verifique o campo Solicitante.`;
+      }
+    }
+    if(parsed.titulo){document.getElementById('cf-titulo').value=parsed.titulo;preenchidos.push('Título');}
+    if(parsed.turmas){document.getElementById('cf-turmas').value=parsed.turmas;preenchidos.push('Turmas');}
+    if(parsed.copias>0){document.getElementById('cf-copias').value=parsed.copias;preenchidos.push('Cópias');}
+    if(parsed.laudas>0){document.getElementById('cf-laudas').value=parsed.laudas;preenchidos.push('Laudas');}
+    if(parsed.obs){document.getElementById('cf-obs').value=parsed.obs;}
+    calcTotal('coord');
+
+    // Fecha painel e mostra resultado
+    document.getElementById('emailImportPanel').style.display='none';
+    showToast('✅ Formulário preenchido! Campos: '+preenchidos.join(', ')+'. Revise antes de enviar.');
+
+  } catch(err){
+    console.error(err);
+    status.textContent='❌ Erro ao processar. Verifique o texto e tente novamente.';
+  } finally {
+    btn.disabled=false;btn.innerHTML='✨ Preencher formulário';
   }
 }
 
@@ -1408,29 +1550,61 @@ function renderSolicitacoes(){
   });
   const container=document.getElementById('coordContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
-  container.innerHTML=`
-    <table>
-      <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead>
-      <tbody>${filtered.map(d=>`
-        <tr onclick="openModal(${d.id})" style="cursor:pointer">
-          <td><strong>${esc(d.professor)}</strong>${d.professor==='Coordenação'?` <span class="badge badge-coord" style="font-size:.65rem;padding:.1rem .4rem;">coord</span>`:''}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.65rem;padding:.1rem .4rem;">📋 retroativo</span>`:''}</td>
-          <td>${esc(d.disciplina)}</td>
-          <td style="max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
-          <td>${esc(d.turmas)}</td>
-          <td style="text-align:center;">${d.copias}</td>
-          <td style="text-align:center;">${d.laudas||'—'}</td>
-          <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
-          <td>${fmtDate(d.prazo_entrega)}</td>
-          <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
-            ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
-            ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
-            ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
-            ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
-          </td>
-          <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
-        </tr>`).join('')}
-      </tbody>
-    </table>`;
+
+  function rowHtml(d){
+    return `<tr onclick="openModal(${d.id})" style="cursor:pointer">
+      <td><strong>${esc(d.professor)}</strong>${d.professor==='Coordenação'?` <span class="badge badge-coord" style="font-size:.65rem;padding:.1rem .4rem;">coord</span>`:''}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.65rem;padding:.1rem .4rem;">📋 retroativo</span>`:''}</td>
+      <td>${esc(d.disciplina)}</td>
+      <td style="max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
+      <td>${esc(d.turmas)}</td>
+      <td style="text-align:center;">${d.copias}</td>
+      <td style="text-align:center;">${d.laudas||'—'}</td>
+      <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
+      <td>${fmtDate(d.prazo_entrega)}</td>
+      <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
+        ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+        ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
+        ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
+        ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
+      </td>
+      <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
+    </tr>`;
+  }
+
+  const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead>`;
+  const ultima=filtered[0];
+  const demais=filtered.slice(1);
+
+  let html=`<table>${thead}<tbody>${rowHtml(ultima)}</tbody></table>`;
+
+  if(demais.length>0){
+    html+=`
+      <div style="border-top:1.5px solid var(--border);">
+        <button onclick="toggleCoordDemais()" id="btnCoordDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
+          <span>📋 Ver demais solicitações (${demais.length})</span>
+          <span id="iconCoordDemais" style="transition:transform .25s;">▼</span>
+        </button>
+        <div id="coordDemaisPanel" style="display:none;overflow:hidden;">
+          <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${demais.map(rowHtml).join('')}</tbody></table>
+        </div>
+      </div>`;
+  }
+
+  container.innerHTML=html;
+}
+
+function toggleCoordDemais(){
+  const panel=document.getElementById('coordDemaisPanel');
+  const icon=document.getElementById('iconCoordDemais');
+  const btn=document.getElementById('btnCoordDemais');
+  const open=panel.style.display==='none';
+  panel.style.display=open?'block':'none';
+  icon.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+  const spans=btn.querySelectorAll('span');
+  if(spans[0]){
+    const n=parseInt(spans[0].textContent.match(/\d+/));
+    spans[0].textContent=open?`📋 Ocultar demais solicitações (${n})`:`📋 Ver demais solicitações (${n})`;
+  }
 }
 
 // ── EXPORTAR EXCEL ──
@@ -1791,40 +1965,79 @@ function renderMeca(){
   });
   const container=document.getElementById('mecaContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
-  container.innerHTML=`
-    <table>
-      <thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th><th>Ações</th></tr></thead>
-      <tbody>${filtered.map(d=>`
-        <tr>
-          <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
-          <td>${esc(d.disciplina)}</td>
-          <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
-          <td>${esc(d.turmas)}</td>
-          <td style="text-align:center;">${d.copias}</td>
-          <td style="text-align:center;">${d.laudas||'—'}</td>
-          <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
-          <td>${fmtDate(d.prazo_entrega)}</td>
-          <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
-            ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
-            ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
-            ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 2</a>`:''}
-            ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
-          </td>
-          <td>
-            <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
-              <option ${d.status==='Aguardando'?'selected':''}>Aguardando</option>
-              <option ${d.status==='Em produção'?'selected':''}>Em produção</option>
-              <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
-              <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
-              <option ${d.status==='Cancelado'?'selected':''}>Cancelado</option>
-            </select>
-          </td>
-          <td>
-            <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Imprimir</button>
-          </td>
-        </tr>`).join('')}
-      </tbody>
-    </table>`;
+
+  function mecaRowHtml(d){
+    return `<tr>
+      <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
+      <td>${esc(d.disciplina)}</td>
+      <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
+      <td>${esc(d.turmas)}</td>
+      <td style="text-align:center;">${d.copias}</td>
+      <td style="text-align:center;">${d.laudas||'—'}</td>
+      <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
+      <td>${fmtDate(d.prazo_entrega)}</td>
+      <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
+        ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+        ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
+        ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 2</a>`:''}
+        ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
+      </td>
+      <td>
+        <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
+          <option ${d.status==='Aguardando'?'selected':''}>Aguardando</option>
+          <option ${d.status==='Em produção'?'selected':''}>Em produção</option>
+          <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
+          <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
+          <option ${d.status==='Cancelado'?'selected':''}>Cancelado</option>
+        </select>
+      </td>
+      <td>
+        <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Imprimir</button>
+      </td>
+    </tr>`;
+  }
+
+  const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th><th>Ações</th></tr></thead>`;
+
+  // Separa: prioritárias (Pronto e Aguardando) vs demais
+  const prioritarias=filtered.filter(d=>d.status==='Pronto'||d.status==='Aguardando');
+  const demais=filtered.filter(d=>d.status!=='Pronto'&&d.status!=='Aguardando');
+
+  let html='';
+  if(prioritarias.length>0){
+    html+=`<table>${thead}<tbody>${prioritarias.map(mecaRowHtml).join('')}</tbody></table>`;
+  } else {
+    html+=`<div class="empty-state" style="padding:1.5rem 2rem;"><div class="emoji">✅</div><p>Nenhuma solicitação Pronta ou Aguardando.</p></div>`;
+  }
+
+  if(demais.length>0){
+    html+=`
+      <div style="border-top:1.5px solid var(--border);">
+        <button onclick="toggleMecaDemais()" id="btnMecaDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
+          <span>📦 Ver demais solicitações (${demais.length})</span>
+          <span id="iconMecaDemais" style="transition:transform .25s;">▼</span>
+        </button>
+        <div id="mecaDemaisPanel" style="display:none;">
+          <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${demais.map(mecaRowHtml).join('')}</tbody></table>
+        </div>
+      </div>`;
+  }
+
+  container.innerHTML=html;
+}
+
+function toggleMecaDemais(){
+  const panel=document.getElementById('mecaDemaisPanel');
+  const icon=document.getElementById('iconMecaDemais');
+  const btn=document.getElementById('btnMecaDemais');
+  const open=panel.style.display==='none';
+  panel.style.display=open?'block':'none';
+  icon.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+  const spans=btn.querySelectorAll('span');
+  if(spans[0]){
+    const n=parseInt(spans[0].textContent.match(/\d+/));
+    spans[0].textContent=open?`📦 Ocultar demais solicitações (${n})`:`📦 Ver demais solicitações (${n})`;
+  }
 }
 
 async function mecaUpdateStatus(id,newStatus){
