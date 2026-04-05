@@ -599,6 +599,41 @@
 
       <!-- TAB SOLICITAÇÕES -->
       <div class="tab-panel" id="tab-solicitacoes">
+
+        <!-- CONTADOR MENSAL COORDENAÇÃO -->
+        <div style="background:linear-gradient(135deg,var(--primary) 0%,#2a5a3a 100%);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:space-between;">
+          <!-- navegação de mês -->
+          <div style="display:flex;align-items:center;gap:.5rem;">
+            <button onclick="coordContadorNavMes(-1)" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">‹</button>
+            <div style="min-width:130px;text-align:center;">
+              <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.55);">Cópias solicitadas</div>
+              <div id="coordContadorMesLabel" style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:rgba(255,255,255,.9);margin-top:.1rem;">—</div>
+            </div>
+            <button onclick="coordContadorNavMes(1)" id="btnCoordContadorProx" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">›</button>
+          </div>
+          <!-- números -->
+          <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Total de cópias</div>
+              <div style="display:flex;align-items:baseline;gap:.4rem;">
+                <span id="coordContadorNum" style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--accent);line-height:1;">—</span>
+              </div>
+            </div>
+            <div style="width:1px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0;"></div>
+            <div>
+              <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Solicitações</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;" id="coordContadorSolicNum">—</div>
+            </div>
+            <div style="width:1px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0;"></div>
+            <div>
+              <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Professores</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;" id="coordContadorProfsNum">—</div>
+            </div>
+          </div>
+          <!-- botão voltar ao mês atual -->
+          <button id="btnCoordContadorHoje" onclick="coordContadorIrHoje()" style="display:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;padding:.35rem .8rem;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1.5px solid rgba(255,255,255,.2);border-radius:8px;cursor:pointer;white-space:nowrap;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">↩ Mês atual</button>
+        </div>
+
         <div class="stats-row" id="statsRow">
           <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">—</div><div class="slabel">Aguardando</div></div>
           <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">—</div><div class="slabel">Em Produção</div></div>
@@ -1945,6 +1980,55 @@ function atualizarContadorMensal(data) {
   if (btnHoje) btnHoje.style.display = _contadorOffset < 0 ? 'inline-block' : 'none';
 }
 
+// ── CONTADOR MENSAL COORDENAÇÃO ──
+let _coordContadorOffset = 0;
+
+function coordContadorNavMes(delta) {
+  _coordContadorOffset += delta;
+  if (_coordContadorOffset > 0) _coordContadorOffset = 0;
+  atualizarCoordContadorMensal(allSolic);
+}
+
+function coordContadorIrHoje() {
+  _coordContadorOffset = 0;
+  atualizarCoordContadorMensal(allSolic);
+}
+
+function atualizarCoordContadorMensal(data) {
+  const agora = new Date();
+  const alvo = new Date(agora.getFullYear(), agora.getMonth() + _coordContadorOffset, 1);
+  const mesAlvo = alvo.getMonth();
+  const anoAlvo = alvo.getFullYear();
+  const nomeMes = alvo.toLocaleDateString('pt-BR', {month: 'long', year: 'numeric'});
+
+  const doMes = (data || []).filter(d => {
+    const dt = new Date(d.data_solicitacao);
+    return dt.getMonth() === mesAlvo && dt.getFullYear() === anoAlvo && d.status !== 'Cancelado';
+  });
+
+  const totalCopias = doMes.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
+  const totalProfs = new Set(doMes.map(d => d.professor).filter(Boolean)).size;
+  const label = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+
+  const elLabel = document.getElementById('coordContadorMesLabel');
+  const elNum = document.getElementById('coordContadorNum');
+  const elSolic = document.getElementById('coordContadorSolicNum');
+  const elProfs = document.getElementById('coordContadorProfsNum');
+  if (elLabel) elLabel.textContent = label;
+  if (elNum) elNum.textContent = totalCopias.toLocaleString('pt-BR');
+  if (elSolic) elSolic.textContent = doMes.length;
+  if (elProfs) elProfs.textContent = totalProfs;
+
+  const btnProx = document.getElementById('btnCoordContadorProx');
+  if (btnProx) {
+    btnProx.disabled = _coordContadorOffset >= 0;
+    btnProx.style.opacity = _coordContadorOffset >= 0 ? '.35' : '1';
+    btnProx.style.cursor = _coordContadorOffset >= 0 ? 'default' : 'pointer';
+  }
+  const btnHoje = document.getElementById('btnCoordContadorHoje');
+  if (btnHoje) btnHoje.style.display = _coordContadorOffset < 0 ? 'inline-block' : 'none';
+}
+
 function renderMinhasFiltered() {
   const data = _minhasData;
   const txt = (document.getElementById('minhasFilterText').value || '').toLowerCase();
@@ -2178,6 +2262,7 @@ function renderStats(){
     <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">${p}</div><div class="slabel">Aguardando</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${r}</div><div class="slabel">Em Produção</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
+  atualizarCoordContadorMensal(allSolic);
 }
 
 // ── POPULATE PROFESSOR FILTER ──
