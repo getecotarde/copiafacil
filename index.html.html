@@ -398,14 +398,11 @@
         <button class="btn-secondary" onclick="loadMeca()">↻ Atualizar</button>
       </div>
       <!-- BLOCO SENHA MECANOGRAFIA -->
-      <div id="mecaSenhaBox" style="display:none;margin-bottom:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:.9rem 1.3rem;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <div id="mecaSenhaBox" style="display:none;margin-bottom:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
         <span style="font-size:1.3rem;">🔑</span>
         <div>
           <div style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.2rem;">Sua senha inicial</div>
-          <div style="display:flex;align-items:center;gap:.7rem;">
-            <div id="mecaSenhaValor" style="font-family:monospace;font-weight:700;font-size:1.1rem;letter-spacing:.12em;color:var(--primary);">—</div>
-            <button onclick="toggleMecaSenha()" id="btnToggleMecaSenha" style="font-family:'DM Sans',sans-serif;font-size:.75rem;padding:.25rem .6rem;background:transparent;border:1.5px solid var(--border);border-radius:6px;cursor:pointer;color:var(--muted);">👁 Mostrar</button>
-          </div>
+          <div id="mecaSenhaValor" style="font-family:monospace;font-weight:700;font-size:1.1rem;letter-spacing:.12em;color:var(--primary);">—</div>
         </div>
         <span style="font-size:.78rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
       </div>
@@ -450,24 +447,8 @@
 
       <!-- TAB NOVA -->
       <div class="tab-panel active" id="tab-nova">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
-          <div style="font-size:.88rem;color:var(--muted);">Crie uma solicitação em nome próprio ou de um professor.</div>
-          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
-            <button class="btn-secondary" onclick="toggleEmailImport()" id="btnEmailImport" style="display:inline-flex;align-items:center;gap:.4rem;">📧 Importar do e-mail</button>
-            <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
-          </div>
-        </div>
-
-        <!-- PAINEL IMPORTAR E-MAIL -->
-        <div id="emailImportPanel" style="display:none;margin-bottom:1.2rem;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.05);">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--primary);margin-bottom:.5rem;">📧 Importar solicitação do e-mail</div>
-          <div style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem;">Cole abaixo o texto do e-mail recebido. A IA vai identificar as informações e preencher o formulário automaticamente.</div>
-          <textarea id="emailTexto" placeholder="Cole aqui o texto do e-mail…" style="width:100%;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;resize:vertical;min-height:120px;transition:border-color .2s;" onfocus="this.style.borderColor='var(--primary)';" onblur="this.style.borderColor='var(--border)';"></textarea>
-          <div style="display:flex;gap:.6rem;margin-top:.7rem;align-items:center;flex-wrap:wrap;">
-            <button class="btn-action" id="btnProcessarEmail" onclick="processarEmailIA()">✨ Preencher formulário</button>
-            <button class="btn-secondary" onclick="toggleEmailImport()">Cancelar</button>
-            <span id="emailImportStatus" style="font-size:.82rem;color:var(--muted);"></span>
-          </div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
+          <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
         </div>
         <div class="form-layout">
           <!-- COLUNA ESQUERDA -->
@@ -628,8 +609,33 @@
       <!-- TAB MECANOGRAFIA -->
       <div class="tab-panel" id="tab-mecanografia">
         <div class="card" style="padding:1.5rem 2rem;">
-          <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">🖨️ Acesso da Mecanografia</h3>
-          <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.5rem;">Este perfil permite visualizar solicitações, baixar arquivos, imprimir e atualizar o status das cópias.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem;">
+            <div>
+              <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">🖨️ Acesso da Mecanografia</h3>
+              <p style="font-size:.88rem;color:var(--muted);">Este perfil permite visualizar solicitações, baixar arquivos, imprimir e atualizar o status das cópias.</p>
+            </div>
+            <button class="btn-secondary" id="btnVerSenhasMeca" onclick="togglePainelSenhasMeca()" title="Ver senhas dos acessos de mecanografia">🔑 Ver senhas</button>
+          </div>
+          <!-- PAINEL DE SENHAS MECANOGRAFIA -->
+          <div id="painelSenhasMeca" style="display:none;margin-bottom:1.5rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos de Mecanografia</span>
+              <div style="display:flex;gap:.5rem;">
+                <button onclick="baixarCredsMeca()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+                <button onclick="togglePainelSenhasMeca()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table id="tabelaSenhasMeca" style="width:100%;border-collapse:collapse;font-size:.88rem;">
+                <thead><tr>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">E-mail</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Senha inicial</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Criado em</th>
+                </tr></thead>
+                <tbody id="tabelaSenhasMecaBody"></tbody>
+              </table>
+            </div>
+          </div>
           <div id="mecaGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
@@ -885,8 +891,7 @@ async function iniciarApp() {
     // Busca e exibe senha individual da mecanografia
     const {data:mecaData}=await db.from('mecanografia').select('senha_inicial').eq('id',currentUser.id).maybeSingle();
     if(mecaData&&mecaData.senha_inicial){
-      window._mecaSenha=mecaData.senha_inicial;
-      document.getElementById('mecaSenhaValor').textContent='••••••';
+      document.getElementById('mecaSenhaValor').textContent=mecaData.senha_inicial;
       document.getElementById('mecaSenhaBox').style.display='flex';
     }
     await loadMeca();
@@ -1900,12 +1905,40 @@ function previewSenhaMeca(){
   document.getElementById('mecaSenhaGerada').value=nome?gerarSenhaPorNome(nome):'';
 }
 
-function toggleMecaSenha(){
-  const el=document.getElementById('mecaSenhaValor');
-  const btn=document.getElementById('btnToggleMecaSenha');
-  const visivel=el.textContent!=='••••••';
-  el.textContent=visivel?'••••••':(window._mecaSenha||'—');
-  btn.textContent=visivel?'👁 Mostrar':'🙈 Ocultar';
+async function togglePainelSenhasMeca(){
+  const p=document.getElementById('painelSenhasMeca');
+  if(p.style.display==='block'){p.style.display='none';return;}
+  const tbody=document.getElementById('tabelaSenhasMecaBody');
+  tbody.innerHTML=`<tr><td colspan="3" style="padding:1rem;text-align:center;"><span class="spinner"></span> Carregando…</td></tr>`;
+  p.style.display='block';
+  const {data:lista}=await db.from('mecanografia').select('email,senha_inicial,criado_em').order('criado_em',{ascending:true});
+  const itens=(lista||[]);
+  window._lastCredsMeca=itens;
+  if(itens.length===0){
+    tbody.innerHTML=`<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:var(--muted);">Nenhum acesso cadastrado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=itens.map(m=>`
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:.7rem 1rem;">${esc(m.email||'—')}</td>
+      <td style="padding:.7rem 1rem;font-family:monospace;font-weight:700;letter-spacing:.08em;color:var(--primary);">${esc(m.senha_inicial||'—')}</td>
+      <td style="padding:.7rem 1rem;">${m.criado_em?fmtDate(m.criado_em):'—'}</td>
+    </tr>`).join('');
+}
+
+function baixarCredsMeca(){
+  const itens=window._lastCredsMeca||[];
+  if(!itens.length){showToast('⚠️ Nenhum dado para exportar.',true);return;}
+  const csv='\uFEFF'+'E-mail;Senha inicial;Criado em\r\n'
+    +itens.map(m=>`"${m.email||''}";"${m.senha_inicial||''}";"${m.criado_em?fmtDate(m.criado_em):''}"`).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const stamp=new Date().toISOString().slice(0,10);
+  a.href=url;a.download=`senhas_mecanografia_${stamp}.csv`;
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+  showToast('📊 CSV exportado!');
 }
 
 function abrirModalMeca(){
