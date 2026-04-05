@@ -286,7 +286,13 @@
       <!-- BLOCO SENHA PROFESSOR -->
       <div id="profSenhaBox" style="display:none;margin-bottom:.8rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:8px;padding:.7rem 1.1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
         <span style="font-size:1.2rem;">🔑</span>
-        <div><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.15rem;">Sua senha inicial</div><div id="profSenhaValor" style="font-family:monospace;font-weight:700;font-size:1rem;letter-spacing:.12em;color:var(--primary);">—</div></div>
+        <div>
+          <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.15rem;">Sua senha inicial</div>
+          <div style="display:flex;align-items:center;gap:.5rem;">
+            <div id="profSenhaValor" style="font-family:monospace;font-weight:700;font-size:1rem;letter-spacing:.12em;color:var(--primary);">••••••</div>
+            <button id="btnVerSenhaProf" class="btn-eye" title="Mostrar senha" onclick="toggleSenhaProfBox()" style="padding:.18rem .5rem;font-size:.85rem;">👁</button>
+          </div>
+        </div>
         <span style="font-size:.75rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
       </div>
 
@@ -1267,7 +1273,9 @@ async function iniciarApp() {
     // Exibe senha individual do professor
     if(professorData.senha_inicial){
       const box=document.getElementById('profSenhaBox');
-      document.getElementById('profSenhaValor').textContent=professorData.senha_inicial;
+      window._profSenhaReal = professorData.senha_inicial;
+      document.getElementById('profSenhaValor').textContent='••••••';
+      const btnV=document.getElementById('btnVerSenhaProf');if(btnV){btnV.textContent='👁';btnV.title='Mostrar senha';}
       box.style.display='flex';
     }
     showPage('solicitar');
@@ -1898,6 +1906,16 @@ async function submitForm(modo){
   finally{btn.disabled=false;btn.innerHTML='✔ Enviar Solicitação';}
 }
 // ── TOGGLE SENHA (visível / oculta) ──
+function toggleSenhaProfBox() {
+  const span = document.getElementById('profSenhaValor');
+  const btn = document.getElementById('btnVerSenhaProf');
+  if (!span) return;
+  const visible = span.textContent !== '••••••';
+  span.textContent = visible ? '••••••' : (window._profSenhaReal || '—');
+  btn.textContent = visible ? '👁' : '🙈';
+  btn.title = visible ? 'Mostrar senha' : 'Ocultar senha';
+}
+
 function toggleSenhaModal() {
   const input = document.getElementById('mpSenhaGerada');
   const btn = document.getElementById('btnVerSenhaModal');
