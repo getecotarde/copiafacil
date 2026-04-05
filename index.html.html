@@ -2223,23 +2223,17 @@ function renderSolicitacoes(){
   }
 
   const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead>`;
-  const visiveis=filtered.slice(0,3);
-  const demais=filtered.slice(3);
 
-  let html=`<table>${thead}<tbody>${visiveis.map(rowHtml).join('')}</tbody></table>`;
-
-  if(demais.length>0){
-    html+=`
-      <div style="border-top:1.5px solid var(--border);">
-        <button onclick="toggleCoordDemais()" id="btnCoordDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
-          <span>📋 Ver demais solicitações (${demais.length})</span>
-          <span id="iconCoordDemais" style="transition:transform .25s;">▼</span>
-        </button>
-        <div id="coordDemaisPanel" style="display:none;overflow:hidden;">
-          <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${demais.map(rowHtml).join('')}</tbody></table>
-        </div>
-      </div>`;
-  }
+  const html=`
+    <div>
+      <button onclick="toggleCoordDemais()" id="btnCoordDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
+        <span>📋 Ver solicitações (${filtered.length})</span>
+        <span id="iconCoordDemais" style="transition:transform .25s;">▼</span>
+      </button>
+      <div id="coordDemaisPanel" style="display:none;overflow:hidden;">
+        <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${filtered.map(rowHtml).join('')}</tbody></table>
+      </div>
+    </div>`;
 
   container.innerHTML=html;
 }
@@ -2254,7 +2248,7 @@ function toggleCoordDemais(){
   const spans=btn.querySelectorAll('span');
   if(spans[0]){
     const n=parseInt(spans[0].textContent.match(/\d+/));
-    spans[0].textContent=open?`📋 Ocultar demais solicitações (${n})`:`📋 Ver demais solicitações (${n})`;
+    spans[0].textContent=open?`📋 Ocultar solicitações (${n})`:`📋 Ver solicitações (${n})`;
   }
 }
 
