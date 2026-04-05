@@ -450,22 +450,10 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
           <div style="font-size:.88rem;color:var(--muted);">Crie uma solicitação em nome próprio ou de um professor.</div>
           <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
-            <button class="btn-secondary" onclick="toggleEmailImport()" id="btnEmailImport" style="display:inline-flex;align-items:center;gap:.4rem;">📧 Importar do e-mail</button>
             <div class="deadline-box" style="margin-bottom:0;flex-shrink:0;"><div class="icon">📅</div><div><strong>Prazo: 5 dias úteis</strong><p>A contar da confirmação.</p></div></div>
           </div>
         </div>
 
-        <!-- PAINEL IMPORTAR E-MAIL -->
-        <div id="emailImportPanel" style="display:none;margin-bottom:1.2rem;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.05);">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--primary);margin-bottom:.5rem;">📧 Importar solicitação do e-mail</div>
-          <div style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem;">Cole abaixo o texto do e-mail recebido. A IA vai identificar as informações e preencher o formulário automaticamente.</div>
-          <textarea id="emailTexto" placeholder="Cole aqui o texto do e-mail…" style="width:100%;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;resize:vertical;min-height:120px;transition:border-color .2s;" onfocus="this.style.borderColor='var(--primary)';" onblur="this.style.borderColor='var(--border)';"></textarea>
-          <div style="display:flex;gap:.6rem;margin-top:.7rem;align-items:center;flex-wrap:wrap;">
-            <button class="btn-action" id="btnProcessarEmail" onclick="processarEmailIA()">✨ Preencher formulário</button>
-            <button class="btn-secondary" onclick="toggleEmailImport()">Cancelar</button>
-            <span id="emailImportStatus" style="font-size:.82rem;color:var(--muted);"></span>
-          </div>
-        </div>
         <div class="form-layout">
           <!-- COLUNA ESQUERDA -->
           <div class="card">
@@ -614,6 +602,10 @@
             </select>
           </div>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+            <label class="btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;" title="Importar lista de professores via CSV">
+              📥 Importar CSV
+              <input type="file" id="csvImportInput" accept=".csv" style="display:none;" onchange="importarProfessoresCSV(this)" />
+            </label>
             <button class="btn-secondary" onclick="baixarModeloCSV()" title="Baixar modelo de planilha para preenchimento">📄 Baixar modelo</button>
             <button class="btn-secondary" id="btnVerSenhas" onclick="togglePainelSenhas()" title="Ver senhas geradas na última importação">🔑 Ver senhas</button>
             <button class="btn-action" onclick="abrirModalProfessor()">+ Adicionar Professor</button>
