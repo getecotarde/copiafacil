@@ -615,7 +615,7 @@
           <select id="minhasFilterStatus" onchange="renderMinhasFiltered()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
             <option value="">Todos</option>
             <option value="Aguardando">Aguardando</option>
-            <option value="Em produção">Em produção</option>
+            <option value="Autorizado">Autorizado</option>
             <option value="Pronto">Pronto</option>
             <option value="Entregue">Entregue</option>
             <option value="Cancelado">Cancelado</option>
@@ -644,7 +644,7 @@
       </div>
       <div class="stats-row" id="mecaStatsRow">
         <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">—</div><div class="slabel">Aguardando</div></div>
-        <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">—</div><div class="slabel">Em Produção</div></div>
+        <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">—</div><div class="slabel">Autorizado</div></div>
         <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">—</div><div class="slabel">Entregues</div></div>
       </div>
       <div class="card" style="padding:0;overflow:hidden;">
@@ -654,12 +654,9 @@
             <option value="">Todos os professores</option>
           </select>
           <select id="mecaFilterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderMeca()">
-            <option value="">Todos os status</option>
-            <option value="Aguardando">Aguardando</option>
-            <option value="Em produção">Em produção</option>
+            <option value="">Todos</option>
+            <option value="Autorizado">Autorizado</option>
             <option value="Pronto">Pronto</option>
-            <option value="Entregue">Entregue</option>
-            <option value="Cancelado">Cancelado</option>
           </select>
           <button class="btn-secondary" onclick="limparFiltrosMeca()" style="white-space:nowrap;">✕ Limpar</button>
         </div>
@@ -829,7 +826,7 @@
 
         <div class="stats-row" id="statsRow">
           <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">—</div><div class="slabel">Aguardando</div></div>
-          <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">—</div><div class="slabel">Em Produção</div></div>
+          <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">—</div><div class="slabel">Autorizado</div></div>
           <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">—</div><div class="slabel">Entregues</div></div>
         </div>
         <div class="card" style="padding:0;overflow:hidden;">
@@ -841,7 +838,7 @@
 
             <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
               <option value="">Todos os status</option>
-              <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
+              <option value="Aguardando">Aguardando</option><option value="Autorizado">Autorizado</option>
               <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
             </select>
             <button class="btn-secondary" onclick="exportarSolicitacoesExcel()" title="Exportar tabela para Excel" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">
@@ -967,7 +964,7 @@
                 <select id="resumoStatus" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()">
                   <option value="">Todos</option>
                   <option value="Aguardando">Aguardando</option>
-                  <option value="Em produção">Em produção</option>
+                  <option value="Autorizado">Autorizado</option>
                   <option value="Pronto">Pronto</option>
                   <option value="Entregue">Entregue</option>
                   <option value="Cancelado">Cancelado</option>
@@ -1009,7 +1006,7 @@
                 <select id="resumoMensalStatus" onchange="renderResumoMensal()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;">
                   <option value="">Todos</option>
                   <option value="Aguardando">Aguardando</option>
-                  <option value="Em produção">Em produção</option>
+                  <option value="Autorizado">Autorizado</option>
                   <option value="Pronto">Pronto</option>
                   <option value="Entregue">Entregue</option>
                   <option value="Cancelado">Cancelado</option>
@@ -1201,7 +1198,7 @@
           <select id="adm1FilterStatus" onchange="renderAdmCopias()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
             <option value="">Todos</option>
             <option value="Aguardando">Aguardando</option>
-            <option value="Em produção">Em produção</option>
+            <option value="Autorizado">Autorizado</option>
             <option value="Pronto">Pronto</option>
             <option value="Entregue">Entregue</option>
             <option value="Cancelado">Cancelado</option>
@@ -1293,7 +1290,7 @@
     <div style="margin-bottom:1rem;">
       <label style="display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">Atualizar Status</label>
       <select class="status-select" id="modalStatus" onchange="updateStatus()">
-        <option value="Aguardando">Aguardando</option><option value="Em produção">Em produção</option>
+        <option value="Aguardando">Aguardando</option><option value="Autorizado">Autorizado</option>
         <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
       </select>
     </div>
@@ -1941,7 +1938,7 @@ function addWorkdays(d,days){let dt=new Date(d),a=0;while(a<days){dt.setDate(dt.
 function fmtDate(d){return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function sanitizeFileName(n){return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_');}
-const statusClass={'Aguardando':'badge-pending','Em produção':'badge-progress','Pronto':'badge-ready','Entregue':'badge-done','Cancelado':'badge-cancelled'};
+const statusClass={'Aguardando':'badge-pending','Autorizado':'badge-progress','Pronto':'badge-ready','Entregue':'badge-done','Cancelado':'badge-cancelled'};
 
 // ── CLEAR ──
 // ── DRIVE LINK ──
@@ -2550,11 +2547,11 @@ async function loadCoord(){
 // ── STATS ──
 function renderStats(){
   const p=allSolic.filter(d=>d.status==='Aguardando').length;
-  const r=allSolic.filter(d=>d.status==='Em produção').length;
+  const r=allSolic.filter(d=>d.status==='Autorizado').length;
   const e=allSolic.filter(d=>d.status==='Entregue').length;
   document.getElementById('statsRow').innerHTML=`
     <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">${p}</div><div class="slabel">Aguardando</div></div>
-    <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${r}</div><div class="slabel">Em Produção</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${r}</div><div class="slabel">Autorizado</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
   atualizarCoordContadorMensal(allSolic);
 }
@@ -3193,19 +3190,21 @@ async function excluirMeca(id){
 
 // ── MECANOGRAFIA LOAD ──
 async function loadMeca(){
-  const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
+  // Mecanografia vê apenas solicitações com status Autorizado ou Pronto
+  const {data:solic}=await db.from('solicitacoes').select('*')
+    .in('status',['Autorizado','Pronto'])
+    .order('data_solicitacao',{ascending:false});
   allSolic=solic||[];
   renderMecaStats();populateMecaFilterProfessor();renderMeca();
 }
 
 function renderMecaStats(){
-  const p=allSolic.filter(d=>d.status==='Aguardando').length;
-  const r=allSolic.filter(d=>d.status==='Em produção').length;
-  const e=allSolic.filter(d=>d.status==='Entregue').length;
+  const a=allSolic.filter(d=>d.status==='Autorizado').length;
+  const p=allSolic.filter(d=>d.status==='Pronto').length;
   document.getElementById('mecaStatsRow').innerHTML=`
-    <div class="stat-card"><div class="accent-dot" style="background:#e8a020;"></div><div class="num">${p}</div><div class="slabel">Aguardando</div></div>
-    <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${r}</div><div class="slabel">Em Produção</div></div>
-    <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
+    <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${a}</div><div class="slabel">Autorizado</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${p}</div><div class="slabel">Pronto</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${a+p}</div><div class="slabel">Total visível</div></div>`;
 }
 
 function populateMecaFilterProfessor(){
@@ -3220,13 +3219,15 @@ function renderMeca(){
   const txt=(document.getElementById('mecaFilterText').value||'').toLowerCase();
   const st=document.getElementById('mecaFilterStatus').value;
   const prof=(document.getElementById('mecaFilterProfessor')||{}).value||'';
+  // Mecanografia só exibe Autorizado e Pronto; aplica filtros adicionais em cima disso
   const filtered=allSolic.filter(d=>{
     const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
-    return m&&mProf&&(!st||d.status===st);
+    const mSt=!st||d.status===st;
+    return m&&mProf&&mSt;
   });
   const container=document.getElementById('mecaContainer');
-  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
+  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação Autorizada ou Pronta no momento.</p></div>';return;}
 
   function mecaRowHtml(d){
     return `<tr>
@@ -3246,11 +3247,8 @@ function renderMeca(){
       </td>
       <td>
         <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
-          <option ${d.status==='Aguardando'?'selected':''}>Aguardando</option>
-          <option ${d.status==='Em produção'?'selected':''}>Em produção</option>
+          <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
           <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
-          <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
-          <option ${d.status==='Cancelado'?'selected':''}>Cancelado</option>
         </select>
       </td>
       <td>
@@ -3261,28 +3259,27 @@ function renderMeca(){
 
   const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th><th>Ações</th></tr></thead>`;
 
-  // Separa: prioritárias (Pronto e Aguardando) vs demais
-  const prioritarias=filtered.filter(d=>d.status==='Pronto'||d.status==='Aguardando');
-  const demais=filtered.filter(d=>d.status!=='Pronto'&&d.status!=='Aguardando');
+  // Separa: Autorizado primeiro (prioritário), depois Pronto
+  const autorizados=filtered.filter(d=>d.status==='Autorizado');
+  const prontos=filtered.filter(d=>d.status==='Pronto');
 
   let html='';
-  if(prioritarias.length>0){
-    html+=`<table>${thead}<tbody>${prioritarias.map(mecaRowHtml).join('')}</tbody></table>`;
-  } else {
-    html+=`<div class="empty-state" style="padding:1.5rem 2rem;"><div class="emoji">✅</div><p>Nenhuma solicitação Pronta ou Aguardando.</p></div>`;
-  }
-
-  if(demais.length>0){
+  if(autorizados.length>0){
     html+=`
-      <div style="border-top:1.5px solid var(--border);">
-        <button onclick="toggleMecaDemais()" id="btnMecaDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
-          <span>📦 Ver demais solicitações (${demais.length})</span>
-          <span id="iconMecaDemais" style="transition:transform .25s;">▼</span>
-        </button>
-        <div id="mecaDemaisPanel" style="display:none;">
-          <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${demais.map(mecaRowHtml).join('')}</tbody></table>
-        </div>
-      </div>`;
+      <div style="padding:.6rem 1.2rem;background:#e8f0fb;border-bottom:1.5px solid #b8cef0;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#0055aa;">
+        🔵 Autorizados — aguardando produção (${autorizados.length})
+      </div>
+      <table>${thead}<tbody>${autorizados.map(mecaRowHtml).join('')}</tbody></table>`;
+  }
+  if(prontos.length>0){
+    html+=`
+      <div style="padding:.6rem 1.2rem;background:#e8f0eb;border-bottom:1.5px solid #b8d4bf;border-top:${autorizados.length?'2px':'0px'} solid var(--border);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);">
+        ✅ Prontos — aguardando retirada (${prontos.length})
+      </div>
+      <table>${thead}<tbody>${prontos.map(mecaRowHtml).join('')}</tbody></table>`;
+  }
+  if(!autorizados.length&&!prontos.length){
+    html='<div class="empty-state" style="padding:1.5rem 2rem;"><div class="emoji">✅</div><p>Nenhuma solicitação no momento.</p></div>';
   }
 
   container.innerHTML=html;
@@ -3931,7 +3928,7 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
           <div class="tut-step"><div class="tsnum">1</div><div>Revise os campos e confirme que o arquivo ou link está adicionado.</div></div>
           <div class="tut-step"><div class="tsnum">2</div><div>Clique em <span class="tut-tag" style="background:#e8a020;color:#1a3a2a;border-color:#e8a020;">✔ Enviar Solicitação</span>.</div></div>
           <div class="tut-step"><div class="tsnum">3</div><div>A mensagem <strong>"Solicitação enviada!"</strong> confirma o recebimento. Você é redirecionado para <em>Minhas Solicitações</em>.</div></div>
-          <div class="tut-step"><div class="tsnum">4</div><div>Acompanhe: <span class="tut-tag" style="background:#fff3d6;color:#a06000;border-color:#f0d090;">Aguardando</span> → <span class="tut-tag" style="background:#ddeeff;color:#0055aa;border-color:#b0ccee;">Em produção</span> → <span class="tut-tag" style="background:#d6f0e0;color:#1a6a3a;border-color:#a0d8b8;">Entregue</span></div></div>
+          <div class="tut-step"><div class="tsnum">4</div><div>Acompanhe: <span class="tut-tag" style="background:#fff3d6;color:#a06000;border-color:#f0d090;">Aguardando</span> → <span class="tut-tag" style="background:#ddeeff;color:#0055aa;border-color:#b0ccee;">Autorizado</span> → <span class="tut-tag" style="background:#d6f0e0;color:#1a6a3a;border-color:#a0d8b8;">Entregue</span></div></div>
         </div>
         <div class="tut-summary">
           <h4>📌 Resumo rápido</h4>
