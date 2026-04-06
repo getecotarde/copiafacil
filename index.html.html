@@ -3487,18 +3487,20 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
   <div class="modal modal-tut">
 
     <div class="modal-tut-header">
-      <h2>📖 Tutorial &nbsp;<em>CópiaFácil</em>&nbsp; Como enviar arquivos e links</h2>
+      <h2>📖 Tutorial &nbsp;<em>CópiaFácil</em>&nbsp; Como preencher e enviar uma solicitação</h2>
       <button class="btn-close-tut" onclick="fecharTutorial()" title="Fechar">✕</button>
     </div>
 
     <div class="modal-tut-nav">
       <button class="tut-step-btn active" onclick="tutShowPanel(0)"><div class="tsn">1</div> Acessar formulário</button>
       <div class="tut-nav-sep"></div>
-      <button class="tut-step-btn" onclick="tutShowPanel(1)"><div class="tsn">2</div> Enviar arquivo</button>
+      <button class="tut-step-btn" onclick="tutShowPanel(1)"><div class="tsn">2</div> Preencher campos</button>
       <div class="tut-nav-sep"></div>
-      <button class="tut-step-btn" onclick="tutShowPanel(2)"><div class="tsn">3</div> Enviar link do Drive</button>
+      <button class="tut-step-btn" onclick="tutShowPanel(2)"><div class="tsn">3</div> Enviar arquivo</button>
       <div class="tut-nav-sep"></div>
-      <button class="tut-step-btn" onclick="tutShowPanel(3)"><div class="tsn">4</div> Finalizar</button>
+      <button class="tut-step-btn" onclick="tutShowPanel(3)"><div class="tsn">4</div> Enviar link do Drive</button>
+      <div class="tut-nav-sep"></div>
+      <button class="tut-step-btn" onclick="tutShowPanel(4)"><div class="tsn">5</div> Finalizar</button>
     </div>
 
     <div class="modal-tut-body" id="modalTutBody">
@@ -3513,7 +3515,7 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
             <text x="270" y="49" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="12" fill="#1a3a2a">CópiaFácil</text>
             <text x="290" y="68" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6b6b5a">Sistema de Solicitação</text>
             <rect x="188" y="80" width="204" height="26" rx="7" fill="#f5f0e8" stroke="#d8d0c0" stroke-width="1.5"/>
-            <text x="200" y="97" font-family="sans-serif" font-size="9" fill="#b0a898">seu@email.com</text>
+            <text x="200" y="97" font-family="sans-serif" font-size="9" fill="#b0a898"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="94e7f1e1d4f1f9f5fdf8baf7fbf9">[email&#160;protected]</a></text>
             <rect x="188" y="112" width="204" height="26" rx="7" fill="#f5f0e8" stroke="#d8d0c0" stroke-width="1.5"/>
             <text x="200" y="129" font-family="sans-serif" font-size="9" fill="#b0a898">••••••••</text>
             <rect x="188" y="148" width="204" height="34" rx="8" fill="#e8a020"/>
@@ -3525,23 +3527,72 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
         <div class="tut-steps">
           <div class="tut-step"><div class="tsnum">1</div><div>Insira seu <strong>e-mail</strong> e <strong>senha</strong> e clique em <span class="tut-tag">Entrar</span>.</div></div>
           <div class="tut-step"><div class="tsnum">2</div><div>Após o login, clique em <span class="tut-tag">➕ Nova Solicitação</span> no menu do topo.</div></div>
-          <div class="tut-step"><div class="tsnum">3</div><div>Preencha os campos obrigatórios: <strong>Título, Turmas, Nº de Cópias</strong> e <strong>Laudas</strong>.</div></div>
-          <div class="tut-step"><div class="tsnum">4</div><div>Role até a seção <span class="tut-tag">📎 ANEXOS</span> para adicionar arquivo ou link.</div></div>
+          <div class="tut-step"><div class="tsnum">3</div><div>O formulário de solicitação será aberto. Siga os próximos passos para preenchê-lo corretamente.</div></div>
         </div>
         <div class="tut-callout tip"><span>💡</span><div>O botão <strong>Nova Solicitação</strong> fica em destaque amarelo no menu.</div></div>
         <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
-          <button class="btn-secondary" onclick="tutShowPanel(1)" style="display:inline-flex;align-items:center;gap:.4rem;">Próximo: Enviar arquivo →</button>
+          <button class="btn-secondary" onclick="tutShowPanel(1)" style="display:inline-flex;align-items:center;gap:.4rem;">Próximo: Preencher campos →</button>
         </div>
       </div>
 
-      <!-- PAINEL 2 -->
+      <!-- PAINEL 2 — PREENCHER CAMPOS -->
       <div class="tut-panel">
         <div class="tut-screen">
-          <svg viewBox="0 0 580 240" xmlns="http://www.w3.org/2000/svg" width="580">
-            <rect width="580" height="240" fill="#f0ede6" rx="10"/>
-            <rect x="14" y="12" width="552" height="216" rx="12" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
-            <rect x="26" y="24" width="58" height="15" rx="4" fill="#e8a020"/>
-            <text x="31" y="35" font-family="sans-serif" font-weight="700" font-size="8" fill="#1a3a2a">📎 ANEXOS</text>
+          <svg viewBox="0 0 580 260" xmlns="http://www.w3.org/2000/svg" width="580">
+            <rect width="580" height="260" fill="#f0ede6" rx="10"/>
+            <!-- Card formulário -->
+            <rect x="14" y="10" width="552" height="240" rx="12" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
+
+            <!-- Campo TÍTULO -->
+            <text x="28" y="32" font-family="sans-serif" font-size="8" font-weight="700" fill="#6b6b5a" letter-spacing="1">TÍTULO DA ATIVIDADE</text>
+            <rect x="28" y="38" width="524" height="26" rx="7" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="2"/>
+            <text x="38" y="55" font-family="sans-serif" font-size="10" fill="#1a3a2a">Avaliação Bimestral — Matemática — 3.º Bimestre</text>
+            <rect x="26" y="36" width="528" height="30" rx="8" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
+            <text x="28" y="78" font-family="sans-serif" font-size="8" fill="#c94f2a" font-weight="700">↑ descreva a atividade de forma clara (ex.: disciplina, bimestre, tipo)</text>
+
+            <!-- Campo TURMAS -->
+            <text x="28" y="100" font-family="sans-serif" font-size="8" font-weight="700" fill="#6b6b5a" letter-spacing="1">TURMAS ATENDIDAS</text>
+            <rect x="28" y="106" width="244" height="26" rx="7" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="2"/>
+            <text x="38" y="123" font-family="sans-serif" font-size="10" fill="#1a3a2a">3A, 3B, 3C</text>
+            <rect x="26" y="104" width="248" height="30" rx="8" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
+            <text x="28" y="146" font-family="sans-serif" font-size="8" fill="#c94f2a" font-weight="700">↑ liste todas as turmas separadas por vírgula</text>
+
+            <!-- Campo CÓPIAS -->
+            <text x="298" y="100" font-family="sans-serif" font-size="8" font-weight="700" fill="#6b6b5a" letter-spacing="1">QTD. DE CÓPIAS</text>
+            <rect x="298" y="106" width="116" height="26" rx="7" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="2"/>
+            <text x="338" y="123" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a3a2a">90</text>
+            <rect x="296" y="104" width="120" height="30" rx="8" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
+            <text x="298" y="146" font-family="sans-serif" font-size="8" fill="#c94f2a" font-weight="700">↑ total de alunos</text>
+
+            <!-- Campo LAUDAS -->
+            <text x="432" y="100" font-family="sans-serif" font-size="8" font-weight="700" fill="#6b6b5a" letter-spacing="1">LAUDAS DA MATRIZ</text>
+            <rect x="432" y="106" width="98" height="26" rx="7" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="2"/>
+            <text x="481" y="123" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a3a2a">2</text>
+            <rect x="430" y="104" width="102" height="30" rx="8" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
+            <text x="432" y="146" font-family="sans-serif" font-size="8" fill="#c94f2a" font-weight="700">↑ páginas do original</text>
+
+            <!-- Dica visual -->
+            <rect x="28" y="162" width="524" height="72" rx="10" fill="#e8f0eb" stroke="#2a7a4a" stroke-width="1.5"/>
+            <text x="42" y="180" font-family="sans-serif" font-size="9" font-weight="700" fill="#1a3a2a">📌 Como calcular o total de cópias:</text>
+            <text x="42" y="196" font-family="sans-serif" font-size="9" fill="#333">Nº de alunos por turma  ×  Nº de turmas  =  Total de cópias</text>
+            <text x="42" y="212" font-family="sans-serif" font-size="9" fill="#555">Exemplo: 30 alunos × 3 turmas = <tspan font-weight="700" fill="#1a3a2a">90 cópias</tspan></text>
+            <text x="42" y="228" font-family="sans-serif" font-size="9" fill="#555">Laudas: conte as páginas do arquivo original (frente e verso = 2 laudas)</text>
+          </svg>
+        </div>
+        <div class="tut-steps">
+          <div class="tut-step"><div class="tsnum">1</div><div><strong>Título da Atividade:</strong> informe a disciplina, o tipo e o bimestre — ex.: <em>"Avaliação Bimestral — Matemática — 3.º Bimestre"</em>. Evite títulos genéricos como "Atividade" ou "Prova".</div></div>
+          <div class="tut-step"><div class="tsnum">2</div><div><strong>Turmas Atendidas:</strong> liste todas as turmas que receberão as cópias, separadas por vírgula — ex.: <em>3A, 3B, 3C</em>. Se for para toda a série, você pode escrever <em>"Todos os 3.ºs anos"</em>.</div></div>
+          <div class="tut-step"><div class="tsnum">3</div><div><strong>Quantidade de Cópias:</strong> informe o <strong>total de alunos</strong> que receberão a atividade (some todas as turmas). Exemplo: 3 turmas × 30 alunos = <em>90 cópias</em>.</div></div>
+          <div class="tut-step"><div class="tsnum">4</div><div><strong>Laudas da Matriz:</strong> informe quantas <strong>páginas tem o arquivo original</strong>. Uma folha impressa frente e verso = 2 laudas. Um arquivo de 3 páginas = 3 laudas.</div></div>
+        </div>
+        <div class="tut-callout tip"><span>💡</span><div>Preencha todos os campos antes de adicionar o anexo. Campos em branco bloqueiam o envio.</div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:.5rem;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="tutShowPanel(0)">← Anterior</button>
+          <button class="btn-secondary" onclick="tutShowPanel(2)">Próximo: Enviar arquivo →</button>
+        </div>
+      </div>
+
+      <!-- PAINEL 3 (antigo 2) — ENVIAR ARQUIVO -->
             <text x="30" y="54" font-family="sans-serif" font-weight="700" font-size="8" fill="#1a3a2a">📄 ARQUIVO 1</text>
             <rect x="26" y="60" width="248" height="82" rx="8" fill="#fef8ec" stroke="#e8a020" stroke-width="2.5" stroke-dasharray="6,3"/>
             <text x="150" y="94" text-anchor="middle" font-family="sans-serif" font-size="18">📁</text>
@@ -3565,12 +3616,12 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
         </div>
         <div class="tut-callout warn"><span>⚠️</span><div><strong>Não feche a aba</strong> enquanto o upload estiver em andamento.</div></div>
         <div style="display:flex;justify-content:space-between;margin-top:.5rem;gap:.5rem;flex-wrap:wrap;">
-          <button class="btn-secondary" onclick="tutShowPanel(0)">← Anterior</button>
-          <button class="btn-secondary" onclick="tutShowPanel(2)">Próximo: Link do Drive →</button>
+          <button class="btn-secondary" onclick="tutShowPanel(1)">← Anterior</button>
+          <button class="btn-secondary" onclick="tutShowPanel(3)">Próximo: Link do Drive →</button>
         </div>
       </div>
 
-      <!-- PAINEL 3 -->
+      <!-- PAINEL 4 (antigo 3) — LINK DO DRIVE -->
       <div class="tut-panel">
         <div class="tut-screen">
           <svg viewBox="0 0 580 240" xmlns="http://www.w3.org/2000/svg" width="580">
@@ -3604,12 +3655,12 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
           <div class="tut-step"><div class="tsnum">4</div><div>O preview <span class="tut-tag" style="color:#1a6ac7;background:#e8f0fb;border-color:#b8cef0;">🔗 Ver arquivo</span> aparece automaticamente — confirme que funciona.</div></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:.5rem;gap:.5rem;flex-wrap:wrap;">
-          <button class="btn-secondary" onclick="tutShowPanel(1)">← Anterior</button>
-          <button class="btn-secondary" onclick="tutShowPanel(3)">Próximo: Finalizar →</button>
+          <button class="btn-secondary" onclick="tutShowPanel(2)">← Anterior</button>
+          <button class="btn-secondary" onclick="tutShowPanel(4)">Próximo: Finalizar →</button>
         </div>
       </div>
 
-      <!-- PAINEL 4 -->
+      <!-- PAINEL 5 (antigo 4) — FINALIZAR -->
       <div class="tut-panel">
         <div class="tut-screen">
           <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg" width="580">
@@ -3648,14 +3699,5 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
           </div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:1rem;gap:.5rem;flex-wrap:wrap;">
-          <button class="btn-secondary" onclick="tutShowPanel(2)">← Anterior</button>
-          <button class="btn-primary" onclick="fecharTutorial()" style="width:auto;padding:.6rem 1.4rem;">✔ Entendido, fechar</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
+          <button class="btn-secondary" onclick="tutShowPanel(3)">← Anterior</button>
+          <button class="btn-primary" onclick="fecharTutorial()" style="width:auto;padding:.6r
