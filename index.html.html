@@ -157,6 +157,7 @@
   .stat-card .accent-dot { width: 7px; height: 7px; border-radius: 50%; margin-bottom: .2rem; }
 
   table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   thead th { text-align: left; padding: .6rem .9rem; font-size: .72rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-bottom: 2px solid var(--border); }
   tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
   tbody tr:hover { background: #f9f6ef; }
@@ -225,16 +226,98 @@
     .form-layout, .form-layout-wide { grid-template-columns: 1fr; }
     .anexos-grid { grid-template-columns: 1fr; }
   }
+
   @media (max-width: 640px) {
+    /* ── LAYOUT GERAL ── */
+    header { padding: 0 .75rem; height: auto; min-height: 56px; flex-wrap: wrap; gap: .4rem; padding-top: .5rem; padding-bottom: .5rem; }
+    .logo { font-size: 1.1rem; }
+    .header-right { gap: .4rem; flex-wrap: wrap; }
+    .perfil-badge { font-size: .7rem; padding: .2rem .6rem; }
+    nav { gap: .3rem; flex-wrap: wrap; }
+    nav button { font-size: .75rem; padding: .35rem .65rem; }
+    .btn-sair { font-size: .73rem; padding: .28rem .6rem; }
+
+    main { padding: .75rem; }
+    .card { padding: 1rem 1rem; }
+    .card-sm { padding: .85rem .9rem; }
+
+    /* ── TÍTULOS ── */
+    .page-header h1 { font-size: 1.2rem; }
+    .page-header p { font-size: .82rem; }
+
+    /* ── GRIDS DE FORMULÁRIO ── */
     .form-grid { grid-template-columns: 1fr; }
-    .form-grid-3 { grid-template-columns: 1fr 1fr; }
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    header { padding: 0 1rem; }
-    main { padding: 1rem; }
-    .page-header h1 { font-size: 1.3rem; }
+    .form-grid-3 { grid-template-columns: 1fr; }
+    .anexos-grid { grid-template-columns: 1fr; }
+
+    /* ── STATS ── */
+    .stats-row { grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .stat-card { padding: .7rem .9rem; }
+    .stat-card .num { font-size: 1.4rem; }
+
+    /* ── COORD TABS ── */
+    .coord-tabs { gap: .25rem; overflow-x: auto; padding-bottom: .15rem; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .coord-tabs::-webkit-scrollbar { display: none; }
+    .coord-tab { font-size: .76rem; padding: .45rem .7rem; white-space: nowrap; flex-shrink: 0; }
+
+    /* ── DEADLINE BOX ── */
+    .deadline-box { padding: .6rem .85rem; }
+    .deadline-box .icon { font-size: 1.1rem; }
+    .deadline-box strong { font-size: .82rem; }
+    .deadline-box p { font-size: .74rem; }
+
+    /* ── SOLICITANTE BOX ── */
+    .solicitante-box { flex-direction: column; align-items: flex-start; gap: .5rem; }
+    .solicitante-box select { width: 100%; min-width: unset; }
+
+    /* ── RETRO BOX ── */
+    .retro-box { flex-direction: column; align-items: flex-start; }
+    .retro-box label { min-width: unset; width: 100%; }
+
+    /* ── BOTÕES DE AÇÃO ── */
+    .btn-action { width: 100%; justify-content: center; font-size: .88rem; padding: .7rem 1rem; }
+    .btn-secondary { font-size: .82rem; padding: .5rem .9rem; }
+
+    /* ── BOTÕES ENVIAR + LIMPAR ── */
+    div:has(> #btnEnviar), div:has(> #btnEnviarCoord) { flex-direction: column; }
+    div:has(> #btnEnviar) .btn-secondary,
+    div:has(> #btnEnviarCoord) .btn-secondary { width: 100%; text-align: center; justify-content: center; }
+
+    /* ── MINHA CARD ── */
+    .minha-card { grid-template-columns: 1fr; gap: .6rem; padding: .85rem 1rem; }
+    .mc-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+
+    /* ── MODAL ── */
     .modal-detail { grid-template-columns: 1fr; }
-    .minha-card { grid-template-columns: 1fr; }
-    .mc-right { align-items: flex-start; }
+    .modal { padding: 1.2rem; }
+    .modal-actions { flex-direction: column; }
+    .modal-actions button, .modal-actions select { width: 100%; }
+
+    /* ── TABELAS ── */
+    .card[style*="overflow:hidden"], .card[style*="overflow: hidden"] { overflow-x: auto; }
+    .card-sm { overflow-x: auto; }
+    table { font-size: .78rem; min-width: 500px; }
+    thead th { padding: .45rem .6rem; }
+    tbody td { padding: .5rem .6rem; }
+
+    /* ── FILE DROP ── */
+    .file-drop { padding: .85rem .6rem; min-height: 80px; }
+    .file-drop .file-icon { font-size: 1.3rem; }
+    .file-drop p { font-size: .74rem; }
+
+    /* ── SENHA BOX PROFESSOR/MECA ── */
+    #profSenhaBox, #mecaSenhaBox { flex-direction: column; align-items: flex-start; gap: .5rem; }
+    #profSenhaBox span[style*="margin-left:auto"],
+    #mecaSenhaBox span[style*="margin-left:auto"] { margin-left: 0 !important; }
+
+    /* ── CABEÇALHO DA PÁGINA SOLICITAR ── */
+    #page-solicitar > div:first-child { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (max-width: 400px) {
+    .stats-row { grid-template-columns: 1fr; }
+    .form-grid-3 { grid-template-columns: 1fr; }
+    nav button { font-size: .7rem; padding: .3rem .5rem; }
   }
 </style>
 </head>
@@ -508,8 +591,8 @@
           </div>
         </div>
 
-        <div class="form-layout">
-          <!-- COLUNA ESQUERDA -->
+        <div>
+          <!-- FORMULÁRIO PRINCIPAL -->
           <div class="card">
             <div class="solicitante-box">
               <span class="sb-label">🧑‍💼 Solicitante:</span>
@@ -543,15 +626,9 @@
                 <input type="date" id="cf-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.45rem .8rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);outline:none;" />
               </div>
             </div>
-            <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
-              <button class="btn-action" id="btnEnviarCoord" onclick="submitForm('coord')">✔ Enviar Solicitação</button>
-              <button class="btn-secondary" onclick="clearCoordForm()">Limpar</button>
-            </div>
-          </div>
 
-          <!-- COLUNA DIREITA: anexos -->
-          <div style="display:flex;flex-direction:column;gap:.8rem;">
-            <div class="card-sm">
+            <!-- ANEXOS -->
+            <div style="margin-top:1rem;">
               <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;">
                 <span style="background:var(--accent);color:var(--primary);border-radius:5px;padding:.1rem .5rem;font-size:.7rem;">📎</span>
                 ANEXOS <span style="font-weight:400;color:var(--muted);font-size:.68rem;margin-left:.2rem;">(até 2)</span>
@@ -597,6 +674,11 @@
                 </div>
               </div>
               <div class="upload-progress" id="cuploadProgress" style="margin-top:.6rem;"><div class="upload-progress-bar"><div class="upload-progress-fill" id="cuploadFill"></div></div><div class="upload-progress-label" id="cuploadLabel"></div></div>
+            </div>
+
+            <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
+              <button class="btn-action" id="btnEnviarCoord" onclick="submitForm('coord')">✔ Enviar Solicitação</button>
+              <button class="btn-secondary" onclick="clearCoordForm()">Limpar</button>
             </div>
           </div>
         </div>
