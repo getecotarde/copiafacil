@@ -685,6 +685,7 @@
         <button class="coord-tab" onclick="switchCoordTab('mecanografia',this)">🖨️ Mecanografia</button>
         <button class="coord-tab" onclick="switchCoordTab('admcopias',this)">📊 Adm. Cópias</button>
         <button class="coord-tab" onclick="switchCoordTab('pedagogico',this)">📚 Pedagógico</button>
+        <button class="coord-tab" id="coordSubTabBtn" style="display:none;" onclick="switchCoordTab('coordsub',this)">👥 Coord. Sub</button>
       </div>
 
       <!-- TAB NOVA -->
@@ -1126,6 +1127,40 @@
           <div id="admPedagogicoGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
+
+      <!-- TAB COORDENAÇÃO SUB -->
+      <div class="tab-panel" id="tab-coordsub">
+        <div class="card" style="padding:1.5rem 2rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem;">
+            <div>
+              <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--primary);margin-bottom:.4rem;">👥 Usuários de Coordenação</h3>
+              <p style="font-size:.88rem;color:var(--muted);">Esses usuários têm acesso ao painel de coordenação, <strong>exceto</strong> a exclusão de solicitações.</p>
+            </div>
+            <div style="display:flex;gap:.5rem;">
+              <button class="btn-secondary" onclick="togglePainelSenhasCoordSub()">🔑 Ver senhas</button>
+              <button class="btn-action" onclick="abrirModalCoordSub()">+ Criar acesso</button>
+            </div>
+          </div>
+          <!-- PAINEL DE SENHAS COORD SUB -->
+          <div id="painelSenhasCoordSub" style="display:none;margin-bottom:1.5rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Coordenação Sub</span>
+              <button onclick="togglePainelSenhasCoordSub()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+            </div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
+                <thead><tr>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Nome</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">E-mail</th>
+                  <th style="text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--border);">Senha inicial</th>
+                </tr></thead>
+                <tbody id="tabelaSenhasCoordSubBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="coordSubGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -1263,7 +1298,7 @@
       </select>
     </div>
     <div class="modal-actions">
-      <button class="btn-danger" onclick="deleteItem()">🗑 Excluir</button>
+      <button class="btn-danger" id="modalBtnExcluir" onclick="deleteItem()">🗑 Excluir</button>
       <button class="btn-secondary" onclick="closeModal()">Fechar</button>
     </div>
   </div>
@@ -1349,11 +1384,35 @@
 
 <div id="toast"></div>
 
+<!-- MODAL COORDENAÇÃO SUB -->
+<div class="modal-overlay" id="modalCoordSubOverlay" onclick="closeModalCoordSub(event)">
+  <div class="modal">
+    <h2>👥 Criar Acesso — Coordenação</h2>
+    <p style="font-size:.84rem;color:var(--muted);margin-bottom:1rem;">Este usuário terá acesso ao painel de coordenação, mas <strong>não poderá excluir</strong> solicitações de cópias.</p>
+    <div class="mfg"><label>Nome completo *</label><input type="text" id="coordSubNome" placeholder="Ex.: Ana Coordenadora" oninput="previewSenhaCoordSub()" /></div>
+    <div class="mfg"><label>E-mail *</label><input type="email" id="coordSubEmail" placeholder="usuario@edu.pbh.gov.br" /></div>
+    <div class="mfg">
+      <label>Senha inicial (gerada automaticamente)</label>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <input type="text" id="coordSubSenhaGerada" readonly style="font-family:monospace;font-weight:700;letter-spacing:.1em;background:#f0ede6;color:var(--primary);flex:1;" placeholder="Digite o nome para gerar" />
+        <button type="button" onclick="previewSenhaCoordSub()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.5rem .9rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;">↻ Prévia</button>
+      </div>
+      <span class="hint">Baseada nas 5 primeiras letras do nome + caractere especial.</span>
+    </div>
+    <p class="auth-erro" id="modalCoordSubErro"></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModalCoordSub()">Cancelar</button>
+      <button class="btn-action" id="btnSalvarCoordSub" onclick="salvarCoordSub()">Criar acesso</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL = 'https://uaedrqrnexcktjynecja.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZWRycXJuZXhja3RqeW5lY2phIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NDY1MTAsImV4cCI6MjA5MDIyMjUxMH0.uNS6boM5ksPEzThO0B8za4FvqsxCP2IEENFO_BGM7Dw';
 const BUCKET      = 'matrizes';
 const SENHA_COORD  = 'galodoido';
+const EMAIL_COORD_MASTER = 'everton.correa@edu.pbh.gov.br';
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1365,6 +1424,7 @@ let allSolic       = [];
 let allProfs       = [];
 let currentSolicId = null;
 let editandoProfId = null; // id do professor sendo editado (null = novo)
+let coordIsMaster  = false; // true somente para everton.correa@edu.pbh.gov.br
 
 const disciplinaDisplay = {
   'portugues':'Português','matematica':'Matemática','ciencias':'Ciências',
@@ -1424,10 +1484,17 @@ async function fazerLogin() {
     const {data,error}=await db.auth.signInWithPassword({email,password:senha});
     if (error) throw error;
     currentUser=data.user;
-    if (senha===SENHA_COORD){perfilAtual='coordenacao';await iniciarApp();return;}
+    if (senha===SENHA_COORD){
+      perfilAtual='coordenacao';
+      coordIsMaster = (email.toLowerCase()===EMAIL_COORD_MASTER.toLowerCase());
+      await iniciarApp();return;
+    }
     // Verifica se é mecanografia
     const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
     if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
+    // Verifica coordenação sub
+    const {data:coordSub}=await db.from('coordenacao_sub').select('*').eq('id',currentUser.id).maybeSingle();
+    if(coordSub){perfilAtual='coordenacaoSub';await iniciarApp();return;}
     const {data:prof,error:profErr}=await db.from('professores').select('*').eq('id',currentUser.id).single();
     if (profErr||!prof) throw new Error('Perfil não encontrado.');
     if (!prof.aprovado){
@@ -1477,6 +1544,14 @@ async function iniciarApp() {
     }
     await loadMeca();
     showPage('meca');
+  } else if (perfilAtual==='coordenacaoSub') {
+    badge.textContent='🗂️ Coordenação';
+    badge.className='perfil-badge coord';
+    nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
+    document.getElementById('cf-professor').value='Coordenação';
+    document.getElementById('cf-disciplina').value='Coordenação';
+    await loadCoord();
+    showPage('coord');
   } else {
     badge.textContent='🗂️ Coordenação';
     badge.className='perfil-badge coord';
@@ -1484,6 +1559,9 @@ async function iniciarApp() {
     document.getElementById('cf-professor').value='Coordenação';
     document.getElementById('cf-disciplina').value='Coordenação';
     await loadCoord();
+    // Exibe aba de Coordenação Sub apenas para o e-mail master
+    const tabCoordSub = document.getElementById('coordSubTabBtn');
+    if(tabCoordSub) tabCoordSub.style.display = coordIsMaster ? 'inline-block' : 'none';
     showPage('coord');
   }
 }
@@ -1693,6 +1771,7 @@ function switchCoordTab(tab,btn) {
   if(tab==='mecanografia') renderMecaGerenciar();
   if(tab==='admcopias') renderAdmGerenciar('copias');
   if(tab==='pedagogico') renderAdmGerenciar('pedagogico');
+  if(tab==='coordsub') renderCoordSubGerenciar();
   if(tab==='resumo') {
     // Garante que allSolic está carregado antes de renderizar
     if(allSolic.length === 0) {
@@ -2831,6 +2910,9 @@ function openModal(id){
   }
   document.getElementById('modalArquivo').innerHTML = arquivosHtml;
   document.getElementById('modalOverlay').classList.add('open');
+  // Oculta botão excluir para perfil Coordenação Sub
+  const btnDel = document.getElementById('modalBtnExcluir');
+  if(btnDel) btnDel.style.display = perfilAtual==='coordenacaoSub' ? 'none' : '';
 }
 
 function closeModal(e){
@@ -2859,6 +2941,115 @@ async function deleteItem(){
   allSolic=allSolic.filter(d=>d.id!==currentSolicId);
   closeModal();renderStats();renderSolicitacoes();
   showToast('🗑 Solicitação removida.');
+}
+
+// ── COORDENAÇÃO SUB ── (apenas everton.correa pode gerenciar)
+function abrirModalCoordSub(){
+  document.getElementById('coordSubNome').value='';
+  document.getElementById('coordSubEmail').value='';
+  document.getElementById('coordSubSenhaGerada').value='';
+  document.getElementById('modalCoordSubErro').style.display='none';
+  document.getElementById('modalCoordSubOverlay').classList.add('open');
+}
+function closeModalCoordSub(e){
+  if(!e||e.target===document.getElementById('modalCoordSubOverlay'))
+    document.getElementById('modalCoordSubOverlay').classList.remove('open');
+}
+function previewSenhaCoordSub(){
+  const nome=document.getElementById('coordSubNome').value.trim();
+  document.getElementById('coordSubSenhaGerada').value=nome?gerarSenhaPorNome(nome):'';
+}
+async function salvarCoordSub(){
+  const nome=document.getElementById('coordSubNome').value.trim();
+  const email=document.getElementById('coordSubEmail').value.trim();
+  const erroEl=document.getElementById('modalCoordSubErro');
+  const btn=document.getElementById('btnSalvarCoordSub');
+  erroEl.style.display='none';
+  if(!nome||!email){erroEl.textContent='⚠️ Preencha nome e e-mail.';erroEl.style.display='block';return;}
+  const senha=gerarSenhaPorNome(nome);
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
+  try{
+    const {data,error}=await db.auth.signUp({email,password:senha});
+    if(error)throw error;
+    const uid=data.user.id;
+    const {error:insErr}=await db.from('coordenacao_sub').insert([{id:uid,email,nome,senha_inicial:senha}]);
+    if(insErr)throw insErr;
+    await db.auth.signOut();
+    const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+    if(!loginErr)currentUser=sessao.user;
+    closeModalCoordSub();
+    await renderCoordSubGerenciar();
+    showToast(`✅ Acesso criado! Senha: ${senha}`);
+  }catch(err){
+    erroEl.textContent=err.message.includes('already registered')?'⚠️ Este e-mail já está cadastrado.':'❌ Erro: '+err.message;
+    erroEl.style.display='block';
+  }finally{btn.disabled=false;btn.innerHTML='Criar acesso';}
+}
+async function excluirCoordSub(id){
+  if(!confirm('Remover este acesso de coordenação?'))return;
+  const {error}=await db.from('coordenacao_sub').delete().eq('id',id);
+  if(error){showToast('❌ Erro ao remover.',true);return;}
+  await renderCoordSubGerenciar();
+  showToast('🗑 Acesso removido.');
+}
+async function renderCoordSubGerenciar(){
+  const container=document.getElementById('coordSubGerenciar');
+  if(!container)return;
+  const {data:lista}=await db.from('coordenacao_sub').select('id,email,nome,senha_inicial,criado_em').order('criado_em',{ascending:true});
+  if(!lista||lista.length===0){
+    container.innerHTML=`<div style="text-align:center;padding:2rem 1rem;">
+      <div style="font-size:2.5rem;margin-bottom:.8rem;">👥</div>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.2rem;">Nenhum acesso criado ainda.</p>
+      <button class="btn-action" onclick="abrirModalCoordSub()">+ Criar acesso</button>
+    </div>`;
+    return;
+  }
+  container.innerHTML=`
+    <div style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;">
+      ${lista.length} acesso${lista.length!==1?'s':''} cadastrado${lista.length!==1?'s':''}.
+    </div>
+    <table>
+      <thead><tr>
+        <th>Nome</th><th>E-mail</th><th>Criado em</th><th>Ações</th>
+      </tr></thead>
+      <tbody>${lista.map(m=>`
+        <tr>
+          <td>${esc(m.nome||'—')}</td>
+          <td>${esc(m.email||'—')}</td>
+          <td>${m.criado_em?fmtDate(m.criado_em):'—'}</td>
+          <td><button class="btn-danger" onclick="excluirCoordSub('${m.id}')">🗑 Remover</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div style="margin-top:1.2rem;display:flex;justify-content:flex-end;">
+      <button class="btn-action" onclick="abrirModalCoordSub()">+ Criar outro acesso</button>
+    </div>`;
+}
+async function togglePainelSenhasCoordSub(){
+  const p=document.getElementById('painelSenhasCoordSub');
+  if(p.style.display==='block'){p.style.display='none';return;}
+  const tbody=document.getElementById('tabelaSenhasCoordSubBody');
+  tbody.innerHTML=`<tr><td colspan="3" style="padding:1rem;text-align:center;"><span class="spinner"></span> Carregando…</td></tr>`;
+  p.style.display='block';
+  const {data:lista}=await db.from('coordenacao_sub').select('nome,email,senha_inicial').order('nome',{ascending:true});
+  const itens=lista||[];
+  if(!itens.length){
+    tbody.innerHTML=`<tr><td colspan="3" style="padding:1.5rem;text-align:center;color:var(--muted);">Nenhum acesso cadastrado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=itens.map(m=>{
+    const sid='senha-coordsub-'+esc((m.email||'sub').replace(/[^a-z0-9]/gi,'_'));
+    return `<tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:.7rem 1rem;">${esc(m.nome||'—')}</td>
+      <td style="padding:.7rem 1rem;">${esc(m.email||'—')}</td>
+      <td style="padding:.7rem 1rem;">
+        <div class="senha-cell">
+          <span class="senha-mask" id="${sid}">••••••</span>
+          <button class="btn-eye" onclick="toggleSenha(this,'${esc(m.senha_inicial||'')}','${sid}')">👁</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
 }
 
 // ── TOAST ──
@@ -3144,7 +3335,11 @@ async function fazerLogin() {
     const {data,error}=await db.auth.signInWithPassword({email,password:senha});
     if (error) throw error;
     currentUser=data.user;
-    if (senha===SENHA_COORD){perfilAtual='coordenacao';await iniciarApp();return;}
+    if (senha===SENHA_COORD){
+      perfilAtual='coordenacao';
+      coordIsMaster = (email.toLowerCase()===EMAIL_COORD_MASTER.toLowerCase());
+      await iniciarApp();return;
+    }
     // Verifica mecanografia
     const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
     if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
@@ -3159,6 +3354,9 @@ async function fazerLogin() {
       else await iniciarAdmArquivos();
       return;
     }
+    // Verifica coordenação sub
+    const {data:coordSub}=await db.from('coordenacao_sub').select('*').eq('id',currentUser.id).maybeSingle();
+    if(coordSub){perfilAtual='coordenacaoSub';await iniciarApp();return;}
     // Professor
     const {data:prof,error:profErr}=await db.from('professores').select('*').eq('id',currentUser.id).single();
     if (profErr||!prof) throw new Error('Perfil não encontrado.');
@@ -3577,7 +3775,7 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
           <div class="tut-visual-title">📱 Tela de login</div>
           <div class="tut-mock-login">
             <div class="tut-mock-logo"><span>CópiaFácil</span></div>
-            <div class="tut-mock-field">✉️ &nbsp;seu@email.com</div>
+            <div class="tut-mock-field">✉️ &nbsp;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0774627247626a666e6b2964686a">[email&#160;protected]</a></div>
             <div class="tut-mock-field">🔒 &nbsp;••••••••</div>
             <div class="tut-mock-btn">Entrar</div>
           </div>
@@ -3745,5 +3943,4 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
           </div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:1rem;gap:.5rem;flex-wrap:wrap;">
-          <button class="btn-secondary" onclick="tutShowPanel(3)">← Anterior</button>
-          <button class="btn-primary" onclick="fecharTutorial()" style="width:auto;padding:.6r
+          <button class="btn-secondary" onclick="tutShowPanel(3)">
