@@ -296,8 +296,8 @@
         <span style="font-size:.75rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
       </div>
 
-      <div class="form-layout">
-        <!-- COLUNA ESQUERDA: dados principais -->
+      <div>
+        <!-- FORMULÁRIO PRINCIPAL -->
         <div class="card">
           <div class="form-grid">
             <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
@@ -314,15 +314,9 @@
             <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
           </div>
           <!-- RETROATIVO removido: apenas coordenação pode lançar retroativo -->
-          <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
-            <button class="btn-action" id="btnEnviar" onclick="submitForm('prof')">✔ Enviar Solicitação</button>
-            <button class="btn-secondary" onclick="clearProfForm()">Limpar</button>
-          </div>
-        </div>
 
-        <!-- COLUNA DIREITA: anexos -->
-        <div style="display:flex;flex-direction:column;gap:.8rem;">
-          <div class="card-sm">
+          <!-- ANEXOS -->
+          <div style="margin-top:1rem;">
             <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;">
               <span style="background:var(--accent);color:var(--primary);border-radius:5px;padding:.1rem .5rem;font-size:.7rem;">📎</span>
               ANEXOS <span style="font-weight:400;color:var(--muted);font-size:.68rem;margin-left:.2rem;">(até 2)</span>
@@ -368,6 +362,11 @@
               </div>
             </div>
             <div class="upload-progress" id="uploadProgress" style="margin-top:.6rem;"><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div><div class="upload-progress-label" id="uploadLabel"></div></div>
+          </div>
+
+          <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
+            <button class="btn-action" id="btnEnviar" onclick="submitForm('prof')">✔ Enviar Solicitação</button>
+            <button class="btn-secondary" onclick="clearProfForm()">Limpar</button>
           </div>
         </div>
       </div>
