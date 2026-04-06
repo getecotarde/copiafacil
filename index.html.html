@@ -195,19 +195,71 @@
   .modal-tut-header h2 em { background: var(--accent); color: var(--primary); border-radius: 5px; padding: .1rem .55rem; font-style: normal; font-size: .85rem; }
   .modal-tut-header .btn-close-tut { background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 1.1rem; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; flex-shrink: 0; }
   .modal-tut-header .btn-close-tut:hover { background: rgba(255,255,255,.28); }
-  .modal-tut-nav { background: var(--surface); border-bottom: 1.5px solid var(--border); padding: .7rem 1.4rem; display: flex; align-items: center; gap: 0; flex-wrap: nowrap; overflow-x: auto; }
+  .modal-tut-nav { background: var(--surface); border-bottom: 1.5px solid var(--border); padding: .6rem 1rem; display: flex; align-items: center; gap: 0; flex-wrap: nowrap; overflow-x: auto; }
   .modal-tut-nav::-webkit-scrollbar { display: none; }
-  .tut-step-btn { display: flex; align-items: center; gap: .4rem; background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: .78rem; font-weight: 600; color: var(--muted); cursor: pointer; padding: .35rem .6rem; border-radius: 7px; transition: all .2s; white-space: nowrap; flex-shrink: 0; }
+  .tut-step-btn { display: flex; align-items: center; gap: .4rem; background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: .78rem; font-weight: 600; color: var(--muted); cursor: pointer; padding: .35rem .55rem; border-radius: 7px; transition: all .2s; white-space: nowrap; flex-shrink: 0; }
   .tut-step-btn:hover { background: rgba(26,58,42,.07); color: var(--primary); }
   .tut-step-btn.active { background: #e8f0eb; color: var(--primary); }
   .tut-step-btn .tsn { width: 20px; height: 20px; border-radius: 50%; font-size: .68rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--border); color: var(--muted); transition: all .2s; }
   .tut-step-btn.active .tsn, .tut-step-btn:hover .tsn { background: var(--primary); color: #fff; }
-  .tut-nav-sep { width: 20px; height: 2px; background: var(--border); flex-shrink: 0; margin: 0 .1rem; }
+  .tut-nav-sep { width: 14px; height: 2px; background: var(--border); flex-shrink: 0; margin: 0 .05rem; }
   .modal-tut-body { padding: 1.4rem 1.6rem; max-height: 70vh; overflow-y: auto; scroll-behavior: smooth; }
   .tut-panel { display: none; }
   .tut-panel.active { display: block; animation: fadeIn .25s ease; }
-  .tut-screen { background: #f0ede6; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1rem; display: flex; justify-content: center; padding: 1rem; }
-  .tut-screen svg { max-width: 100%; display: block; }
+
+  /* ── VISUAL CARDS (substituem SVGs) ── */
+  .tut-visual { background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; }
+  .tut-visual-title { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: .75rem; }
+
+  /* Login mock */
+  .tut-mock-login { display: flex; flex-direction: column; gap: .5rem; max-width: 320px; margin: 0 auto; }
+  .tut-mock-field { background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: .55rem .9rem; font-size: .85rem; color: var(--muted); }
+  .tut-mock-btn { background: var(--accent); color: var(--primary); font-weight: 700; font-size: .9rem; border-radius: 8px; padding: .6rem 1rem; text-align: center; border: 2.5px dashed #c94f2a; position: relative; }
+  .tut-mock-btn::after { content: '← clique aqui'; position: absolute; right: -90px; top: 50%; transform: translateY(-50%); color: #c94f2a; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+  .tut-mock-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--primary); text-align: center; margin-bottom: .4rem; }
+  .tut-mock-logo span { background: var(--accent); border-radius: 5px; padding: 1px 7px; }
+
+  /* Campo mock genérico */
+  .tut-field-row { display: grid; gap: .75rem; margin-bottom: .5rem; }
+  .tut-field-row.col2 { grid-template-columns: 1fr 1fr; }
+  .tut-field-row.col3 { grid-template-columns: 2fr 1fr 1fr; }
+  .tut-field-block { display: flex; flex-direction: column; gap: .3rem; }
+  .tut-field-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .tut-field-input { background: var(--surface); border: 2px solid var(--primary); border-radius: 7px; padding: .45rem .75rem; font-size: .85rem; color: var(--text); font-weight: 500; }
+  .tut-field-hint { font-size: .72rem; color: #c94f2a; font-weight: 600; }
+  .tut-field-formula { background: #e8f0eb; border: 1.5px solid #b8d4bf; border-radius: 9px; padding: .7rem 1rem; font-size: .83rem; color: var(--primary); line-height: 1.6; margin-top: .5rem; }
+  .tut-field-formula strong { font-weight: 700; }
+
+  /* Upload mock */
+  .tut-mock-dropzone { border: 2.5px dashed var(--accent); border-radius: 10px; padding: 1.2rem 1rem; text-align: center; background: #fef8ec; }
+  .tut-mock-dropzone .dz-icon { font-size: 1.8rem; margin-bottom: .3rem; }
+  .tut-mock-dropzone .dz-label { font-weight: 700; font-size: .88rem; color: var(--primary); }
+  .tut-mock-dropzone .dz-sub { font-size: .78rem; color: var(--muted); margin-top: .15rem; }
+  .tut-mock-dropzone-ok { border: 2px solid var(--success); border-radius: 10px; padding: .75rem 1rem; background: #e8f0eb; display: flex; align-items: center; gap: .6rem; margin-top: .7rem; font-size: .85rem; font-weight: 600; color: var(--success); }
+  .tut-mock-dropzone-pair { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+  /* Drive mock */
+  .tut-mock-drive { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .tut-mock-drive-header { background: #4285f4; padding: .5rem .9rem; color: #fff; font-weight: 700; font-size: .82rem; }
+  .tut-mock-drive-file { padding: .55rem .9rem; font-size: .83rem; color: var(--text); display: flex; align-items: center; gap: .5rem; border-bottom: 1px solid var(--border); }
+  .tut-mock-drive-ctx { background: var(--surface); border: 1.5px solid #ccc; border-radius: 8px; padding: .4rem 0; margin: .5rem auto; max-width: 210px; box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+  .tut-mock-drive-ctx-item { padding: .4rem .9rem; font-size: .82rem; color: var(--text); }
+  .tut-mock-drive-ctx-item.highlight { background: #e8f0fb; color: #1a6ac7; font-weight: 600; border: 1.5px solid #c94f2a; border-radius: 5px; margin: 0 .4rem; }
+  .tut-mock-drive-field { display: flex; gap: .4rem; align-items: center; margin-top: .65rem; }
+  .tut-mock-drive-field input-fake { flex: 1; display: block; background: var(--bg); border: 1.5px solid #4285f4; border-radius: 7px; padding: .42rem .7rem; font-size: .78rem; color: var(--muted); font-style: italic; }
+
+  /* Finalizar mock */
+  .tut-mock-checklist { display: flex; flex-direction: column; gap: .45rem; margin-bottom: .9rem; }
+  .tut-mock-check-item { display: flex; align-items: center; gap: .6rem; font-size: .88rem; color: var(--text); }
+  .tut-mock-check-item .ck { width: 20px; height: 20px; border-radius: 5px; background: var(--success); color: #fff; font-size: .7rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tut-mock-send-btn { background: var(--accent); color: var(--primary); font-weight: 700; font-size: .9rem; border-radius: 8px; padding: .65rem 1.4rem; text-align: center; display: inline-block; border: 2.5px dashed #c94f2a; position: relative; margin-bottom: .8rem; }
+  .tut-mock-send-btn::after { content: '← clique para enviar'; position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-50%); color: #c94f2a; font-size: .75rem; font-weight: 700; white-space: nowrap; }
+  .tut-mock-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 9px; padding: .65rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+  .tut-mock-card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .88rem; color: var(--primary); }
+  .tut-mock-card-meta { font-size: .78rem; color: var(--muted); margin-top: .1rem; }
+  .tut-mock-badge { padding: .2rem .6rem; border-radius: 99px; font-size: .72rem; font-weight: 600; background: #fff3d6; color: #a06000; }
+  .tut-mock-success { background: var(--primary); color: #fff; border-radius: 8px; padding: .55rem 1rem; font-size: .88rem; font-weight: 600; text-align: center; margin-top: .6rem; }
+
   .tut-steps { display: flex; flex-direction: column; gap: .65rem; margin-bottom: 1rem; }
   .tut-step { display: flex; gap: .8rem; align-items: flex-start; font-size: .88rem; line-height: 1.55; }
   .tut-step .tsnum { width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff; font-size: .68rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .14rem; }
@@ -224,7 +276,21 @@
   .tut-summary-item p { font-size: .82rem; color: #fff; line-height: 1.5; }
   .btn-tut-login { display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; margin-top: .9rem; padding: .55rem 1rem; background: transparent; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: .84rem; color: var(--muted); cursor: pointer; transition: all .2s; }
   .btn-tut-login:hover { border-color: var(--primary); color: var(--primary); background: rgba(26,58,42,.04); }
-  @media (max-width: 540px) { .modal-tut { width: 98%; } .modal-tut-body { padding: 1rem; max-height: 65vh; } .tut-summary-grid { grid-template-columns: 1fr; } }
+
+  /* ── RESPONSIVIDADE TUTORIAL ── */
+  @media (max-width: 600px) {
+    .modal-tut { width: 100%; max-width: 100%; border-radius: 16px 16px 0 0; margin-top: auto; }
+    .modal-overlay.open { align-items: flex-end; }
+    .modal-tut-body { padding: 1rem; max-height: 72vh; }
+    .modal-tut-header { padding: .9rem 1rem; }
+    .modal-tut-header h2 { font-size: .85rem; }
+    .tut-field-row.col3 { grid-template-columns: 1fr 1fr; }
+    .tut-field-row.col3 .tut-field-block:first-child { grid-column: 1 / -1; }
+    .tut-mock-dropzone-pair { grid-template-columns: 1fr; }
+    .tut-mock-btn::after, .tut-mock-send-btn::after { display: none; }
+    .tut-summary-grid { grid-template-columns: 1fr; }
+    .tut-step-btn .tsn-label { display: none; }
+  }
   .modal h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--primary); margin-bottom: 1rem; }
   .modal-detail { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: 1rem; }
   .modal-detail .d-item { background: var(--bg); border-radius: 7px; padding: .5rem .8rem; }
@@ -3507,22 +3573,14 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
 
       <!-- PAINEL 1 -->
       <div class="tut-panel active">
-        <div class="tut-screen">
-          <svg viewBox="0 0 580 230" xmlns="http://www.w3.org/2000/svg" width="580">
-            <rect width="580" height="230" fill="#f5f0e8" rx="10"/>
-            <rect x="170" y="18" width="240" height="196" rx="14" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
-            <rect x="232" y="34" width="76" height="22" rx="6" fill="#e8a020"/>
-            <text x="270" y="49" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="12" fill="#1a3a2a">CópiaFácil</text>
-            <text x="290" y="68" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6b6b5a">Sistema de Solicitação</text>
-            <rect x="188" y="80" width="204" height="26" rx="7" fill="#f5f0e8" stroke="#d8d0c0" stroke-width="1.5"/>
-            <text x="200" y="97" font-family="sans-serif" font-size="9" fill="#b0a898"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="94e7f1e1d4f1f9f5fdf8baf7fbf9">[email&#160;protected]</a></text>
-            <rect x="188" y="112" width="204" height="26" rx="7" fill="#f5f0e8" stroke="#d8d0c0" stroke-width="1.5"/>
-            <text x="200" y="129" font-family="sans-serif" font-size="9" fill="#b0a898">••••••••</text>
-            <rect x="188" y="148" width="204" height="34" rx="8" fill="#e8a020"/>
-            <text x="290" y="169" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="12" fill="#1a3a2a">Entrar</text>
-            <rect x="186" y="146" width="208" height="38" rx="9" fill="none" stroke="#c94f2a" stroke-width="2.5" stroke-dasharray="5,3"/>
-            <text x="406" y="169" font-family="sans-serif" font-size="11" fill="#c94f2a" font-weight="700">← clique aqui</text>
-          </svg>
+        <div class="tut-visual">
+          <div class="tut-visual-title">📱 Tela de login</div>
+          <div class="tut-mock-login">
+            <div class="tut-mock-logo"><span>CópiaFácil</span></div>
+            <div class="tut-mock-field">✉️ &nbsp;seu@email.com</div>
+            <div class="tut-mock-field">🔒 &nbsp;••••••••</div>
+            <div class="tut-mock-btn">Entrar</div>
+          </div>
         </div>
         <div class="tut-steps">
           <div class="tut-step"><div class="tsnum">1</div><div>Insira seu <strong>e-mail</strong> e <strong>senha</strong> e clique em <span class="tut-tag">Entrar</span>.</div></div>
@@ -3537,47 +3595,37 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
 
       <!-- PAINEL 2 — PREENCHER CAMPOS -->
       <div class="tut-panel">
-        <div class="tut-screen">
-          <svg viewBox="0 0 580 260" xmlns="http://www.w3.org/2000/svg" width="580">
-            <rect width="580" height="260" fill="#f0ede6" rx="10"/>
-            <!-- Card formulário -->
-            <rect x="14" y="10" width="552" height="240" rx="12" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
-
-            <!-- Campo TÍTULO -->
-            <text x="28" y="32" font-family="sans-serif" font-size="8" font-weight="700" fill="#6b6b5a" letter-spacing="1">TÍTULO DA ATIVIDADE</text>
-            <rect x="28" y="38" width="524" height="26" rx="7" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="2"/>
-            <text x="38" y="55" font-family="sans-serif" font-size="10" fill="#1a3a2a">Avaliação Bimestral — Matemática — 3.º Bimestre</text>
-            <rect x="26" y="36" width="528" height="30" rx="8" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
-            <text x="28" y="78" font-family="sans-serif" font-size="8" fill="#c94f2a" font-weight="700">↑ descreva a atividade de forma clara (ex.: disciplina, bimestre, tipo)</text>
-
-            <!-- Campo TURMAS -->
-            <text x="28" y="100" font-family="sans-serif" font-size="8" font-weight="700" fill="#6b6b5a" letter-spacing="1">TURMAS ATENDIDAS</text>
-            <rect x="28" y="106" width="244" height="26" rx="7" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="2"/>
-            <text x="38" y="123" font-family="sans-serif" font-size="10" fill="#1a3a2a">3A, 3B, 3C</text>
-            <rect x="26" y="104" width="248" height="30" rx="8" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
-            <text x="28" y="146" font-family="sans-serif" font-size="8" fill="#c94f2a" font-weight="700">↑ liste todas as turmas separadas por vírgula</text>
-
-            <!-- Campo CÓPIAS -->
-            <text x="298" y="100" font-family="sans-serif" font-size="8" font-weight="700" fill="#6b6b5a" letter-spacing="1">QTD. DE CÓPIAS</text>
-            <rect x="298" y="106" width="116" height="26" rx="7" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="2"/>
-            <text x="338" y="123" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a3a2a">90</text>
-            <rect x="296" y="104" width="120" height="30" rx="8" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
-            <text x="298" y="146" font-family="sans-serif" font-size="8" fill="#c94f2a" font-weight="700">↑ total de alunos</text>
-
-            <!-- Campo LAUDAS -->
-            <text x="432" y="100" font-family="sans-serif" font-size="8" font-weight="700" fill="#6b6b5a" letter-spacing="1">LAUDAS DA MATRIZ</text>
-            <rect x="432" y="106" width="98" height="26" rx="7" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="2"/>
-            <text x="481" y="123" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a3a2a">2</text>
-            <rect x="430" y="104" width="102" height="30" rx="8" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
-            <text x="432" y="146" font-family="sans-serif" font-size="8" fill="#c94f2a" font-weight="700">↑ páginas do original</text>
-
-            <!-- Dica visual -->
-            <rect x="28" y="162" width="524" height="72" rx="10" fill="#e8f0eb" stroke="#2a7a4a" stroke-width="1.5"/>
-            <text x="42" y="180" font-family="sans-serif" font-size="9" font-weight="700" fill="#1a3a2a">📌 Como calcular o total de cópias:</text>
-            <text x="42" y="196" font-family="sans-serif" font-size="9" fill="#333">Nº de alunos por turma  ×  Nº de turmas  =  Total de cópias</text>
-            <text x="42" y="212" font-family="sans-serif" font-size="9" fill="#555">Exemplo: 30 alunos × 3 turmas = <tspan font-weight="700" fill="#1a3a2a">90 cópias</tspan></text>
-            <text x="42" y="228" font-family="sans-serif" font-size="9" fill="#555">Laudas: conte as páginas do arquivo original (frente e verso = 2 laudas)</text>
-          </svg>
+        <div class="tut-visual">
+          <div class="tut-visual-title">📝 Campos obrigatórios do formulário</div>
+          <div class="tut-field-row" style="grid-template-columns:1fr; margin-bottom:.75rem;">
+            <div class="tut-field-block">
+              <div class="tut-field-label">Título da Atividade</div>
+              <div class="tut-field-input">Avaliação Bimestral — Matemática — 3.º Bimestre</div>
+              <div class="tut-field-hint">↑ disciplina + tipo + bimestre</div>
+            </div>
+          </div>
+          <div class="tut-field-row col3">
+            <div class="tut-field-block">
+              <div class="tut-field-label">Turmas Atendidas</div>
+              <div class="tut-field-input">3A, 3B, 3C</div>
+              <div class="tut-field-hint">↑ separadas por vírgula</div>
+            </div>
+            <div class="tut-field-block">
+              <div class="tut-field-label">Qtd. de Cópias</div>
+              <div class="tut-field-input" style="text-align:center;font-weight:700;">90</div>
+              <div class="tut-field-hint">↑ total de alunos</div>
+            </div>
+            <div class="tut-field-block">
+              <div class="tut-field-label">Laudas da Matriz</div>
+              <div class="tut-field-input" style="text-align:center;font-weight:700;">2</div>
+              <div class="tut-field-hint">↑ páginas do original</div>
+            </div>
+          </div>
+          <div class="tut-field-formula">
+            📌 <strong>Como calcular cópias:</strong> nº de alunos × nº de turmas = total<br>
+            Exemplo: 30 alunos × 3 turmas = <strong>90 cópias</strong><br>
+            📄 <strong>Laudas:</strong> conte as páginas do arquivo — frente e verso = 2 laudas
+          </div>
         </div>
         <div class="tut-steps">
           <div class="tut-step"><div class="tsnum">1</div><div><strong>Título da Atividade:</strong> informe a disciplina, o tipo e o bimestre — ex.: <em>"Avaliação Bimestral — Matemática — 3.º Bimestre"</em>. Evite títulos genéricos como "Atividade" ou "Prova".</div></div>
@@ -3593,20 +3641,27 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
       </div>
 
       <!-- PAINEL 3 (antigo 2) — ENVIAR ARQUIVO -->
-            <text x="30" y="54" font-family="sans-serif" font-weight="700" font-size="8" fill="#1a3a2a">📄 ARQUIVO 1</text>
-            <rect x="26" y="60" width="248" height="82" rx="8" fill="#fef8ec" stroke="#e8a020" stroke-width="2.5" stroke-dasharray="6,3"/>
-            <text x="150" y="94" text-anchor="middle" font-family="sans-serif" font-size="18">📁</text>
-            <text x="150" y="110" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="10" fill="#1a3a2a">Clique ou arraste</text>
-            <text x="150" y="124" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#6b6b5a">PDF, DOC, DOCX, ODT</text>
-            <text x="26" y="160" font-family="sans-serif" font-size="10" fill="#c94f2a" font-weight="700">↑ clique para escolher o arquivo</text>
-            <text x="300" y="54" font-family="sans-serif" font-weight="700" font-size="8" fill="#1a3a2a">📄 ARQUIVO 2 — OPCIONAL</text>
-            <rect x="300" y="60" width="248" height="82" rx="8" fill="#f5f0e8" stroke="#d8d0c0" stroke-width="1.5" stroke-dasharray="5,3"/>
-            <text x="424" y="110" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="10" fill="#aaa">Clique ou arraste</text>
-            <rect x="26" y="176" width="248" height="40" rx="8" fill="#e8f0eb" stroke="#2a7a4a" stroke-width="1.5" stroke-dasharray="5,3"/>
-            <text x="150" y="193" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#2a7a4a" font-weight="600">✔ avaliacao_3ano.pdf</text>
-            <text x="150" y="208" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6b6b5a">arquivo selecionado</text>
-            <text x="284" y="197" font-family="sans-serif" font-size="9" fill="#6b6b5a">← após seleção</text>
-          </svg>
+      <div class="tut-panel">
+        <div class="tut-visual">
+          <div class="tut-visual-title">📎 Seção de Anexos — Upload de arquivo</div>
+          <div class="tut-mock-dropzone-pair">
+            <div>
+              <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);margin-bottom:.4rem;">📄 Arquivo 1</div>
+              <div class="tut-mock-dropzone">
+                <div class="dz-icon">📁</div>
+                <div class="dz-label">Clique ou arraste</div>
+                <div class="dz-sub">PDF · DOC · DOCX · ODT</div>
+              </div>
+              <div class="tut-mock-dropzone-ok">✔ avaliacao_3ano.pdf <span style="font-size:.75rem;font-weight:400;color:var(--muted);margin-left:auto;">arquivo selecionado</span></div>
+            </div>
+            <div>
+              <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.4rem;">📄 Arquivo 2 — opcional</div>
+              <div class="tut-mock-dropzone" style="border-color:var(--border);background:var(--bg);">
+                <div class="dz-icon" style="opacity:.4;">📁</div>
+                <div class="dz-label" style="color:var(--muted);">Clique ou arraste</div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="tut-steps">
           <div class="tut-step"><div class="tsnum">1</div><div>Clique na <strong>área pontilhada</strong> do Arquivo 1 — fica amarela ao passar o mouse.</div></div>
@@ -3623,29 +3678,24 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
 
       <!-- PAINEL 4 (antigo 3) — LINK DO DRIVE -->
       <div class="tut-panel">
-        <div class="tut-screen">
-          <svg viewBox="0 0 580 240" xmlns="http://www.w3.org/2000/svg" width="580">
-            <rect width="580" height="240" fill="#f0ede6" rx="10"/>
-            <rect x="14" y="12" width="340" height="148" rx="12" fill="#fff" stroke="#d0d0d0" stroke-width="1.5"/>
-            <rect x="14" y="12" width="340" height="34" rx="12 12 0 0" fill="#4285f4"/>
-            <text x="30" y="33" font-family="sans-serif" font-weight="700" font-size="12" fill="white">📁 Google Drive</text>
-            <rect x="26" y="58" width="220" height="28" rx="7" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="1"/>
-            <text x="40" y="76" font-family="sans-serif" font-size="10" fill="#333">📄 avaliacao_bimestral.docx</text>
-            <rect x="164" y="80" width="178" height="76" rx="8" fill="#fff" stroke="#ccc" stroke-width="1" filter="drop-shadow(0 3px 6px rgba(0,0,0,.15))"/>
-            <text x="178" y="100" font-family="sans-serif" font-size="10" fill="#555">👁 Pré-visualizar</text>
-            <line x1="164" y1="107" x2="342" y2="107" stroke="#eee" stroke-width="1"/>
-            <rect x="164" y="109" width="178" height="22" fill="#e8f0fb"/>
-            <text x="178" y="124" font-family="sans-serif" font-size="10" fill="#1a6ac7" font-weight="600">🔗 Copiar link</text>
-            <text x="178" y="146" font-family="sans-serif" font-size="10" fill="#555">⬇️ Download</text>
-            <rect x="162" y="107" width="182" height="26" rx="3" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
-            <text x="14" y="176" font-family="sans-serif" font-size="10" fill="#c94f2a" font-weight="700">↑ botão direito → "Copiar link"</text>
-            <rect x="14" y="192" width="552" height="38" rx="10" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
-            <text x="26" y="207" font-family="sans-serif" font-size="8" fill="#6b6b5a">— OU LINK DO DRIVE —</text>
-            <rect x="26" y="210" width="440" height="14" rx="4" fill="#f5f0e8" stroke="#4285f4" stroke-width="1.5"/>
-            <text x="32" y="221" font-family="sans-serif" font-size="7" fill="#333">https://drive.google.com/file/d/1BxiMVs…</text>
-            <rect x="472" y="207" width="76" height="20" rx="6" fill="#e8f0fb" stroke="#b8cef0" stroke-width="1"/>
-            <text x="510" y="221" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#1a6ac7" font-weight="600">🔗 Ver arq.</text>
-          </svg>
+        <div class="tut-visual">
+          <div class="tut-visual-title">🔗 Copiar link do Google Drive</div>
+          <div class="tut-mock-drive">
+            <div class="tut-mock-drive-header">📁 Google Drive</div>
+            <div class="tut-mock-drive-file">📄 avaliacao_bimestral.docx</div>
+            <div class="tut-mock-drive-ctx">
+              <div class="tut-mock-drive-ctx-item">👁 Pré-visualizar</div>
+              <div class="tut-mock-drive-ctx-item highlight">🔗 Copiar link &nbsp;<span style="color:#c94f2a;font-size:.7rem;">← clique aqui</span></div>
+              <div class="tut-mock-drive-ctx-item">⬇️ Download</div>
+            </div>
+          </div>
+          <div style="margin-top:.75rem;background:var(--surface);border:1.5px solid var(--border);border-radius:9px;padding:.6rem .9rem;">
+            <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.35rem;">— ou link do drive —</div>
+            <div style="display:flex;gap:.4rem;align-items:center;">
+              <div style="flex:1;background:var(--bg);border:1.5px solid #4285f4;border-radius:7px;padding:.42rem .7rem;font-size:.78rem;color:var(--muted);font-style:italic;">https://drive.google.com/file/d/1BxiMVs…</div>
+              <div style="background:#e8f0fb;border:1.5px solid #b8cef0;border-radius:6px;padding:.35rem .6rem;font-size:.78rem;font-weight:600;color:#1a6ac7;white-space:nowrap;">🔗 Ver arq.</div>
+            </div>
+          </div>
         </div>
         <div class="tut-callout tip" style="margin-bottom:.8rem;"><span>💡</span><div>Use o link do Drive como <strong>alternativa</strong> ao upload — ideal para arquivos grandes.</div></div>
         <div class="tut-steps">
@@ -3662,26 +3712,22 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
 
       <!-- PAINEL 5 (antigo 4) — FINALIZAR -->
       <div class="tut-panel">
-        <div class="tut-screen">
-          <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg" width="580">
-            <rect width="580" height="200" fill="#f0ede6" rx="10"/>
-            <rect x="14" y="12" width="552" height="128" rx="12" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
-            <text x="28" y="34" font-family="sans-serif" font-weight="700" font-size="9" fill="#1a3a2a">VERIFIQUE ANTES DE ENVIAR</text>
-            <text x="28" y="52" font-family="sans-serif" font-size="10" fill="#2a7a4a">✅  Título da Matriz preenchido</text>
-            <text x="28" y="68" font-family="sans-serif" font-size="10" fill="#2a7a4a">✅  Turmas, Cópias e Laudas preenchidos</text>
-            <text x="28" y="84" font-family="sans-serif" font-size="10" fill="#2a7a4a">✅  Arquivo ou link do Drive adicionado</text>
-            <rect x="28" y="98" width="194" height="34" rx="8" fill="#e8a020"/>
-            <text x="125" y="119" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="12" fill="#1a3a2a">✔ Enviar Solicitação</text>
-            <rect x="26" y="96" width="198" height="38" rx="9" fill="none" stroke="#c94f2a" stroke-width="2.5" stroke-dasharray="5,3"/>
-            <text x="234" y="119" font-family="sans-serif" font-size="10" fill="#c94f2a" font-weight="700">← clique para enviar</text>
-            <rect x="14" y="152" width="310" height="36" rx="9" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.2"/>
-            <text x="26" y="168" font-family="sans-serif" font-weight="700" font-size="9" fill="#1a3a2a">Avaliação Bimestral — 3.º Ano</text>
-            <text x="26" y="182" font-family="sans-serif" font-size="8" fill="#6b6b5a">90 cópias · 📎 arquivo.pdf</text>
-            <rect x="252" y="160" width="58" height="18" rx="99" fill="#fff3d6"/>
-            <text x="281" y="173" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="600" fill="#a06000">Aguardando</text>
-            <rect x="374" y="152" width="192" height="36" rx="10" fill="#1a3a2a"/>
-            <text x="470" y="173" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">✅ Solicitação enviada!</text>
-          </svg>
+        <div class="tut-visual">
+          <div class="tut-visual-title">✅ Revisar e enviar</div>
+          <div class="tut-mock-checklist">
+            <div class="tut-mock-check-item"><div class="ck">✓</div> Título da Atividade preenchido</div>
+            <div class="tut-mock-check-item"><div class="ck">✓</div> Turmas, Cópias e Laudas preenchidos</div>
+            <div class="tut-mock-check-item"><div class="ck">✓</div> Arquivo ou link do Drive adicionado</div>
+          </div>
+          <div class="tut-mock-send-btn">✔ Enviar Solicitação</div>
+          <div class="tut-mock-card">
+            <div>
+              <div class="tut-mock-card-title">Avaliação Bimestral — 3.º Ano</div>
+              <div class="tut-mock-card-meta">90 cópias · 📎 arquivo.pdf</div>
+            </div>
+            <div class="tut-mock-badge">Aguardando</div>
+          </div>
+          <div class="tut-mock-success">✅ Solicitação enviada com sucesso!</div>
         </div>
         <div class="tut-steps">
           <div class="tut-step"><div class="tsnum">1</div><div>Revise os campos e confirme que o arquivo ou link está adicionado.</div></div>
