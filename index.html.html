@@ -187,6 +187,44 @@
   .modal-overlay.open { opacity: 1; pointer-events: all; }
   .modal { background: var(--surface); border-radius: 14px; padding: 1.6rem; max-width: 520px; width: 90%; transform: scale(.95); transition: transform .25s; max-height: 90vh; overflow-y: auto; }
   .modal-overlay.open .modal { transform: scale(1); }
+
+  /* ── MODAL TUTORIAL ── */
+  .modal-tut { max-width: 780px; width: 95%; padding: 0; overflow: hidden; border-radius: 16px; }
+  .modal-tut-header { background: var(--primary); padding: 1.1rem 1.4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .modal-tut-header h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem; color: #fff; margin: 0; display: flex; align-items: center; gap: .6rem; }
+  .modal-tut-header h2 em { background: var(--accent); color: var(--primary); border-radius: 5px; padding: .1rem .55rem; font-style: normal; font-size: .85rem; }
+  .modal-tut-header .btn-close-tut { background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 1.1rem; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; flex-shrink: 0; }
+  .modal-tut-header .btn-close-tut:hover { background: rgba(255,255,255,.28); }
+  .modal-tut-nav { background: var(--surface); border-bottom: 1.5px solid var(--border); padding: .7rem 1.4rem; display: flex; align-items: center; gap: 0; flex-wrap: nowrap; overflow-x: auto; }
+  .modal-tut-nav::-webkit-scrollbar { display: none; }
+  .tut-step-btn { display: flex; align-items: center; gap: .4rem; background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: .78rem; font-weight: 600; color: var(--muted); cursor: pointer; padding: .35rem .6rem; border-radius: 7px; transition: all .2s; white-space: nowrap; flex-shrink: 0; }
+  .tut-step-btn:hover { background: rgba(26,58,42,.07); color: var(--primary); }
+  .tut-step-btn.active { background: #e8f0eb; color: var(--primary); }
+  .tut-step-btn .tsn { width: 20px; height: 20px; border-radius: 50%; font-size: .68rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--border); color: var(--muted); transition: all .2s; }
+  .tut-step-btn.active .tsn, .tut-step-btn:hover .tsn { background: var(--primary); color: #fff; }
+  .tut-nav-sep { width: 20px; height: 2px; background: var(--border); flex-shrink: 0; margin: 0 .1rem; }
+  .modal-tut-body { padding: 1.4rem 1.6rem; max-height: 70vh; overflow-y: auto; scroll-behavior: smooth; }
+  .tut-panel { display: none; }
+  .tut-panel.active { display: block; animation: fadeIn .25s ease; }
+  .tut-screen { background: #f0ede6; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1rem; display: flex; justify-content: center; padding: 1rem; }
+  .tut-screen svg { max-width: 100%; display: block; }
+  .tut-steps { display: flex; flex-direction: column; gap: .65rem; margin-bottom: 1rem; }
+  .tut-step { display: flex; gap: .8rem; align-items: flex-start; font-size: .88rem; line-height: 1.55; }
+  .tut-step .tsnum { width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff; font-size: .68rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .14rem; }
+  .tut-callout { border-radius: 9px; padding: .75rem 1rem; display: flex; gap: .7rem; align-items: flex-start; font-size: .84rem; line-height: 1.55; margin-bottom: .8rem; }
+  .tut-callout.tip { background: #e8f0eb; border: 1.5px solid #b8d4bf; }
+  .tut-callout.warn { background: #fef8ec; border: 1.5px solid #f0d090; }
+  .tut-callout.info { background: #e8f0fb; border: 1.5px solid #b8cef0; }
+  .tut-tag { display: inline-flex; align-items: center; background: rgba(26,58,42,.08); color: var(--primary); border: 1px solid rgba(26,58,42,.15); border-radius: 5px; font-size: .76rem; font-weight: 600; padding: .1rem .45rem; white-space: nowrap; }
+  .tut-summary { background: linear-gradient(135deg,#1a3a2a 0%,#2a5a3a 100%); border-radius: 10px; padding: 1.1rem 1.3rem; margin-top: .5rem; }
+  .tut-summary h4 { font-family: 'Syne', sans-serif; font-weight: 800; color: #fff; font-size: .95rem; margin-bottom: .8rem; }
+  .tut-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  .tut-summary-item { background: rgba(255,255,255,.1); border-radius: 8px; padding: .7rem .9rem; }
+  .tut-summary-item .si-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: rgba(255,255,255,.5); margin-bottom: .3rem; }
+  .tut-summary-item p { font-size: .82rem; color: #fff; line-height: 1.5; }
+  .btn-tut-login { display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; margin-top: .9rem; padding: .55rem 1rem; background: transparent; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: .84rem; color: var(--muted); cursor: pointer; transition: all .2s; }
+  .btn-tut-login:hover { border-color: var(--primary); color: var(--primary); background: rgba(26,58,42,.04); }
+  @media (max-width: 540px) { .modal-tut { width: 98%; } .modal-tut-body { padding: 1rem; max-height: 65vh; } .tut-summary-grid { grid-template-columns: 1fr; } }
   .modal h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--primary); margin-bottom: 1rem; }
   .modal-detail { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: 1rem; }
   .modal-detail .d-item { background: var(--bg); border-radius: 7px; padding: .5rem .8rem; }
@@ -334,6 +372,7 @@
       <div class="fg"><label>Senha</label><input type="password" id="loginSenha" placeholder="Sua senha" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
       <p class="auth-erro" id="loginErro"></p>
       <button class="btn-primary" id="btnLogin" onclick="fazerLogin()">Entrar</button>
+      <button class="btn-tut-login" onclick="abrirTutorial()">📖 Como enviar arquivos e links? Ver tutorial</button>
     </div>
   </div>
 </div>
@@ -3429,6 +3468,194 @@ db.auth.getSession().then(async({data:{session}})=>{
   }else{perfilAtual='coordenacao';}
   iniciarApp();
 });
+
+// ── TUTORIAL ──
+function abrirTutorial(){ document.getElementById('modalTutorial').classList.add('open'); tutShowPanel(0); }
+function fecharTutorial(){ document.getElementById('modalTutorial').classList.remove('open'); }
+function tutShowPanel(i){
+  document.querySelectorAll('.tut-panel').forEach((p,idx)=>{ p.classList.toggle('active', idx===i); });
+  document.querySelectorAll('.tut-step-btn').forEach((b,idx)=>{ b.classList.toggle('active', idx===i); });
+  document.getElementById('modalTutBody').scrollTop = 0;
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(); });
 </script>
+
+<!-- ═══════════════════════════════════════════════
+     MODAL TUTORIAL — ENVIO DE ARQUIVOS E LINKS
+════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalTutorial" onclick="if(event.target===this)fecharTutorial()">
+  <div class="modal modal-tut">
+
+    <div class="modal-tut-header">
+      <h2>📖 Tutorial &nbsp;<em>CópiaFácil</em>&nbsp; Como enviar arquivos e links</h2>
+      <button class="btn-close-tut" onclick="fecharTutorial()" title="Fechar">✕</button>
+    </div>
+
+    <div class="modal-tut-nav">
+      <button class="tut-step-btn active" onclick="tutShowPanel(0)"><div class="tsn">1</div> Acessar formulário</button>
+      <div class="tut-nav-sep"></div>
+      <button class="tut-step-btn" onclick="tutShowPanel(1)"><div class="tsn">2</div> Enviar arquivo</button>
+      <div class="tut-nav-sep"></div>
+      <button class="tut-step-btn" onclick="tutShowPanel(2)"><div class="tsn">3</div> Enviar link do Drive</button>
+      <div class="tut-nav-sep"></div>
+      <button class="tut-step-btn" onclick="tutShowPanel(3)"><div class="tsn">4</div> Finalizar</button>
+    </div>
+
+    <div class="modal-tut-body" id="modalTutBody">
+
+      <!-- PAINEL 1 -->
+      <div class="tut-panel active">
+        <div class="tut-screen">
+          <svg viewBox="0 0 580 230" xmlns="http://www.w3.org/2000/svg" width="580">
+            <rect width="580" height="230" fill="#f5f0e8" rx="10"/>
+            <rect x="170" y="18" width="240" height="196" rx="14" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
+            <rect x="232" y="34" width="76" height="22" rx="6" fill="#e8a020"/>
+            <text x="270" y="49" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="12" fill="#1a3a2a">CópiaFácil</text>
+            <text x="290" y="68" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6b6b5a">Sistema de Solicitação</text>
+            <rect x="188" y="80" width="204" height="26" rx="7" fill="#f5f0e8" stroke="#d8d0c0" stroke-width="1.5"/>
+            <text x="200" y="97" font-family="sans-serif" font-size="9" fill="#b0a898">seu@email.com</text>
+            <rect x="188" y="112" width="204" height="26" rx="7" fill="#f5f0e8" stroke="#d8d0c0" stroke-width="1.5"/>
+            <text x="200" y="129" font-family="sans-serif" font-size="9" fill="#b0a898">••••••••</text>
+            <rect x="188" y="148" width="204" height="34" rx="8" fill="#e8a020"/>
+            <text x="290" y="169" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="12" fill="#1a3a2a">Entrar</text>
+            <rect x="186" y="146" width="208" height="38" rx="9" fill="none" stroke="#c94f2a" stroke-width="2.5" stroke-dasharray="5,3"/>
+            <text x="406" y="169" font-family="sans-serif" font-size="11" fill="#c94f2a" font-weight="700">← clique aqui</text>
+          </svg>
+        </div>
+        <div class="tut-steps">
+          <div class="tut-step"><div class="tsnum">1</div><div>Insira seu <strong>e-mail</strong> e <strong>senha</strong> e clique em <span class="tut-tag">Entrar</span>.</div></div>
+          <div class="tut-step"><div class="tsnum">2</div><div>Após o login, clique em <span class="tut-tag">➕ Nova Solicitação</span> no menu do topo.</div></div>
+          <div class="tut-step"><div class="tsnum">3</div><div>Preencha os campos obrigatórios: <strong>Título, Turmas, Nº de Cópias</strong> e <strong>Laudas</strong>.</div></div>
+          <div class="tut-step"><div class="tsnum">4</div><div>Role até a seção <span class="tut-tag">📎 ANEXOS</span> para adicionar arquivo ou link.</div></div>
+        </div>
+        <div class="tut-callout tip"><span>💡</span><div>O botão <strong>Nova Solicitação</strong> fica em destaque amarelo no menu.</div></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+          <button class="btn-secondary" onclick="tutShowPanel(1)" style="display:inline-flex;align-items:center;gap:.4rem;">Próximo: Enviar arquivo →</button>
+        </div>
+      </div>
+
+      <!-- PAINEL 2 -->
+      <div class="tut-panel">
+        <div class="tut-screen">
+          <svg viewBox="0 0 580 240" xmlns="http://www.w3.org/2000/svg" width="580">
+            <rect width="580" height="240" fill="#f0ede6" rx="10"/>
+            <rect x="14" y="12" width="552" height="216" rx="12" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
+            <rect x="26" y="24" width="58" height="15" rx="4" fill="#e8a020"/>
+            <text x="31" y="35" font-family="sans-serif" font-weight="700" font-size="8" fill="#1a3a2a">📎 ANEXOS</text>
+            <text x="30" y="54" font-family="sans-serif" font-weight="700" font-size="8" fill="#1a3a2a">📄 ARQUIVO 1</text>
+            <rect x="26" y="60" width="248" height="82" rx="8" fill="#fef8ec" stroke="#e8a020" stroke-width="2.5" stroke-dasharray="6,3"/>
+            <text x="150" y="94" text-anchor="middle" font-family="sans-serif" font-size="18">📁</text>
+            <text x="150" y="110" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="10" fill="#1a3a2a">Clique ou arraste</text>
+            <text x="150" y="124" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#6b6b5a">PDF, DOC, DOCX, ODT</text>
+            <text x="26" y="160" font-family="sans-serif" font-size="10" fill="#c94f2a" font-weight="700">↑ clique para escolher o arquivo</text>
+            <text x="300" y="54" font-family="sans-serif" font-weight="700" font-size="8" fill="#1a3a2a">📄 ARQUIVO 2 — OPCIONAL</text>
+            <rect x="300" y="60" width="248" height="82" rx="8" fill="#f5f0e8" stroke="#d8d0c0" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="424" y="110" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="10" fill="#aaa">Clique ou arraste</text>
+            <rect x="26" y="176" width="248" height="40" rx="8" fill="#e8f0eb" stroke="#2a7a4a" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="150" y="193" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#2a7a4a" font-weight="600">✔ avaliacao_3ano.pdf</text>
+            <text x="150" y="208" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6b6b5a">arquivo selecionado</text>
+            <text x="284" y="197" font-family="sans-serif" font-size="9" fill="#6b6b5a">← após seleção</text>
+          </svg>
+        </div>
+        <div class="tut-steps">
+          <div class="tut-step"><div class="tsnum">1</div><div>Clique na <strong>área pontilhada</strong> do Arquivo 1 — fica amarela ao passar o mouse.</div></div>
+          <div class="tut-step"><div class="tsnum">2</div><div>Selecione o arquivo. Formatos: <span class="tut-tag">PDF</span> <span class="tut-tag">DOC</span> <span class="tut-tag">DOCX</span> <span class="tut-tag">ODT</span></div></div>
+          <div class="tut-step"><div class="tsnum">3</div><div>O nome aparece em verde com barra de progresso. Aguarde concluir antes de enviar.</div></div>
+          <div class="tut-step"><div class="tsnum">4</div><div>Para trocar, clique em <span class="tut-tag" style="color:#c94f2a;background:#fce4de;border-color:#f0c0b0;">✕ Remover arquivo</span> e escolha outro.</div></div>
+        </div>
+        <div class="tut-callout warn"><span>⚠️</span><div><strong>Não feche a aba</strong> enquanto o upload estiver em andamento.</div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:.5rem;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="tutShowPanel(0)">← Anterior</button>
+          <button class="btn-secondary" onclick="tutShowPanel(2)">Próximo: Link do Drive →</button>
+        </div>
+      </div>
+
+      <!-- PAINEL 3 -->
+      <div class="tut-panel">
+        <div class="tut-screen">
+          <svg viewBox="0 0 580 240" xmlns="http://www.w3.org/2000/svg" width="580">
+            <rect width="580" height="240" fill="#f0ede6" rx="10"/>
+            <rect x="14" y="12" width="340" height="148" rx="12" fill="#fff" stroke="#d0d0d0" stroke-width="1.5"/>
+            <rect x="14" y="12" width="340" height="34" rx="12 12 0 0" fill="#4285f4"/>
+            <text x="30" y="33" font-family="sans-serif" font-weight="700" font-size="12" fill="white">📁 Google Drive</text>
+            <rect x="26" y="58" width="220" height="28" rx="7" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="1"/>
+            <text x="40" y="76" font-family="sans-serif" font-size="10" fill="#333">📄 avaliacao_bimestral.docx</text>
+            <rect x="164" y="80" width="178" height="76" rx="8" fill="#fff" stroke="#ccc" stroke-width="1" filter="drop-shadow(0 3px 6px rgba(0,0,0,.15))"/>
+            <text x="178" y="100" font-family="sans-serif" font-size="10" fill="#555">👁 Pré-visualizar</text>
+            <line x1="164" y1="107" x2="342" y2="107" stroke="#eee" stroke-width="1"/>
+            <rect x="164" y="109" width="178" height="22" fill="#e8f0fb"/>
+            <text x="178" y="124" font-family="sans-serif" font-size="10" fill="#1a6ac7" font-weight="600">🔗 Copiar link</text>
+            <text x="178" y="146" font-family="sans-serif" font-size="10" fill="#555">⬇️ Download</text>
+            <rect x="162" y="107" width="182" height="26" rx="3" fill="none" stroke="#c94f2a" stroke-width="2" stroke-dasharray="4,3"/>
+            <text x="14" y="176" font-family="sans-serif" font-size="10" fill="#c94f2a" font-weight="700">↑ botão direito → "Copiar link"</text>
+            <rect x="14" y="192" width="552" height="38" rx="10" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
+            <text x="26" y="207" font-family="sans-serif" font-size="8" fill="#6b6b5a">— OU LINK DO DRIVE —</text>
+            <rect x="26" y="210" width="440" height="14" rx="4" fill="#f5f0e8" stroke="#4285f4" stroke-width="1.5"/>
+            <text x="32" y="221" font-family="sans-serif" font-size="7" fill="#333">https://drive.google.com/file/d/1BxiMVs…</text>
+            <rect x="472" y="207" width="76" height="20" rx="6" fill="#e8f0fb" stroke="#b8cef0" stroke-width="1"/>
+            <text x="510" y="221" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#1a6ac7" font-weight="600">🔗 Ver arq.</text>
+          </svg>
+        </div>
+        <div class="tut-callout tip" style="margin-bottom:.8rem;"><span>💡</span><div>Use o link do Drive como <strong>alternativa</strong> ao upload — ideal para arquivos grandes.</div></div>
+        <div class="tut-steps">
+          <div class="tut-step"><div class="tsnum">1</div><div>No Google Drive, clique com o <strong>botão direito</strong> no arquivo → <span class="tut-tag">🔗 Copiar link</span>.</div></div>
+          <div class="tut-step"><div class="tsnum">2</div><div>O arquivo deve estar compartilhado como <strong>"Qualquer pessoa com o link"</strong>.</div></div>
+          <div class="tut-step"><div class="tsnum">3</div><div>Cole o link (<strong>Ctrl+V</strong> / <strong>Cmd+V</strong>) no campo <em>"Cole o link do Google Drive…"</em>.</div></div>
+          <div class="tut-step"><div class="tsnum">4</div><div>O preview <span class="tut-tag" style="color:#1a6ac7;background:#e8f0fb;border-color:#b8cef0;">🔗 Ver arquivo</span> aparece automaticamente — confirme que funciona.</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:.5rem;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="tutShowPanel(1)">← Anterior</button>
+          <button class="btn-secondary" onclick="tutShowPanel(3)">Próximo: Finalizar →</button>
+        </div>
+      </div>
+
+      <!-- PAINEL 4 -->
+      <div class="tut-panel">
+        <div class="tut-screen">
+          <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg" width="580">
+            <rect width="580" height="200" fill="#f0ede6" rx="10"/>
+            <rect x="14" y="12" width="552" height="128" rx="12" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.5"/>
+            <text x="28" y="34" font-family="sans-serif" font-weight="700" font-size="9" fill="#1a3a2a">VERIFIQUE ANTES DE ENVIAR</text>
+            <text x="28" y="52" font-family="sans-serif" font-size="10" fill="#2a7a4a">✅  Título da Matriz preenchido</text>
+            <text x="28" y="68" font-family="sans-serif" font-size="10" fill="#2a7a4a">✅  Turmas, Cópias e Laudas preenchidos</text>
+            <text x="28" y="84" font-family="sans-serif" font-size="10" fill="#2a7a4a">✅  Arquivo ou link do Drive adicionado</text>
+            <rect x="28" y="98" width="194" height="34" rx="8" fill="#e8a020"/>
+            <text x="125" y="119" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="12" fill="#1a3a2a">✔ Enviar Solicitação</text>
+            <rect x="26" y="96" width="198" height="38" rx="9" fill="none" stroke="#c94f2a" stroke-width="2.5" stroke-dasharray="5,3"/>
+            <text x="234" y="119" font-family="sans-serif" font-size="10" fill="#c94f2a" font-weight="700">← clique para enviar</text>
+            <rect x="14" y="152" width="310" height="36" rx="9" fill="#fffdf8" stroke="#d8d0c0" stroke-width="1.2"/>
+            <text x="26" y="168" font-family="sans-serif" font-weight="700" font-size="9" fill="#1a3a2a">Avaliação Bimestral — 3.º Ano</text>
+            <text x="26" y="182" font-family="sans-serif" font-size="8" fill="#6b6b5a">90 cópias · 📎 arquivo.pdf</text>
+            <rect x="252" y="160" width="58" height="18" rx="99" fill="#fff3d6"/>
+            <text x="281" y="173" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="600" fill="#a06000">Aguardando</text>
+            <rect x="374" y="152" width="192" height="36" rx="10" fill="#1a3a2a"/>
+            <text x="470" y="173" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">✅ Solicitação enviada!</text>
+          </svg>
+        </div>
+        <div class="tut-steps">
+          <div class="tut-step"><div class="tsnum">1</div><div>Revise os campos e confirme que o arquivo ou link está adicionado.</div></div>
+          <div class="tut-step"><div class="tsnum">2</div><div>Clique em <span class="tut-tag" style="background:#e8a020;color:#1a3a2a;border-color:#e8a020;">✔ Enviar Solicitação</span>.</div></div>
+          <div class="tut-step"><div class="tsnum">3</div><div>A mensagem <strong>"Solicitação enviada!"</strong> confirma o recebimento. Você é redirecionado para <em>Minhas Solicitações</em>.</div></div>
+          <div class="tut-step"><div class="tsnum">4</div><div>Acompanhe: <span class="tut-tag" style="background:#fff3d6;color:#a06000;border-color:#f0d090;">Aguardando</span> → <span class="tut-tag" style="background:#ddeeff;color:#0055aa;border-color:#b0ccee;">Em produção</span> → <span class="tut-tag" style="background:#d6f0e0;color:#1a6a3a;border-color:#a0d8b8;">Entregue</span></div></div>
+        </div>
+        <div class="tut-summary">
+          <h4>📌 Resumo rápido</h4>
+          <div class="tut-summary-grid">
+            <div class="tut-summary-item"><div class="si-label">📁 Arquivo</div><p>Clique na área pontilhada → selecione → aguarde o upload.</p></div>
+            <div class="tut-summary-item"><div class="si-label">🔗 Link do Drive</div><p>Copie no Drive → cole no campo → veja o preview.</p></div>
+            <div class="tut-summary-item"><div class="si-label">📄 Até 2 anexos</div><p>Combine arquivo e link, ou use apenas um dos dois.</p></div>
+            <div class="tut-summary-item"><div class="si-label">⏱ Prazo</div><p>5 dias úteis a partir da confirmação.</p></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:1rem;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="tutShowPanel(2)">← Anterior</button>
+          <button class="btn-primary" onclick="fecharTutorial()" style="width:auto;padding:.6rem 1.4rem;">✔ Entendido, fechar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
