@@ -2016,14 +2016,14 @@ function calcTotal(modo){
 
 // ── TURMAS CHECKBOXES ──
 const TURMAS_COPIAS={
-  '6º anos (TODOS)':180,
-  '7º anos (TODOS)':150,
-  '8º X':10,
-  '6º A/B/C':90,
-  '6º D/E/F':90,
-  '7º A/B/C':90,
-  '7º D/E':60,
-  '6º e 7º Anos':330,
+  '6º anos (TODOS)':175,
+  '7º anos (TODOS)':145,
+  '8º X':8,
+  '6º A/B/C':85,
+  '6º D/E/F':85,
+  '7º A/B/C':85,
+  '7º D/E':55,
+  '6º e 7º Anos':320,
   'Professores':25,
   'Adaptados/as':10
 };
@@ -2758,8 +2758,8 @@ function renderProfessores(){
 
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">🔍</div><p>Nenhum professor encontrado.</p></div>';return;}
 
-  const pendentes=filtered.filter(p=>!p.aprovado);
-  const aprovados=filtered.filter(p=>p.aprovado);
+  const pendentes=filtered.filter(p=>!p.aprovado).sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR',{sensitivity:'base'}));
+  const aprovados=filtered.filter(p=>p.aprovado).sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR',{sensitivity:'base'}));
 
   function cardHtml(p, idx){
     const sid='prof-card-'+p.id;
