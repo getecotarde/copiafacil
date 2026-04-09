@@ -503,8 +503,11 @@
             <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
             <div class="fg-grid"><label>Disciplina</label><input type="text" id="f-disciplina-ro" readonly /></div>
             <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
-            <div class="fg-grid"><label>Tipo *</label><select id="f-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
-            <div class="fg-grid"><label>Modo *</label><select id="f-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
+            <div class="fg-grid full" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;">
+              <div class="fg-grid"><label>Tipo *</label><select id="f-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
+              <div class="fg-grid"><label>Modo *</label><select id="f-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
+              <div class="fg-grid"><label>📅 Data do Pedido</label><input type="date" id="f-dataPedido" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;" /></div>
+            </div>
             <div class="fg-grid full" id="f-turmas-group">
               <label>Turmas Atendidas * <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(marque uma ou mais)</span></label>
               <div style="display:flex;flex-wrap:wrap;gap:.45rem .7rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);" id="f-turmas-checks">
@@ -529,10 +532,6 @@
               <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">Cópias × Laudas</span>
             </div>
             <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
-            <div class="fg-grid full">
-              <label>📅 Data do Pedido <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(preenchida com hoje, altere se necessário)</span></label>
-              <input type="date" id="f-dataPedido" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;" />
-            </div>
           </div>
           <!-- RETROATIVO removido: apenas coordenação pode lançar retroativo -->
 
@@ -742,8 +741,11 @@
               <div class="fg-grid"><label>Professor(a)</label><input type="text" id="cf-professor" readonly /></div>
               <div class="fg-grid"><label>Disciplina</label><input type="text" id="cf-disciplina" readonly /></div>
               <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
-              <div class="fg-grid"><label>Tipo *</label><select id="cf-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
-              <div class="fg-grid"><label>Modo *</label><select id="cf-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
+              <div class="fg-grid full" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;">
+                <div class="fg-grid"><label>Tipo *</label><select id="cf-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
+                <div class="fg-grid"><label>Modo *</label><select id="cf-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
+                <div class="fg-grid"><label>📅 Data do Pedido</label><input type="date" id="cf-dataPedido" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;" /></div>
+              </div>
               <div class="fg-grid full" id="cf-turmas-group">
                 <label>Turmas Atendidas * <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(marque uma ou mais)</span></label>
                 <div style="display:flex;flex-wrap:wrap;gap:.45rem .7rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);" id="cf-turmas-checks">
@@ -768,10 +770,6 @@
                 <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">Cópias × Laudas</span>
               </div>
               <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
-              <div class="fg-grid full">
-                <label>📅 Data do Pedido <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(preenchida com hoje, altere se necessário)</span></label>
-                <input type="date" id="cf-dataPedido" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;" />
-              </div>
             </div>
             <!-- RETROATIVO COORD -->
             <div class="retro-box" style="margin-top:.9rem;">
