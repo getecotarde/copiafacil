@@ -491,6 +491,8 @@
             <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
             <div class="fg-grid"><label>Disciplina</label><input type="text" id="f-disciplina-ro" readonly /></div>
             <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
+            <div class="fg-grid"><label>Tipo *</label><select id="f-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
+            <div class="fg-grid"><label>Modo *</label><select id="f-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
             <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
             <div class="fg-grid"><label>Nº de Cópias *</label><input type="number" id="f-copias" min="1" max="9999" placeholder="Ex.: 90" oninput="calcTotal('prof')" /></div>
             <div class="fg-grid"><label>Nº de Laudas *</label><input type="number" id="f-laudas" min="1" max="999" placeholder="Ex.: 4" oninput="calcTotal('prof')" /></div>
@@ -705,6 +707,8 @@
               <div class="fg-grid"><label>Professor(a)</label><input type="text" id="cf-professor" readonly /></div>
               <div class="fg-grid"><label>Disciplina</label><input type="text" id="cf-disciplina" readonly /></div>
               <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
+              <div class="fg-grid"><label>Tipo *</label><select id="cf-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
+              <div class="fg-grid"><label>Modo *</label><select id="cf-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
               <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
               <div class="fg-grid"><label>Nº de Cópias *</label><input type="number" id="cf-copias" min="1" max="9999" placeholder="Ex.: 90" oninput="calcTotal('coord')" /></div>
               <div class="fg-grid"><label>Nº de Laudas *</label><input type="number" id="cf-laudas" min="1" max="999" placeholder="Ex.: 4" oninput="calcTotal('coord')" /></div>
@@ -1958,8 +1962,8 @@ function clearDriveLink(inputId, previewId) {
   document.getElementById(previewId).style.display = 'none';
 }
 
-function clearProfForm(){['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
-function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
+function clearProfForm(){['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');['f-tipo','f-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
+function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');['cf-tipo','cf-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
 
 // ── CALC TOTAL CÓPIAS ──
 function calcTotal(modo){
@@ -2111,6 +2115,8 @@ function toggleRetroativo(modo) {
 async function submitForm(modo){
   const isCoord=modo==='coord';
   const titulo=document.getElementById(isCoord?'cf-titulo':'f-titulo').value.trim();
+  const tipo=document.getElementById(isCoord?'cf-tipo':'f-tipo').value;
+  const tipoModo=document.getElementById(isCoord?'cf-modo':'f-modo').value;
   const turmas=document.getElementById(isCoord?'cf-turmas':'f-turmas').value.trim();
   const copias=document.getElementById(isCoord?'cf-copias':'f-copias').value;
   const laudas=document.getElementById(isCoord?'cf-laudas':'f-laudas').value;
@@ -2125,6 +2131,8 @@ async function submitForm(modo){
   const dataRealizadaEl=isCoord ? document.getElementById('cf-dataRealizada') : null;
   const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
   if(!titulo||!turmas||!copias||!laudas){showToast('⚠️ Preencha todos os campos obrigatórios, incluindo Nº de Laudas.',true);return;}
+  if(!tipo){showToast('⚠️ Selecione o Tipo da atividade: PROVA ou ATIVIDADE.',true);return;}
+  if(!tipoModo){showToast('⚠️ Selecione o Modo da atividade: REGULAR ou ADAPTADA.',true);return;}
   const totalCopias=parseInt(copias)*parseInt(laudas);
   const btn=document.getElementById(btnId);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Enviando…';
@@ -2154,7 +2162,7 @@ async function submitForm(modo){
       prazo = addWorkdays(now,5);
       statusInicial = 'Aguardando';
     }
-    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),laudas:parseInt(laudas),total_copias:totalCopias,obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
+    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,tipo,modo:tipoModo,turmas,copias:parseInt(copias),laudas:parseInt(laudas),total_copias:totalCopias,obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     if (retroativo) {
