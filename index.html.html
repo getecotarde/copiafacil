@@ -179,13 +179,6 @@
   .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(26,58,42,.2); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: .4rem; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── CAIXA ALTA — apenas inputs de texto dentro do app (excluí login) ──*/
-  #telaApp .fg-grid input[type="text"]:not([readonly]),
-  #telaApp .fg-grid input[type="number"],
-  #telaApp .fg-grid textarea { text-transform: uppercase; }
-  #telaApp .fg-grid input[type="text"]:not([readonly])::placeholder,
-  #telaApp .fg-grid textarea::placeholder { text-transform: none; }
-
   #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primary); color: #fff; padding: .8rem 1.2rem; border-radius: 10px; font-size: .88rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 320px; }
   #toast.show { transform: translateY(0); opacity: 1; }
 
@@ -497,8 +490,8 @@
           <div class="form-grid">
             <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
             <div class="fg-grid"><label>Disciplina</label><input type="text" id="f-disciplina-ro" readonly /></div>
-            <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
-            <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
+            <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" oninput="this.value=this.value.toUpperCase()" /></div>
+            <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" oninput="this.value=this.value.toUpperCase()" /></div>
             <div class="fg-grid"><label>Nº de Cópias *</label><input type="number" id="f-copias" min="1" max="9999" placeholder="Ex.: 90" oninput="calcTotal('prof')" /></div>
             <div class="fg-grid"><label>Nº de Laudas *</label><input type="number" id="f-laudas" min="1" max="999" placeholder="Ex.: 4" oninput="calcTotal('prof')" /></div>
             <div class="fg-grid full">
@@ -520,7 +513,7 @@
                 <option value="ADAPTADA">ADAPTADA</option>
               </select>
             </div>
-            <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+            <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc." oninput="this.value=this.value.toUpperCase()"></textarea></div>
           </div>
           <!-- RETROATIVO removido: apenas coordenação pode lançar retroativo -->
 
@@ -725,8 +718,8 @@
             <div class="form-grid">
               <div class="fg-grid"><label>Professor(a)</label><input type="text" id="cf-professor" readonly /></div>
               <div class="fg-grid"><label>Disciplina</label><input type="text" id="cf-disciplina" readonly /></div>
-              <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
-              <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
+              <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" oninput="this.value=this.value.toUpperCase()" /></div>
+              <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" oninput="this.value=this.value.toUpperCase()" /></div>
               <div class="fg-grid"><label>Nº de Cópias *</label><input type="number" id="cf-copias" min="1" max="9999" placeholder="Ex.: 90" oninput="calcTotal('coord')" /></div>
               <div class="fg-grid"><label>Nº de Laudas *</label><input type="number" id="cf-laudas" min="1" max="999" placeholder="Ex.: 4" oninput="calcTotal('coord')" /></div>
               <div class="fg-grid full">
@@ -748,7 +741,7 @@
                   <option value="ADAPTADA">ADAPTADA</option>
                 </select>
               </div>
-              <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+              <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc." oninput="this.value=this.value.toUpperCase()"></textarea></div>
             </div>
             <!-- RETROATIVO COORD -->
             <div class="retro-box" style="margin-top:.9rem;">
@@ -3778,19 +3771,6 @@ function tutShowPanel(i){
   document.getElementById('modalTutBody').scrollTop = 0;
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(); });
-
-// ── FORÇAR CAIXA ALTA — apenas campos do app (excluí login, senha, e-mail, datas) ──
-document.addEventListener("input", function(e) {
-  const el = e.target;
-  if (el.readOnly || el.disabled) return;
-  if (el.type === "email" || el.type === "password" || el.type === "date") return;
-  if (el.closest(".auth-screen") || el.closest("#telaAuth")) return;
-  if ((el.tagName === "INPUT" && (el.type === "text" || el.type === "number" || el.type === "url")) || el.tagName === "TEXTAREA") {
-    const pos = el.selectionStart;
-    el.value = el.value.toUpperCase();
-    try { el.setSelectionRange(pos, pos); } catch(_) {}
-  }
-});
 </script>
 
 <!-- ═══════════════════════════════════════════════
