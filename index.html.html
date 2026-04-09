@@ -1934,7 +1934,7 @@ function populateSolicitante() {
   const sel=document.getElementById('coordSolicitante');
   const cur=sel.value;
   sel.innerHTML='<option value="coord">Coordenação (em nome próprio)</option>';
-  allProfs.filter(p=>p.aprovado).forEach(p=>{
+  allProfs.filter(p=>p.aprovado).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR')).forEach(p=>{
     const o=document.createElement('option');o.value=p.id;
     o.textContent=p.nome+' — '+(disciplinaDisplay[p.disciplina]||p.disciplina);
     sel.appendChild(o);
