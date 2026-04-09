@@ -3416,16 +3416,28 @@ function renderMeca(){
   }
   if(entregues.length>0){
     html+=`
-      <div style="padding:.6rem 1.2rem;background:#d6f0e0;border-bottom:1.5px solid #a0d8b8;border-top:${(autorizados.length||prontos.length)?'2px':'0px'} solid var(--border);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1a6a3a;">
-        📦 Entregues — retirados pelo professor (${entregues.length})
+      <div style="padding:.6rem 1.2rem;background:#d6f0e0;border-bottom:1.5px solid #a0d8b8;border-top:${(autorizados.length||prontos.length)?'2px':'0px'} solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.5rem;cursor:pointer;" onclick="toggleMecaEntregues()">
+        <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1a6a3a;">📦 Entregues — retirados pelo professor (${entregues.length})</span>
+        <span id="iconMecaEntregues" style="font-size:.78rem;color:#1a6a3a;font-weight:700;display:inline-block;">▶</span>
       </div>
-      <table>${thead}<tbody>${entregues.map(mecaRowHtml).join('')}</tbody></table>`;
+      <div id="mecaEntreguesPanel" style="display:none;">
+        <table>${thead}<tbody>${entregues.map(mecaRowHtml).join('')}</tbody></table>
+      </div>`;
   }
   if(!autorizados.length&&!prontos.length&&!entregues.length){
     html='<div class="empty-state" style="padding:1.5rem 2rem;"><div class="emoji">✅</div><p>Nenhuma solicitação no momento.</p></div>';
   }
 
   container.innerHTML=html;
+}
+
+function toggleMecaEntregues(){
+  const panel=document.getElementById('mecaEntreguesPanel');
+  const icon=document.getElementById('iconMecaEntregues');
+  if(!panel)return;
+  const open=panel.style.display==='none';
+  panel.style.display=open?'block':'none';
+  if(icon)icon.textContent=open?'▼':'▶';
 }
 
 function toggleMecaDemais(){
