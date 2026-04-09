@@ -2111,62 +2111,6 @@ function toggleRetroativo(modo) {
   }
 }
 
-// ── ANÁLISE DE DOCUMENTO VIA API ──
-async function analisarDocumento(file, btnEl) {
-  const ESCOLA = 'ESCOLA MUNICIPAL GERALDO TEIXEIRA DA COSTA';
-  const ext = file.name.split('.').pop().toLowerCase();
-
-  // Lê o arquivo como base64
-  const base64 = await new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = () => rej(new Error('Falha ao ler arquivo'));
-    r.readAsDataURL(file);
-  });
-
-  btnEl.innerHTML = '<span class="spinner"></span> Analisando documento…';
-
-  // Monta o conteúdo conforme tipo de arquivo
-  let msgContent;
-  if (ext === 'pdf') {
-    msgContent = [
-      { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
-      { type: 'text', text: `Analise este documento e responda APENAS um JSON no formato:
-{"aprovado": true/false, "motivo": "explicação curta"}
-
-Regra: o documento deve conter o cabeçalho com o nome exato "${ESCOLA}".
-Se encontrar (mesmo que em caixa alta/baixa ou com pequenas variações de espaço), retorne aprovado:true.
-Se não encontrar, retorne aprovado:false e explique no motivo o que está faltando ou errado.` }
-    ];
-  } else {
-    // Para DOC/DOCX/ODT — envia como texto simples extraído via FileReader (limitado mas funcional)
-    msgContent = [
-      { type: 'text', text: `Não consigo ler diretamente arquivos .${ext}. Retorne: {"aprovado": false, "motivo": "Por favor envie o arquivo no formato PDF para que a verificação do cabeçalho possa ser realizada."}` }
-    ];
-  }
-
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 300,
-      messages: [{ role: 'user', content: msgContent }]
-    })
-  });
-
-  const data = await resp.json();
-  const texto = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-
-  try {
-    const clean = texto.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
-  } catch {
-    // Se não conseguir parsear, aprova com aviso
-    return { aprovado: true, motivo: 'Análise inconclusiva — envio liberado.' };
-  }
-}
-
 // ── SUBMIT SOLICITAÇÃO ──
 async function submitForm(modo){
   const isCoord=modo==='coord';
@@ -2191,33 +2135,8 @@ async function submitForm(modo){
   if(!tipoModo){showToast('⚠️ Selecione o Modo da atividade: REGULAR ou ADAPTADA.',true);return;}
   const totalCopias=parseInt(copias)*parseInt(laudas);
   const btn=document.getElementById(btnId);
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Verificando…';
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Enviando…';
   try {
-    // ── ANÁLISE DO CABEÇALHO (apenas para professores; coordenação tem bypass) ──
-    if (!isCoord && arquivoInput.files[0]) {
-      const analise = await analisarDocumento(arquivoInput.files[0], btn);
-      if (!analise.aprovado) {
-        showToast('❌ Documento reprovado: ' + analise.motivo, true);
-        // Mostra painel de erro detalhado
-        let painelErro = document.getElementById('analise-erro-box');
-        if (!painelErro) {
-          painelErro = document.createElement('div');
-          painelErro.id = 'analise-erro-box';
-          painelErro.style.cssText = 'margin-top:.9rem;background:#fce4de;border:1.5px solid #f0b0a0;border-radius:10px;padding:.9rem 1.1rem;display:flex;gap:.7rem;align-items:flex-start;';
-          const formCard = document.querySelector('#pageSolicitar .card') || document.querySelector('#pageCoord .card');
-          document.getElementById(isCoord?'btnEnviarCoord':'btnEnviar').closest('div').before(painelErro);
-        }
-        painelErro.innerHTML = `<span style="font-size:1.4rem;line-height:1;">🚫</span><div><div style="font-weight:700;font-size:.88rem;color:#a02a10;margin-bottom:.25rem;">Documento não aprovado — envio bloqueado</div><div style="font-size:.83rem;color:#7a2010;line-height:1.5;">${analise.motivo}</div></div>`;
-        painelErro.style.display = 'flex';
-        btn.disabled=false;btn.innerHTML='✔ Enviar Solicitação';
-        return;
-      } else {
-        // Remove painel de erro se existir
-        const painelErro = document.getElementById('analise-erro-box');
-        if (painelErro) painelErro.style.display = 'none';
-      }
-    }
-
     let arquivoPath=null,arquivoUrl=null,arquivoNome=null;
     let arquivoPath2=null,arquivoUrl2=null,arquivoNome2=null;
     if (arquivoInput.files[0]){
