@@ -182,6 +182,18 @@
   #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primary); color: #fff; padding: .8rem 1.2rem; border-radius: 10px; font-size: .88rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 320px; }
   #toast.show { transform: translateY(0); opacity: 1; }
 
+  /* ── PROGRESS OVERLAY ── */
+  #progressOverlay { position: fixed; inset: 0; background: rgba(26,58,42,.55); backdrop-filter: blur(4px); z-index: 9000; display: none; align-items: center; justify-content: center; }
+  #progressOverlay.show { display: flex; animation: fadeIn .2s ease; }
+  #progressBox { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; padding: 2rem 2.4rem; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.25); text-align: center; }
+  #progressBox .prog-icon { font-size: 2.2rem; margin-bottom: .6rem; animation: progBounce .8s ease-in-out infinite alternate; }
+  #progressBox .prog-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--primary); margin-bottom: .3rem; }
+  #progressBox .prog-sub { font-size: .8rem; color: var(--muted); margin-bottom: 1.2rem; min-height: 1.2em; }
+  .prog-track { background: var(--border); border-radius: 99px; height: 10px; overflow: hidden; margin-bottom: .7rem; }
+  .prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 99px; transition: width .3s ease; }
+  .prog-pct { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; color: var(--primary); }
+  @keyframes progBounce { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+
   /* ── MODAL GERAL ── */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s; }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
@@ -648,7 +660,10 @@
     <div id="page-meca" class="page">
       <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
         <div><h1>Painel da Mecanografia</h1><p>Gerencie as solicitações de cópias recebidas.</p></div>
-        <button class="btn-secondary" onclick="loadMeca()">↻ Atualizar</button>
+        <button class="btn-secondary" id="btnAtualizarMeca" onclick="loadMecaComLoader()">↻ Atualizar</button>
+      </div>
+      <div id="loadingBarMeca" style="height:3px;background:var(--border);border-radius:99px;margin-bottom:1.2rem;overflow:hidden;display:none;">
+        <div id="loadingBarMecaFill" style="height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .3s ease;"></div>
       </div>
       <!-- BLOCO SENHA MECANOGRAFIA -->
       <div id="mecaSenhaBox" style="display:none;margin-bottom:1.2rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
@@ -1414,6 +1429,17 @@
 </div>
 
 <div id="toast"></div>
+
+<!-- PROGRESS OVERLAY -->
+<div id="progressOverlay">
+  <div id="progressBox">
+    <div class="prog-icon" id="progIcon">🔄</div>
+    <div class="prog-title" id="progTitle">Atualizando...</div>
+    <div class="prog-sub" id="progSub">Buscando dados no servidor</div>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <div class="prog-pct" id="progPct">0%</div>
+  </div>
+</div>
 
 <!-- MODAL COORDENAÇÃO SUB -->
 <div class="modal-overlay" id="modalCoordSubOverlay" onclick="closeModalCoordSub(event)">
@@ -2443,21 +2469,42 @@ function limparFiltrosMinhas() {
   renderMinhasFiltered();
 }
 
+// ── PROGRESS OVERLAY HELPERS ──
+let _progInterval=null;
+function showProgress(title='Atualizando...', sub='Buscando dados no servidor'){
+  document.getElementById('progressOverlay').classList.add('show');
+  document.getElementById('progTitle').textContent=title;
+  document.getElementById('progSub').textContent=sub;
+  document.getElementById('progIcon').textContent='🔄';
+  document.getElementById('progFill').style.width='0%';
+  document.getElementById('progPct').textContent='0%';
+  let pct=0;
+  clearInterval(_progInterval);
+  _progInterval=setInterval(()=>{
+    const msgs=['Buscando dados no servidor','Processando registros...','Quase lá...'];
+    pct=Math.min(pct+(Math.random()*8+4),88);
+    document.getElementById('progFill').style.width=pct+'%';
+    document.getElementById('progPct').textContent=Math.round(pct)+'%';
+    if(pct>30) document.getElementById('progSub').textContent=msgs[1];
+    if(pct>70) document.getElementById('progSub').textContent=msgs[2];
+  },150);
+}
+function hideProgress(){
+  clearInterval(_progInterval);
+  document.getElementById('progFill').style.width='100%';
+  document.getElementById('progPct').textContent='100%';
+  document.getElementById('progSub').textContent='Concluído!';
+  document.getElementById('progIcon').textContent='✅';
+  setTimeout(()=>document.getElementById('progressOverlay').classList.remove('show'),600);
+}
+
 // ── COORD LOAD COM LOADER ──
 async function loadCoordComLoader(){
-  const bar=document.getElementById('loadingBar');
-  const fill=document.getElementById('loadingBarFill');
   const btn=document.getElementById('btnAtualizar');
-  bar.style.display='block';
-  fill.style.width='0%';
   btn.disabled=true;btn.textContent='⏳ Atualizando…';
-  // Animação progressiva
-  let pct=0;
-  const iv=setInterval(()=>{pct=Math.min(pct+12,85);fill.style.width=pct+'%';},120);
+  showProgress('Atualizando painel...','Buscando solicitações');
   await loadCoord();
-  clearInterval(iv);
-  fill.style.width='100%';
-  setTimeout(()=>{bar.style.display='none';fill.style.width='0%';},500);
+  hideProgress();
   btn.disabled=false;btn.textContent='↻ Atualizar';
 }
 
@@ -3261,6 +3308,15 @@ async function excluirMeca(id){
 }
 
 // ── MECANOGRAFIA LOAD ──
+async function loadMecaComLoader(){
+  const btn=document.getElementById('btnAtualizarMeca');
+  btn.disabled=true;btn.textContent='⏳ Atualizando…';
+  showProgress('Atualizando fila...','Buscando solicitações autorizadas');
+  await loadMeca();
+  hideProgress();
+  btn.disabled=false;btn.textContent='↻ Atualizar';
+}
+
 async function loadMeca(){
   // Mecanografia vê apenas solicitações com status Autorizado ou Pronto
   const {data:solic}=await db.from('solicitacoes').select('*')
