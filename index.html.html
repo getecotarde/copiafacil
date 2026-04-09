@@ -490,8 +490,8 @@
           <div class="form-grid">
             <div class="fg-grid"><label>Professor(a)</label><input type="text" id="f-professor" readonly /></div>
             <div class="fg-grid"><label>Disciplina</label><input type="text" id="f-disciplina-ro" readonly /></div>
-            <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" oninput="this.value=this.value.toUpperCase()" /></div>
-            <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" oninput="this.value=this.value.toUpperCase()" /></div>
+            <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
+            <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
             <div class="fg-grid"><label>Nº de Cópias *</label><input type="number" id="f-copias" min="1" max="9999" placeholder="Ex.: 90" oninput="calcTotal('prof')" /></div>
             <div class="fg-grid"><label>Nº de Laudas *</label><input type="number" id="f-laudas" min="1" max="999" placeholder="Ex.: 4" oninput="calcTotal('prof')" /></div>
             <div class="fg-grid full">
@@ -499,21 +499,7 @@
               <div id="f-total-box" style="padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:#e8f0eb;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--primary);min-height:38px;">—</div>
               <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">Cópias × Laudas</span>
             </div>
-            <div class="fg-grid"><label>Tipo de Atividade *</label>
-              <select id="f-tipo-atividade">
-                <option value="">Selecione…</option>
-                <option value="PROVA">PROVA</option>
-                <option value="ATIVIDADE">ATIVIDADE</option>
-              </select>
-            </div>
-            <div class="fg-grid"><label>Modo *</label>
-              <select id="f-modo">
-                <option value="">Selecione…</option>
-                <option value="REGULAR">REGULAR</option>
-                <option value="ADAPTADA">ADAPTADA</option>
-              </select>
-            </div>
-            <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc." oninput="this.value=this.value.toUpperCase()"></textarea></div>
+            <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
           </div>
           <!-- RETROATIVO removido: apenas coordenação pode lançar retroativo -->
 
@@ -718,8 +704,8 @@
             <div class="form-grid">
               <div class="fg-grid"><label>Professor(a)</label><input type="text" id="cf-professor" readonly /></div>
               <div class="fg-grid"><label>Disciplina</label><input type="text" id="cf-disciplina" readonly /></div>
-              <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" oninput="this.value=this.value.toUpperCase()" /></div>
-              <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" oninput="this.value=this.value.toUpperCase()" /></div>
+              <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
+              <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
               <div class="fg-grid"><label>Nº de Cópias *</label><input type="number" id="cf-copias" min="1" max="9999" placeholder="Ex.: 90" oninput="calcTotal('coord')" /></div>
               <div class="fg-grid"><label>Nº de Laudas *</label><input type="number" id="cf-laudas" min="1" max="999" placeholder="Ex.: 4" oninput="calcTotal('coord')" /></div>
               <div class="fg-grid full">
@@ -727,21 +713,7 @@
                 <div id="cf-total-box" style="padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:#e8f0eb;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--primary);min-height:38px;">—</div>
                 <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">Cópias × Laudas</span>
               </div>
-              <div class="fg-grid"><label>Tipo de Atividade *</label>
-                <select id="cf-tipo-atividade">
-                  <option value="">Selecione…</option>
-                  <option value="PROVA">PROVA</option>
-                  <option value="ATIVIDADE">ATIVIDADE</option>
-                </select>
-              </div>
-              <div class="fg-grid"><label>Modo *</label>
-                <select id="cf-modo">
-                  <option value="">Selecione…</option>
-                  <option value="REGULAR">REGULAR</option>
-                  <option value="ADAPTADA">ADAPTADA</option>
-                </select>
-              </div>
-              <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc." oninput="this.value=this.value.toUpperCase()"></textarea></div>
+              <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
             </div>
             <!-- RETROATIVO COORD -->
             <div class="retro-box" style="margin-top:.9rem;">
@@ -1986,8 +1958,8 @@ function clearDriveLink(inputId, previewId) {
   document.getElementById(previewId).style.display = 'none';
 }
 
-function clearProfForm(){['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-tipo-atividade').value='';document.getElementById('f-modo').value='';document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
-function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-tipo-atividade').value='';document.getElementById('cf-modo').value='';document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
+function clearProfForm(){['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
+function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
 
 // ── CALC TOTAL CÓPIAS ──
 function calcTotal(modo){
@@ -2145,8 +2117,6 @@ async function submitForm(modo){
   const obs=document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
   const professor=document.getElementById(isCoord?'cf-professor':'f-professor').value;
   const disciplina=document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
-  const tipoAtividade=document.getElementById(isCoord?'cf-tipo-atividade':'f-tipo-atividade').value;
-  const modo=document.getElementById(isCoord?'cf-modo':'f-modo').value;
   const arquivoInput=document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
   const arquivoInput2=document.getElementById(isCoord?'cf-arquivo2':'f-arquivo2');
   const driveLink1=(document.getElementById(isCoord?'cf-drive1':'f-drive1').value||'').trim();
@@ -2155,8 +2125,6 @@ async function submitForm(modo){
   const dataRealizadaEl=isCoord ? document.getElementById('cf-dataRealizada') : null;
   const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
   if(!titulo||!turmas||!copias||!laudas){showToast('⚠️ Preencha todos os campos obrigatórios, incluindo Nº de Laudas.',true);return;}
-  if(!tipoAtividade){showToast('⚠️ Selecione o Tipo de Atividade.',true);return;}
-  if(!modo){showToast('⚠️ Selecione o Modo.',true);return;}
   const totalCopias=parseInt(copias)*parseInt(laudas);
   const btn=document.getElementById(btnId);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Enviando…';
@@ -2186,7 +2154,7 @@ async function submitForm(modo){
       prazo = addWorkdays(now,5);
       statusInicial = 'Aguardando';
     }
-    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),laudas:parseInt(laudas),total_copias:totalCopias,obs:obs||null,tipo_atividade:tipoAtividade,modo:modo,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
+    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),laudas:parseInt(laudas),total_copias:totalCopias,obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     if (retroativo) {
