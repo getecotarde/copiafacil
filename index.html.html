@@ -3777,11 +3777,13 @@ function tutShowPanel(i){
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(); });
 
-// ── FORÇAR CAIXA ALTA EM TODOS OS CAMPOS DE TEXTO/TEXTAREA ──
-document.addEventListener('input', function(e) {
+// ── FORÇAR CAIXA ALTA — apenas campos do app (excluí login, senha, e-mail, datas) ──
+document.addEventListener("input", function(e) {
   const el = e.target;
   if (el.readOnly || el.disabled) return;
-  if ((el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'number' || el.type === 'url')) || el.tagName === 'TEXTAREA') {
+  if (el.type === "email" || el.type === "password" || el.type === "date") return;
+  if (el.closest(".auth-screen") || el.closest("#telaAuth")) return;
+  if ((el.tagName === "INPUT" && (el.type === "text" || el.type === "number" || el.type === "url")) || el.tagName === "TEXTAREA") {
     const pos = el.selectionStart;
     el.value = el.value.toUpperCase();
     try { el.setSelectionRange(pos, pos); } catch(_) {}
