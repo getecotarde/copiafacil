@@ -493,7 +493,21 @@
             <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="f-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
             <div class="fg-grid"><label>Tipo *</label><select id="f-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
             <div class="fg-grid"><label>Modo *</label><select id="f-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
-            <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="f-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
+            <div class="fg-grid full" id="f-turmas-group">
+              <label>Turmas Atendidas * <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(marque uma ou mais)</span></label>
+              <div style="display:flex;flex-wrap:wrap;gap:.45rem .7rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);" id="f-turmas-checks">
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="6º anos (TODOS)" style="accent-color:var(--primary);width:15px;height:15px;"> 6º anos (TODOS)</label>
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="7º anos (TODOS)" style="accent-color:var(--primary);width:15px;height:15px;"> 7º anos (TODOS)</label>
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="8º X" style="accent-color:var(--primary);width:15px;height:15px;"> 8º X</label>
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="6º A/B/C" style="accent-color:var(--primary);width:15px;height:15px;"> 6º A/B/C</label>
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="6º D/E/F" style="accent-color:var(--primary);width:15px;height:15px;"> 6º D/E/F</label>
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="7º A/B/C" style="accent-color:var(--primary);width:15px;height:15px;"> 7º A/B/C</label>
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="7º D/E" style="accent-color:var(--primary);width:15px;height:15px;"> 7º D/E</label>
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="6º e 7º Anos" style="accent-color:var(--primary);width:15px;height:15px;"> 6º e 7º Anos</label>
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="Professores" style="accent-color:var(--primary);width:15px;height:15px;"> Professores</label>
+              </div>
+              <input type="hidden" id="f-turmas" />
+            </div>
             <div class="fg-grid"><label>Nº de Cópias *</label><input type="number" id="f-copias" min="1" max="9999" placeholder="Ex.: 90" oninput="calcTotal('prof')" /></div>
             <div class="fg-grid"><label>Nº de Laudas *</label><input type="number" id="f-laudas" min="1" max="999" placeholder="Ex.: 4" oninput="calcTotal('prof')" /></div>
             <div class="fg-grid full">
@@ -709,7 +723,21 @@
               <div class="fg-grid full"><label>Título da Matriz *</label><input type="text" id="cf-titulo" placeholder="Ex.: Avaliação Bimestral — 3.º Ano — 1.º Bimestre" /></div>
               <div class="fg-grid"><label>Tipo *</label><select id="cf-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
               <div class="fg-grid"><label>Modo *</label><select id="cf-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
-              <div class="fg-grid"><label>Turmas Atendidas *</label><input type="text" id="cf-turmas" placeholder="Ex.: 3.º A, 3.º B" /></div>
+              <div class="fg-grid full" id="cf-turmas-group">
+                <label>Turmas Atendidas * <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(marque uma ou mais)</span></label>
+                <div style="display:flex;flex-wrap:wrap;gap:.45rem .7rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);" id="cf-turmas-checks">
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="6º anos (TODOS)" style="accent-color:var(--primary);width:15px;height:15px;"> 6º anos (TODOS)</label>
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="7º anos (TODOS)" style="accent-color:var(--primary);width:15px;height:15px;"> 7º anos (TODOS)</label>
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="8º X" style="accent-color:var(--primary);width:15px;height:15px;"> 8º X</label>
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="6º A/B/C" style="accent-color:var(--primary);width:15px;height:15px;"> 6º A/B/C</label>
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="6º D/E/F" style="accent-color:var(--primary);width:15px;height:15px;"> 6º D/E/F</label>
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="7º A/B/C" style="accent-color:var(--primary);width:15px;height:15px;"> 7º A/B/C</label>
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="7º D/E" style="accent-color:var(--primary);width:15px;height:15px;"> 7º D/E</label>
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="6º e 7º Anos" style="accent-color:var(--primary);width:15px;height:15px;"> 6º e 7º Anos</label>
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="Professores" style="accent-color:var(--primary);width:15px;height:15px;"> Professores</label>
+                </div>
+                <input type="hidden" id="cf-turmas" />
+              </div>
               <div class="fg-grid"><label>Nº de Cópias *</label><input type="number" id="cf-copias" min="1" max="9999" placeholder="Ex.: 90" oninput="calcTotal('coord')" /></div>
               <div class="fg-grid"><label>Nº de Laudas *</label><input type="number" id="cf-laudas" min="1" max="999" placeholder="Ex.: 4" oninput="calcTotal('coord')" /></div>
               <div class="fg-grid full">
@@ -1962,8 +1990,8 @@ function clearDriveLink(inputId, previewId) {
   document.getElementById(previewId).style.display = 'none';
 }
 
-function clearProfForm(){['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');['f-tipo','f-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
-function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');['cf-tipo','cf-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
+function clearProfForm(){document.querySelectorAll('.f-turma-cb').forEach(cb=>cb.checked=false);['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');['f-tipo','f-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
+function clearCoordForm(){document.querySelectorAll('.cf-turma-cb').forEach(cb=>cb.checked=false);['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');['cf-tipo','cf-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
 
 // ── CALC TOTAL CÓPIAS ──
 function calcTotal(modo){
@@ -1983,6 +2011,21 @@ function calcTotal(modo){
     box.style.color='var(--primary)';
   }
 }
+
+// ── TURMAS CHECKBOXES ──
+function syncTurmasHidden(prefix){
+  const cbs=document.querySelectorAll('.'+prefix+'-turma-cb');
+  const vals=[...cbs].filter(c=>c.checked).map(c=>c.value);
+  document.getElementById(prefix+'-turmas').value=vals.join(', ');
+}
+// Attach listeners after DOM ready
+document.addEventListener('DOMContentLoaded',function(){
+  ['f','cf'].forEach(function(prefix){
+    document.querySelectorAll('.'+prefix+'-turma-cb').forEach(function(cb){
+      cb.addEventListener('change',function(){ syncTurmasHidden(prefix); });
+    });
+  });
+});
 
 // ── IMPORTAR E-MAIL ──
 function toggleEmailImport(){
@@ -2114,6 +2157,7 @@ function toggleRetroativo(modo) {
 // ── SUBMIT SOLICITAÇÃO ──
 async function submitForm(modo){
   const isCoord=modo==='coord';
+  syncTurmasHidden(isCoord?'cf':'f');
   const titulo=document.getElementById(isCoord?'cf-titulo':'f-titulo').value.trim();
   const tipo=document.getElementById(isCoord?'cf-tipo':'f-tipo').value;
   const tipoModo=document.getElementById(isCoord?'cf-modo':'f-modo').value;
