@@ -179,7 +179,12 @@
   .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(26,58,42,.2); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: .4rem; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primary); color: #fff; padding: .8rem 1.2rem; border-radius: 10px; font-size: .88rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 320px; }
+  .fg-grid input[type="text"]:not([readonly]), .fg-grid input[type="number"], .fg-grid textarea,
+  .fg input[type="text"], .fg input[type="number"],
+  .drive-link-row input[type="url"] { text-transform: uppercase; }
+  .fg-grid input[type="text"]:not([readonly])::placeholder, .fg-grid textarea::placeholder { text-transform: none; }
+
+ bottom: 1.5rem; right: 1.5rem; background: var(--primary); color: #fff; padding: .8rem 1.2rem; border-radius: 10px; font-size: .88rem; box-shadow: 0 8px 32px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 999; max-width: 320px; }
   #toast.show { transform: translateY(0); opacity: 1; }
 
   /* ── MODAL GERAL ── */
@@ -499,6 +504,20 @@
               <div id="f-total-box" style="padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:#e8f0eb;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--primary);min-height:38px;">—</div>
               <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">Cópias × Laudas</span>
             </div>
+            <div class="fg-grid"><label>Tipo de Atividade *</label>
+              <select id="f-tipo-atividade">
+                <option value="">Selecione…</option>
+                <option value="PROVA">PROVA</option>
+                <option value="ATIVIDADE">ATIVIDADE</option>
+              </select>
+            </div>
+            <div class="fg-grid"><label>Modo *</label>
+              <select id="f-modo">
+                <option value="">Selecione…</option>
+                <option value="REGULAR">REGULAR</option>
+                <option value="ADAPTADA">ADAPTADA</option>
+              </select>
+            </div>
             <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
           </div>
           <!-- RETROATIVO removido: apenas coordenação pode lançar retroativo -->
@@ -712,6 +731,20 @@
                 <label>Total de Cópias</label>
                 <div id="cf-total-box" style="padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:#e8f0eb;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--primary);min-height:38px;">—</div>
                 <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">Cópias × Laudas</span>
+              </div>
+              <div class="fg-grid"><label>Tipo de Atividade *</label>
+                <select id="cf-tipo-atividade">
+                  <option value="">Selecione…</option>
+                  <option value="PROVA">PROVA</option>
+                  <option value="ATIVIDADE">ATIVIDADE</option>
+                </select>
+              </div>
+              <div class="fg-grid"><label>Modo *</label>
+                <select id="cf-modo">
+                  <option value="">Selecione…</option>
+                  <option value="REGULAR">REGULAR</option>
+                  <option value="ADAPTADA">ADAPTADA</option>
+                </select>
               </div>
               <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
             </div>
@@ -1958,8 +1991,8 @@ function clearDriveLink(inputId, previewId) {
   document.getElementById(previewId).style.display = 'none';
 }
 
-function clearProfForm(){['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
-function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
+function clearProfForm(){['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-tipo-atividade').value='';document.getElementById('f-modo').value='';document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
+function clearCoordForm(){['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-tipo-atividade').value='';document.getElementById('cf-modo').value='';document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
 
 // ── CALC TOTAL CÓPIAS ──
 function calcTotal(modo){
@@ -2117,6 +2150,8 @@ async function submitForm(modo){
   const obs=document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
   const professor=document.getElementById(isCoord?'cf-professor':'f-professor').value;
   const disciplina=document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
+  const tipoAtividade=document.getElementById(isCoord?'cf-tipo-atividade':'f-tipo-atividade').value;
+  const modo=document.getElementById(isCoord?'cf-modo':'f-modo').value;
   const arquivoInput=document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
   const arquivoInput2=document.getElementById(isCoord?'cf-arquivo2':'f-arquivo2');
   const driveLink1=(document.getElementById(isCoord?'cf-drive1':'f-drive1').value||'').trim();
@@ -2125,6 +2160,8 @@ async function submitForm(modo){
   const dataRealizadaEl=isCoord ? document.getElementById('cf-dataRealizada') : null;
   const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
   if(!titulo||!turmas||!copias||!laudas){showToast('⚠️ Preencha todos os campos obrigatórios, incluindo Nº de Laudas.',true);return;}
+  if(!tipoAtividade){showToast('⚠️ Selecione o Tipo de Atividade.',true);return;}
+  if(!modo){showToast('⚠️ Selecione o Modo.',true);return;}
   const totalCopias=parseInt(copias)*parseInt(laudas);
   const btn=document.getElementById(btnId);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Enviando…';
@@ -2154,7 +2191,7 @@ async function submitForm(modo){
       prazo = addWorkdays(now,5);
       statusInicial = 'Aguardando';
     }
-    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),laudas:parseInt(laudas),total_copias:totalCopias,obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
+    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,turmas,copias:parseInt(copias),laudas:parseInt(laudas),total_copias:totalCopias,obs:obs||null,tipo_atividade:tipoAtividade,modo:modo,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     if (retroativo) {
@@ -3739,6 +3776,17 @@ function tutShowPanel(i){
   document.getElementById('modalTutBody').scrollTop = 0;
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(); });
+
+// ── FORÇAR CAIXA ALTA EM TODOS OS CAMPOS DE TEXTO/TEXTAREA ──
+document.addEventListener('input', function(e) {
+  const el = e.target;
+  if (el.readOnly || el.disabled) return;
+  if ((el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'number' || el.type === 'url')) || el.tagName === 'TEXTAREA') {
+    const pos = el.selectionStart;
+    el.value = el.value.toUpperCase();
+    try { el.setSelectionRange(pos, pos); } catch(_) {}
+  }
+});
 </script>
 
 <!-- ═══════════════════════════════════════════════
