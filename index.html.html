@@ -3311,12 +3311,6 @@ function renderMeca(){
       <td style="text-align:center;">${d.laudas||'—'}</td>
       <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
       <td>${fmtDate(d.prazo_entrega)}</td>
-      <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
-        ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
-        ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
-        ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arquivo 2</a>`:''}
-        ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
-      </td>
       <td>
         <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
           <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
@@ -3324,12 +3318,12 @@ function renderMeca(){
         </select>
       </td>
       <td>
-        <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Imprimir</button>
+        <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Acessar/Imprimir</button>
       </td>
     </tr>`;
   }
 
-  const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th><th>Ações</th></tr></thead>`;
+  const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Status</th><th>Ações</th></tr></thead>`;
 
   // Separa: Autorizado primeiro (prioritário), depois Pronto
   const autorizados=filtered.filter(d=>d.status==='Autorizado');
