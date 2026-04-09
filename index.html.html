@@ -689,6 +689,7 @@
             <option value="">Todos</option>
             <option value="Autorizado">Autorizado</option>
             <option value="Pronto">Pronto</option>
+            <option value="Entregue">Entregue</option>
           </select>
           <button class="btn-secondary" onclick="limparFiltrosMeca()" style="white-space:nowrap;">✕ Limpar</button>
         </div>
@@ -770,7 +771,7 @@
                 <input type="checkbox" id="cf-retroativo" onchange="toggleRetroativo('coord')" />
                 <div>
                   <div style="font-weight:600;font-size:.85rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
-                  <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem;">Registra como <strong>Entregue</strong>, sem prazo.</div>
+                  <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem;">Se o prazo de 5 dias úteis já venceu, registra como <strong>Entregue</strong>; caso contrário, como <strong>Aguardando</strong>.</div>
                 </div>
               </label>
               <div id="cf-dataRealizada-box" style="display:none;flex-direction:column;gap:.25rem;">
@@ -2246,7 +2247,10 @@ async function submitForm(modo){
       const dataRef = dataRealizadaEl.value ? new Date(dataRealizadaEl.value+'T12:00:00') : now;
       dataSolicitacao = dataRef.toISOString();
       prazo = dataRef;
-      statusInicial = 'Entregue';
+      // Calcula prazo de 5 dias úteis a partir da data informada
+      const prazo5dias = addWorkdays(dataRef, 5);
+      // Se o prazo de 5 dias úteis já passou (hoje > prazo), salva como Entregue; senão, como Aguardando
+      statusInicial = prazo5dias < now ? 'Entregue' : 'Aguardando';
     } else {
       dataSolicitacao = now.toISOString();
       prazo = addWorkdays(now,5);
@@ -2256,7 +2260,7 @@ async function submitForm(modo){
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     if (retroativo) {
-      showToast('📋 Registro salvo como Entregue!');
+      showToast(statusInicial === 'Entregue' ? '📋 Registro salvo como Entregue!' : '📋 Registro retroativo salvo! Prazo ainda não venceu.');
     } else {
       showToast('✅ Solicitação enviada! Prazo: '+fmtDate(prazo));
     }
@@ -3318,9 +3322,9 @@ async function loadMecaComLoader(){
 }
 
 async function loadMeca(){
-  // Mecanografia vê apenas solicitações com status Autorizado ou Pronto
+  // Mecanografia vê solicitações com status Autorizado, Pronto e Entregue
   const {data:solic}=await db.from('solicitacoes').select('*')
-    .in('status',['Autorizado','Pronto'])
+    .in('status',['Autorizado','Pronto','Entregue'])
     .order('data_solicitacao',{ascending:false});
   allSolic=solic||[];
   renderMecaStats();populateMecaFilterProfessor();renderMeca();
@@ -3329,10 +3333,11 @@ async function loadMeca(){
 function renderMecaStats(){
   const a=allSolic.filter(d=>d.status==='Autorizado').length;
   const p=allSolic.filter(d=>d.status==='Pronto').length;
+  const e=allSolic.filter(d=>d.status==='Entregue').length;
   document.getElementById('mecaStatsRow').innerHTML=`
     <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${a}</div><div class="slabel">Autorizado</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${p}</div><div class="slabel">Pronto</div></div>
-    <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${a+p}</div><div class="slabel">Total visível</div></div>`;
+    <div class="stat-card"><div class="accent-dot" style="background:#1a6a3a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
 }
 
 function populateMecaFilterProfessor(){
@@ -3347,7 +3352,7 @@ function renderMeca(){
   const txt=(document.getElementById('mecaFilterText').value||'').toLowerCase();
   const st=document.getElementById('mecaFilterStatus').value;
   const prof=(document.getElementById('mecaFilterProfessor')||{}).value||'';
-  // Mecanografia só exibe Autorizado e Pronto; aplica filtros adicionais em cima disso
+  // Mecanografia exibe Autorizado, Pronto e Entregue; aplica filtros adicionais em cima disso
   const filtered=allSolic.filter(d=>{
     const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
@@ -3355,9 +3360,18 @@ function renderMeca(){
     return m&&mProf&&mSt;
   });
   const container=document.getElementById('mecaContainer');
-  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação Autorizada ou Pronta no momento.</p></div>';return;}
+  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação Autorizada, Pronta ou Entregue no momento.</p></div>';return;}
 
   function mecaRowHtml(d){
+    // Opções de status disponíveis dependem do status atual
+    let statusOptions='';
+    if(d.status==='Autorizado'){
+      statusOptions=`<option value="Autorizado" selected>Autorizado</option><option value="Pronto">Pronto</option>`;
+    } else if(d.status==='Pronto'){
+      statusOptions=`<option value="Autorizado">Autorizado</option><option value="Pronto" selected>Pronto</option><option value="Entregue">Entregue</option>`;
+    } else {
+      statusOptions=`<option value="Pronto">Pronto</option><option value="Entregue" selected>Entregue</option>`;
+    }
     return `<tr>
       <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
       <td>${esc(d.disciplina)}</td>
@@ -3369,8 +3383,7 @@ function renderMeca(){
       <td>${fmtDate(d.prazo_entrega)}</td>
       <td>
         <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
-          <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
-          <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
+          ${statusOptions}
         </select>
       </td>
       <td>
@@ -3381,9 +3394,10 @@ function renderMeca(){
 
   const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Status</th><th>Ações</th></tr></thead>`;
 
-  // Separa: Autorizado primeiro (prioritário), depois Pronto
+  // Separa por status: Autorizado (prioritário), Pronto, Entregue
   const autorizados=filtered.filter(d=>d.status==='Autorizado');
   const prontos=filtered.filter(d=>d.status==='Pronto');
+  const entregues=filtered.filter(d=>d.status==='Entregue');
 
   let html='';
   if(autorizados.length>0){
@@ -3400,7 +3414,14 @@ function renderMeca(){
       </div>
       <table>${thead}<tbody>${prontos.map(mecaRowHtml).join('')}</tbody></table>`;
   }
-  if(!autorizados.length&&!prontos.length){
+  if(entregues.length>0){
+    html+=`
+      <div style="padding:.6rem 1.2rem;background:#d6f0e0;border-bottom:1.5px solid #a0d8b8;border-top:${(autorizados.length||prontos.length)?'2px':'0px'} solid var(--border);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1a6a3a;">
+        📦 Entregues — retirados pelo professor (${entregues.length})
+      </div>
+      <table>${thead}<tbody>${entregues.map(mecaRowHtml).join('')}</tbody></table>`;
+  }
+  if(!autorizados.length&&!prontos.length&&!entregues.length){
     html='<div class="empty-state" style="padding:1.5rem 2rem;"><div class="emoji">✅</div><p>Nenhuma solicitação no momento.</p></div>';
   }
 
@@ -3426,7 +3447,7 @@ async function mecaUpdateStatus(id,newStatus){
   if(error){showToast('❌ Erro ao atualizar.',true);return;}
   const idx=allSolic.findIndex(d=>d.id===id);
   if(idx!==-1)allSolic[idx].status=newStatus;
-  renderMecaStats();
+  renderMecaStats();renderMeca();populateMecaFilterProfessor();
   showToast('✔ Status atualizado para "'+newStatus+'"');
 }
 
