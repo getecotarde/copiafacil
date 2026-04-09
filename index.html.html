@@ -496,6 +496,7 @@
             <div class="fg-grid full" id="f-turmas-group">
               <label>Turmas Atendidas * <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(marque uma ou mais)</span></label>
               <div style="display:flex;flex-wrap:wrap;gap:.45rem .7rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);" id="f-turmas-checks">
+                <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="Adaptados/as" style="accent-color:var(--primary);width:15px;height:15px;"> Adaptados/as</label>
                 <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="6º anos (TODOS)" style="accent-color:var(--primary);width:15px;height:15px;"> 6º anos (TODOS)</label>
                 <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="7º anos (TODOS)" style="accent-color:var(--primary);width:15px;height:15px;"> 7º anos (TODOS)</label>
                 <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="f-turma-cb" value="8º X" style="accent-color:var(--primary);width:15px;height:15px;"> 8º X</label>
@@ -726,6 +727,7 @@
               <div class="fg-grid full" id="cf-turmas-group">
                 <label>Turmas Atendidas * <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(marque uma ou mais)</span></label>
                 <div style="display:flex;flex-wrap:wrap;gap:.45rem .7rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);" id="cf-turmas-checks">
+                  <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="Adaptados/as" style="accent-color:var(--primary);width:15px;height:15px;"> Adaptados/as</label>
                   <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="6º anos (TODOS)" style="accent-color:var(--primary);width:15px;height:15px;"> 6º anos (TODOS)</label>
                   <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="7º anos (TODOS)" style="accent-color:var(--primary);width:15px;height:15px;"> 7º anos (TODOS)</label>
                   <label style="display:flex;align-items:center;gap:.35rem;font-size:.85rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" class="cf-turma-cb" value="8º X" style="accent-color:var(--primary);width:15px;height:15px;"> 8º X</label>
@@ -2013,10 +2015,28 @@ function calcTotal(modo){
 }
 
 // ── TURMAS CHECKBOXES ──
+const TURMAS_COPIAS={
+  '6º anos (TODOS)':180,
+  '7º anos (TODOS)':150,
+  '8º X':10,
+  '6º A/B/C':90,
+  '6º D/E/F':90,
+  '7º A/B/C':90,
+  '7º D/E':60,
+  '6º e 7º Anos':330,
+  'Professores':25,
+  'Adaptados/as':10
+};
 function syncTurmasHidden(prefix){
   const cbs=document.querySelectorAll('.'+prefix+'-turma-cb');
-  const vals=[...cbs].filter(c=>c.checked).map(c=>c.value);
-  document.getElementById(prefix+'-turmas').value=vals.join(', ');
+  const checked=[...cbs].filter(c=>c.checked);
+  document.getElementById(prefix+'-turmas').value=checked.map(c=>c.value).join(', ');
+  // Auto-fill cópias com soma dos valores padrão
+  const soma=checked.reduce((s,c)=>s+(TURMAS_COPIAS[c.value]||0),0);
+  const copiasEl=document.getElementById(prefix+'-copias');
+  if(soma>0) copiasEl.value=soma;
+  else if(checked.length===0) copiasEl.value='';
+  calcTotal(prefix==='cf'?'coord':'prof');
 }
 // Attach listeners after DOM ready
 document.addEventListener('DOMContentLoaded',function(){
