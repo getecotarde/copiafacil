@@ -529,6 +529,10 @@
               <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">Cópias × Laudas</span>
             </div>
             <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+            <div class="fg-grid full">
+              <label>📅 Data do Pedido <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(preenchida com hoje, altere se necessário)</span></label>
+              <input type="date" id="f-dataPedido" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;" />
+            </div>
           </div>
           <!-- RETROATIVO removido: apenas coordenação pode lançar retroativo -->
 
@@ -764,18 +768,22 @@
                 <span style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">Cópias × Laudas</span>
               </div>
               <div class="fg-grid full"><label>Observações (opcional)</label><textarea id="cf-obs" placeholder="Frente e verso, tipo de papel, etc."></textarea></div>
+              <div class="fg-grid full">
+                <label>📅 Data do Pedido <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(preenchida com hoje, altere se necessário)</span></label>
+                <input type="date" id="cf-dataPedido" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;" />
+              </div>
             </div>
             <!-- RETROATIVO COORD -->
             <div class="retro-box" style="margin-top:.9rem;">
               <label>
                 <input type="checkbox" id="cf-retroativo" onchange="toggleRetroativo('coord')" />
                 <div>
-                  <div style="font-weight:600;font-size:.85rem;color:var(--primary);">📋 Data do Pedido</div>
-                  <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem;">Se o prazo de 5 dias úteis já venceu, registra como <strong>Entregue</strong>; caso contrário, como <strong>Aguardando</strong>.</div>
+                  <div style="font-weight:600;font-size:.85rem;color:var(--primary);">📋 Pedido já realizado e atendido</div>
+                  <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem;">Registra como <strong>Entregue</strong>, sem prazo.</div>
                 </div>
               </label>
               <div id="cf-dataRealizada-box" style="display:none;flex-direction:column;gap:.25rem;">
-                <label style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Indicar o dia</label>
+                <label style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Data realizado</label>
                 <input type="date" id="cf-dataRealizada" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.45rem .8rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);outline:none;" />
               </div>
             </div>
@@ -1581,6 +1589,9 @@ async function iniciarApp() {
     nav.innerHTML=`<button onclick="showPage('solicitar',this)" class="active">Nova Solicitação</button><button onclick="showPage('minhas',this)">Minhas Solicitações</button>`;
     document.getElementById('f-professor').value=professorData.nome;
     document.getElementById('f-disciplina-ro').value=disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
+    // Pré-preenche data do pedido com hoje
+    const dpProf=document.getElementById('f-dataPedido');
+    if(dpProf&&!dpProf.value) dpProf.value=new Date().toISOString().slice(0,10);
     // Exibe senha individual do professor
     if(professorData.senha_inicial){
       const box=document.getElementById('profSenhaBox');
@@ -1608,6 +1619,8 @@ async function iniciarApp() {
     nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
     document.getElementById('cf-professor').value='Coordenação';
     document.getElementById('cf-disciplina').value='Coordenação';
+    const dpCoordSub=document.getElementById('cf-dataPedido');
+    if(dpCoordSub&&!dpCoordSub.value) dpCoordSub.value=new Date().toISOString().slice(0,10);
     await loadCoord();
     showPage('coord');
   } else {
@@ -1616,6 +1629,8 @@ async function iniciarApp() {
     nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
     document.getElementById('cf-professor').value='Coordenação';
     document.getElementById('cf-disciplina').value='Coordenação';
+    const dpCoord=document.getElementById('cf-dataPedido');
+    if(dpCoord&&!dpCoord.value) dpCoord.value=new Date().toISOString().slice(0,10);
     await loadCoord();
     // Exibe aba de Coordenação Sub apenas para o e-mail master
     const tabCoordSub = document.getElementById('coordSubTabBtn');
@@ -2019,8 +2034,8 @@ function clearDriveLink(inputId, previewId) {
   document.getElementById(previewId).style.display = 'none';
 }
 
-function clearProfForm(){document.querySelectorAll('.f-turma-cb').forEach(cb=>cb.checked=false);['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');['f-tipo','f-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';}
-function clearCoordForm(){document.querySelectorAll('.cf-turma-cb').forEach(cb=>cb.checked=false);['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');['cf-tipo','cf-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';}
+function clearProfForm(){document.querySelectorAll('.f-turma-cb').forEach(cb=>cb.checked=false);['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');['f-tipo','f-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';const dp=document.getElementById('f-dataPedido');if(dp)dp.value=new Date().toISOString().slice(0,10);}
+function clearCoordForm(){document.querySelectorAll('.cf-turma-cb').forEach(cb=>cb.checked=false);['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');['cf-tipo','cf-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';const dp=document.getElementById('cf-dataPedido');if(dp)dp.value=new Date().toISOString().slice(0,10);}
 
 // ── CALC TOTAL CÓPIAS ──
 function calcTotal(modo){
@@ -2247,20 +2262,21 @@ async function submitForm(modo){
       const dataRef = dataRealizadaEl.value ? new Date(dataRealizadaEl.value+'T12:00:00') : now;
       dataSolicitacao = dataRef.toISOString();
       prazo = dataRef;
-      // Calcula prazo de 5 dias úteis a partir da data informada
-      const prazo5dias = addWorkdays(dataRef, 5);
-      // Se o prazo de 5 dias úteis já passou (hoje > prazo), salva como Entregue; senão, como Aguardando
-      statusInicial = prazo5dias < now ? 'Entregue' : 'Aguardando';
+      statusInicial = 'Entregue';
     } else {
-      dataSolicitacao = now.toISOString();
-      prazo = addWorkdays(now,5);
+      // Usa a data do pedido inserida pelo usuário (ou hoje se não preenchida)
+      const dataPedidoEl = document.getElementById(isCoord ? 'cf-dataPedido' : 'f-dataPedido');
+      const dataPedidoVal = dataPedidoEl ? dataPedidoEl.value : '';
+      const dataBase = dataPedidoVal ? new Date(dataPedidoVal+'T12:00:00') : now;
+      dataSolicitacao = dataBase.toISOString();
+      prazo = addWorkdays(dataBase,5);
       statusInicial = 'Aguardando';
     }
     const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,tipo,modo:tipoModo,turmas,copias:parseInt(copias),laudas:parseInt(laudas),total_copias:totalCopias,obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
     if (retroativo) {
-      showToast(statusInicial === 'Entregue' ? '📋 Registro salvo como Entregue!' : '📋 Registro retroativo salvo! Prazo ainda não venceu.');
+      showToast('📋 Registro salvo como Entregue!');
     } else {
       showToast('✅ Solicitação enviada! Prazo: '+fmtDate(prazo));
     }
@@ -3322,7 +3338,7 @@ async function loadMecaComLoader(){
 }
 
 async function loadMeca(){
-  // Mecanografia vê solicitações com status Autorizado, Pronto e Entregue
+  // Mecanografia vê solicitações com status Autorizado, Pronto ou Entregue
   const {data:solic}=await db.from('solicitacoes').select('*')
     .in('status',['Autorizado','Pronto','Entregue'])
     .order('data_solicitacao',{ascending:false});
@@ -3337,7 +3353,7 @@ function renderMecaStats(){
   document.getElementById('mecaStatsRow').innerHTML=`
     <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${a}</div><div class="slabel">Autorizado</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:#2a7a4a;"></div><div class="num">${p}</div><div class="slabel">Pronto</div></div>
-    <div class="stat-card"><div class="accent-dot" style="background:#1a6a3a;"></div><div class="num">${e}</div><div class="slabel">Entregues</div></div>`;
+    <div class="stat-card"><div class="accent-dot" style="background:#1a6a3a;"></div><div class="num">${e}</div><div class="slabel">Entregue</div></div>`;
 }
 
 function populateMecaFilterProfessor(){
@@ -3353,25 +3369,17 @@ function renderMeca(){
   const st=document.getElementById('mecaFilterStatus').value;
   const prof=(document.getElementById('mecaFilterProfessor')||{}).value||'';
   // Mecanografia exibe Autorizado, Pronto e Entregue; aplica filtros adicionais em cima disso
-  const filtered=allSolic.filter(d=>{
+  const base=allSolic.filter(d=>d.status==='Autorizado'||d.status==='Pronto'||d.status==='Entregue');
+  const filtered=base.filter(d=>{
     const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
     const mSt=!st||d.status===st;
     return m&&mProf&&mSt;
   });
   const container=document.getElementById('mecaContainer');
-  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação Autorizada, Pronta ou Entregue no momento.</p></div>';return;}
+  if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação no momento.</p></div>';return;}
 
-  function mecaRowHtml(d){
-    // Opções de status disponíveis dependem do status atual
-    let statusOptions='';
-    if(d.status==='Autorizado'){
-      statusOptions=`<option value="Autorizado" selected>Autorizado</option><option value="Pronto">Pronto</option>`;
-    } else if(d.status==='Pronto'){
-      statusOptions=`<option value="Autorizado">Autorizado</option><option value="Pronto" selected>Pronto</option><option value="Entregue">Entregue</option>`;
-    } else {
-      statusOptions=`<option value="Pronto">Pronto</option><option value="Entregue" selected>Entregue</option>`;
-    }
+  function mecaRowHtml(d, showEntregue){
     return `<tr>
       <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
       <td>${esc(d.disciplina)}</td>
@@ -3380,11 +3388,16 @@ function renderMeca(){
       <td style="text-align:center;">${d.copias}</td>
       <td style="text-align:center;">${d.laudas||'—'}</td>
       <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
-      <td>${fmtDate(d.prazo_entrega)}</td>
+      <td>${fmtDate(d.data_solicitacao)}</td>
       <td>
-        <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
-          ${statusOptions}
-        </select>
+        ${showEntregue
+          ? `<span class="badge badge-done">✔ Entregue</span>`
+          : `<select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
+              <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
+              <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
+              <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
+            </select>`
+        }
       </td>
       <td>
         <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Acessar/Imprimir</button>
@@ -3392,9 +3405,9 @@ function renderMeca(){
     </tr>`;
   }
 
-  const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Status</th><th>Ações</th></tr></thead>`;
+  const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Data Pedido</th><th>Status</th><th>Ações</th></tr></thead>`;
 
-  // Separa por status: Autorizado (prioritário), Pronto, Entregue
+  // Separa: Autorizado primeiro (prioritário), depois Pronto, depois Entregue
   const autorizados=filtered.filter(d=>d.status==='Autorizado');
   const prontos=filtered.filter(d=>d.status==='Pronto');
   const entregues=filtered.filter(d=>d.status==='Entregue');
@@ -3405,39 +3418,27 @@ function renderMeca(){
       <div style="padding:.6rem 1.2rem;background:#e8f0fb;border-bottom:1.5px solid #b8cef0;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#0055aa;">
         🔵 Autorizados — aguardando produção (${autorizados.length})
       </div>
-      <table>${thead}<tbody>${autorizados.map(mecaRowHtml).join('')}</tbody></table>`;
+      <table>${thead}<tbody>${autorizados.map(d=>mecaRowHtml(d,false)).join('')}</tbody></table>`;
   }
   if(prontos.length>0){
     html+=`
       <div style="padding:.6rem 1.2rem;background:#e8f0eb;border-bottom:1.5px solid #b8d4bf;border-top:${autorizados.length?'2px':'0px'} solid var(--border);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);">
-        ✅ Prontos — aguardando retirada (${prontos.length})
+        ✅ Prontos — aguardando retirada pelo professor (${prontos.length})
       </div>
-      <table>${thead}<tbody>${prontos.map(mecaRowHtml).join('')}</tbody></table>`;
+      <table>${thead}<tbody>${prontos.map(d=>mecaRowHtml(d,false)).join('')}</tbody></table>`;
   }
   if(entregues.length>0){
     html+=`
-      <div style="padding:.6rem 1.2rem;background:#d6f0e0;border-bottom:1.5px solid #a0d8b8;border-top:${(autorizados.length||prontos.length)?'2px':'0px'} solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.5rem;cursor:pointer;" onclick="toggleMecaEntregues()">
-        <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1a6a3a;">📦 Entregues — retirados pelo professor (${entregues.length})</span>
-        <span id="iconMecaEntregues" style="font-size:.78rem;color:#1a6a3a;font-weight:700;display:inline-block;">▶</span>
+      <div style="padding:.6rem 1.2rem;background:#d6f0e0;border-bottom:1.5px solid #a0d8b8;border-top:${(autorizados.length||prontos.length)?'2px':'0px'} solid var(--border);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1a6a3a;">
+        📦 Entregues — retirada confirmada (${entregues.length})
       </div>
-      <div id="mecaEntreguesPanel" style="display:none;">
-        <table>${thead}<tbody>${entregues.map(mecaRowHtml).join('')}</tbody></table>
-      </div>`;
+      <table>${thead}<tbody>${entregues.map(d=>mecaRowHtml(d,true)).join('')}</tbody></table>`;
   }
   if(!autorizados.length&&!prontos.length&&!entregues.length){
     html='<div class="empty-state" style="padding:1.5rem 2rem;"><div class="emoji">✅</div><p>Nenhuma solicitação no momento.</p></div>';
   }
 
   container.innerHTML=html;
-}
-
-function toggleMecaEntregues(){
-  const panel=document.getElementById('mecaEntreguesPanel');
-  const icon=document.getElementById('iconMecaEntregues');
-  if(!panel)return;
-  const open=panel.style.display==='none';
-  panel.style.display=open?'block':'none';
-  if(icon)icon.textContent=open?'▼':'▶';
 }
 
 function toggleMecaDemais(){
@@ -3459,7 +3460,7 @@ async function mecaUpdateStatus(id,newStatus){
   if(error){showToast('❌ Erro ao atualizar.',true);return;}
   const idx=allSolic.findIndex(d=>d.id===id);
   if(idx!==-1)allSolic[idx].status=newStatus;
-  renderMecaStats();renderMeca();populateMecaFilterProfessor();
+  renderMecaStats();
   showToast('✔ Status atualizado para "'+newStatus+'"');
 }
 
