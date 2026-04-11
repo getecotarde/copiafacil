@@ -706,7 +706,10 @@
         <span style="font-size:1.3rem;">🔑</span>
         <div>
           <div style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.2rem;">Sua senha inicial</div>
-          <div id="mecaSenhaValor" style="font-family:monospace;font-weight:700;font-size:1.1rem;letter-spacing:.12em;color:var(--primary);">—</div>
+          <div style="display:flex;align-items:center;gap:.5rem;">
+            <div id="mecaSenhaValor" style="font-family:monospace;font-weight:700;font-size:1.1rem;letter-spacing:.12em;color:var(--primary);">••••••</div>
+            <button id="btnVerSenhaMeca" class="btn-eye" title="Mostrar senha" onclick="toggleSenhaMecaBox()" style="padding:.18rem .5rem;font-size:.85rem;">👁</button>
+          </div>
         </div>
         <span style="font-size:.78rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
       </div>
@@ -1639,7 +1642,9 @@ async function iniciarApp() {
     // Busca e exibe senha individual da mecanografia
     const {data:mecaData}=await db.from('mecanografia').select('senha_inicial').eq('id',currentUser.id).maybeSingle();
     if(mecaData&&mecaData.senha_inicial){
-      document.getElementById('mecaSenhaValor').textContent=mecaData.senha_inicial;
+      window._mecaSenhaReal = mecaData.senha_inicial;
+      document.getElementById('mecaSenhaValor').textContent='••••••';
+      const btnVM=document.getElementById('btnVerSenhaMeca');if(btnVM){btnVM.textContent='👁';btnVM.title='Mostrar senha';}
       document.getElementById('mecaSenhaBox').style.display='flex';
     }
     await loadMeca();
@@ -2323,6 +2328,16 @@ function toggleSenhaProfBox() {
   if (!span) return;
   const visible = span.textContent !== '••••••';
   span.textContent = visible ? '••••••' : (window._profSenhaReal || '—');
+  btn.textContent = visible ? '👁' : '🙈';
+  btn.title = visible ? 'Mostrar senha' : 'Ocultar senha';
+}
+
+function toggleSenhaMecaBox() {
+  const span = document.getElementById('mecaSenhaValor');
+  const btn = document.getElementById('btnVerSenhaMeca');
+  if (!span) return;
+  const visible = span.textContent !== '••••••';
+  span.textContent = visible ? '••••••' : (window._mecaSenhaReal || '—');
   btn.textContent = visible ? '👁' : '🙈';
   btn.title = visible ? 'Mostrar senha' : 'Ocultar senha';
 }
