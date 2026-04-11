@@ -3422,11 +3422,11 @@ function renderMeca(){
       <td>${esc(d.disciplina)}</td>
       <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
       <td>${esc(d.turmas)}</td>
-      <td style="text-align:center;font-weight:700;font-size:1rem;color:#0055aa;">${d.copias}</td>
-      <td style="text-align:center;">${d.laudas||'—'}</td>
       <td style="text-align:center;">
-        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:#fff;background:var(--primary);border-radius:7px;padding:.2rem .65rem;display:inline-block;">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</span>
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:#fff;background:var(--primary);border-radius:7px;padding:.2rem .65rem;display:inline-block;">${d.copias}</span>
       </td>
+      <td style="text-align:center;">${d.laudas||'—'}</td>
+      <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
       <td>${fmtDate(d.data_solicitacao)}</td>
       <td>
         ${showEntregue
