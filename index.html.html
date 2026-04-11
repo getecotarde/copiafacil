@@ -338,6 +338,39 @@
   .btn-eye { background: none; border: 1.5px solid var(--border); border-radius: 6px; cursor: pointer; font-size: .82rem; padding: .18rem .5rem; color: var(--muted); transition: all .15s; line-height: 1.4; flex-shrink: 0; }
   .btn-eye:hover { border-color: var(--primary); color: var(--primary); background: rgba(26,58,42,.06); }
 
+  /* ── TOOLTIP OBSERVAÇÕES MECANOGRAFIA ── */
+  .meca-obs-wrap { display: inline-block; position: relative; }
+  .meca-obs-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a3a2a;
+    color: #fff;
+    font-size: .8rem;
+    line-height: 1.5;
+    padding: .55rem .85rem;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    max-width: 260px;
+    min-width: 160px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.22);
+    z-index: 500;
+    pointer-events: none;
+    text-align: left;
+  }
+  .meca-obs-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1a3a2a;
+  }
+  .meca-obs-wrap:hover .meca-obs-tip { display: block; }
+
   @media (max-width: 900px) {
     .form-layout, .form-layout-wide { grid-template-columns: 1fr; }
     .anexos-grid { grid-template-columns: 1fr; }
@@ -506,7 +539,7 @@
             <div class="fg-grid full" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;">
               <div class="fg-grid"><label>Tipo *</label><select id="f-tipo"><option value="">— Selecione —</option><option value="PROVA">PROVA</option><option value="ATIVIDADE">ATIVIDADE</option></select></div>
               <div class="fg-grid"><label>Modo *</label><select id="f-modo"><option value="">— Selecione —</option><option value="REGULAR">REGULAR</option><option value="ADAPTADA">ADAPTADA</option></select></div>
-              <div class="fg-grid"><label>📅 Data do Pedido</label><div style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:#f0ede6;color:var(--primary);font-weight:600;opacity:.8;cursor:not-allowed;" id="f-dataPedidoDisplay">—</div><input type="hidden" id="f-dataPedido" /></div>
+              <div class="fg-grid"><label>📅 Data do Pedido</label><input type="date" id="f-dataPedido" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;" /></div>
             </div>
             <div class="fg-grid full" id="f-turmas-group">
               <label>Turmas Atendidas * <span style="font-weight:400;font-size:.72rem;color:var(--muted);">(marque uma ou mais)</span></label>
@@ -1343,29 +1376,16 @@
     <h2 id="modalTitle"></h2>
     <div class="modal-detail" id="modalDetail"></div>
     <div id="modalArquivo"></div>
-    <div style="margin-bottom:1rem;background:linear-gradient(135deg,#e8f0eb 0%,#d6eadc 100%);border:2px solid var(--primary);border-radius:10px;padding:1rem 1.2rem;">
-      <label style="display:block;margin-bottom:.6rem;font-size:.85rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);">🔄 Atualizar Status</label>
-      <select class="status-select" id="modalStatus" onchange="updateStatus()" style="width:100%;padding:.7rem 1rem;font-size:1rem;font-weight:600;border:2px solid var(--primary);border-radius:8px;background:#fff;color:var(--text);cursor:pointer;box-shadow:0 2px 8px rgba(26,58,42,.12);">
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">Atualizar Status</label>
+      <select class="status-select" id="modalStatus" onchange="updateStatus()">
         <option value="Aguardando">Aguardando</option><option value="Autorizado">Autorizado</option>
         <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
       </select>
     </div>
-    <div class="modal-actions" style="justify-content:space-between;align-items:center;">
-      <button class="btn-danger" id="modalBtnExcluir" onclick="confirmarExclusao()" style="font-size:.75rem;padding:.28rem .65rem;opacity:.75;">🗑 Excluir</button>
-      <button onclick="closeModal()" style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;padding:.65rem 2rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='#2a5a3a'" onmouseout="this.style.background='var(--primary)'">Fechar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL CONFIRMAÇÃO EXCLUSÃO -->
-<div class="modal-overlay" id="modalConfirmExclusaoOverlay" onclick="cancelarExclusao(event)" style="z-index:300;">
-  <div class="modal" style="max-width:380px;text-align:center;">
-    <div style="font-size:2.5rem;margin-bottom:.8rem;">⚠️</div>
-    <h2 style="font-size:1.1rem;margin-bottom:.5rem;">Excluir solicitação?</h2>
-    <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.55;">Esta ação é <strong>irreversível</strong>. O arquivo vinculado também será removido do servidor.</p>
-    <div style="display:flex;gap:.7rem;justify-content:center;">
-      <button onclick="cancelarExclusao()" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.55rem 1.3rem;background:transparent;color:var(--primary);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;">Cancelar</button>
-      <button onclick="confirmarExclusaoFinal()" style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;padding:.55rem 1.5rem;background:var(--accent2);color:#fff;border:none;border-radius:8px;cursor:pointer;">Sim, excluir</button>
+    <div class="modal-actions">
+      <button class="btn-danger" id="modalBtnExcluir" onclick="deleteItem()">🗑 Excluir</button>
+      <button class="btn-secondary" onclick="closeModal()">Fechar</button>
     </div>
   </div>
 </div>
@@ -1600,12 +1620,9 @@ async function iniciarApp() {
     nav.innerHTML=`<button onclick="showPage('solicitar',this)" class="active">Nova Solicitação</button><button onclick="showPage('minhas',this)">Minhas Solicitações</button>`;
     document.getElementById('f-professor').value=professorData.nome;
     document.getElementById('f-disciplina-ro').value=disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
-    // Pré-preenche data do pedido com hoje (somente leitura para professor)
-    const hoje=new Date().toISOString().slice(0,10);
+    // Pré-preenche data do pedido com hoje
     const dpProf=document.getElementById('f-dataPedido');
-    if(dpProf) dpProf.value=hoje;
-    const ddProf=document.getElementById('f-dataPedidoDisplay');
-    if(ddProf){const [y,m,d]=hoje.split('-');ddProf.textContent=d+'/'+m+'/'+y;}
+    if(dpProf&&!dpProf.value) dpProf.value=new Date().toISOString().slice(0,10);
     // Exibe senha individual do professor
     if(professorData.senha_inicial){
       const box=document.getElementById('profSenhaBox');
@@ -2048,7 +2065,7 @@ function clearDriveLink(inputId, previewId) {
   document.getElementById(previewId).style.display = 'none';
 }
 
-function clearProfForm(){document.querySelectorAll('.f-turma-cb').forEach(cb=>cb.checked=false);['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');['f-tipo','f-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';const hoje=new Date().toISOString().slice(0,10);const dp=document.getElementById('f-dataPedido');if(dp)dp.value=hoje;const dd=document.getElementById('f-dataPedidoDisplay');if(dd){const [y,m,d]=hoje.split('-');dd.textContent=d+'/'+m+'/'+y;}}
+function clearProfForm(){document.querySelectorAll('.f-turma-cb').forEach(cb=>cb.checked=false);['f-titulo','f-turmas','f-copias','f-laudas','f-obs'].forEach(id=>document.getElementById(id).value='');['f-tipo','f-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-arquivo').value='';document.getElementById('f-arquivo2').value='';document.getElementById('fileName').style.display='none';document.getElementById('fileName2').style.display='none';document.getElementById('uploadProgress').style.display='none';document.getElementById('f-retroativo').checked=false;toggleRetroativo('prof');clearDriveLink('f-drive1','f-drive1-preview');clearDriveLink('f-drive2','f-drive2-preview');document.getElementById('f-total-box').textContent='—';const dp=document.getElementById('f-dataPedido');if(dp)dp.value=new Date().toISOString().slice(0,10);}
 function clearCoordForm(){document.querySelectorAll('.cf-turma-cb').forEach(cb=>cb.checked=false);['cf-titulo','cf-turmas','cf-copias','cf-laudas','cf-obs'].forEach(id=>document.getElementById(id).value='');['cf-tipo','cf-modo'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-arquivo').value='';document.getElementById('cf-arquivo2').value='';document.getElementById('cfileName').style.display='none';document.getElementById('cfileName2').style.display='none';document.getElementById('cuploadProgress').style.display='none';document.getElementById('cf-retroativo').checked=false;toggleRetroativo('coord');clearDriveLink('cf-drive1','cf-drive1-preview');clearDriveLink('cf-drive2','cf-drive2-preview');document.getElementById('cf-total-box').textContent='—';const dp=document.getElementById('cf-dataPedido');if(dp)dp.value=new Date().toISOString().slice(0,10);}
 
 // ── CALC TOTAL CÓPIAS ──
@@ -3082,6 +3099,7 @@ async function updateStatus(){
 
 async function deleteItem(){
   if(!currentSolicId)return;
+  if(!confirm('Excluir esta solicitação?'))return;
   const item=allSolic.find(d=>d.id===currentSolicId);
   if(item&&item.arquivo_path)await db.storage.from(BUCKET).remove([item.arquivo_path]);
   if(item&&item.arquivo_path2)await db.storage.from(BUCKET).remove([item.arquivo_path2]);
@@ -3090,17 +3108,6 @@ async function deleteItem(){
   allSolic=allSolic.filter(d=>d.id!==currentSolicId);
   closeModal();renderStats();renderSolicitacoes();
   showToast('🗑 Solicitação removida.');
-}
-function confirmarExclusao(){
-  document.getElementById('modalConfirmExclusaoOverlay').classList.add('open');
-}
-function cancelarExclusao(e){
-  if(!e||e.target===document.getElementById('modalConfirmExclusaoOverlay'))
-    document.getElementById('modalConfirmExclusaoOverlay').classList.remove('open');
-}
-async function confirmarExclusaoFinal(){
-  document.getElementById('modalConfirmExclusaoOverlay').classList.remove('open');
-  await deleteItem();
 }
 
 // ── COORDENAÇÃO SUB ── (apenas everton.correa pode gerenciar)
@@ -3404,19 +3411,27 @@ function renderMeca(){
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação no momento.</p></div>';return;}
 
   function mecaRowHtml(d, showEntregue){
+    const obsTooltip = (d.obs && d.obs.trim()) ? esc(d.obs.trim()) : 'SEM RECOMENDAÇÕES!!!';
+    const stStyle = d.status==='Autorizado'
+      ? 'background:#ddeeff;color:#0055aa;border:1.5px solid #b0ccee;'
+      : d.status==='Pronto'
+        ? 'background:#e8f0eb;color:#1a3a2a;border:1.5px solid #b8d4bf;'
+        : 'background:#d6f0e0;color:#1a6a3a;border:1.5px solid #a0d8b8;';
     return `<tr>
       <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
       <td>${esc(d.disciplina)}</td>
       <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
       <td>${esc(d.turmas)}</td>
-      <td style="text-align:center;">${d.copias}</td>
+      <td style="text-align:center;font-weight:700;font-size:1rem;color:#0055aa;">${d.copias}</td>
       <td style="text-align:center;">${d.laudas||'—'}</td>
-      <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
+      <td style="text-align:center;">
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:#fff;background:var(--primary);border-radius:7px;padding:.2rem .65rem;display:inline-block;">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</span>
+      </td>
       <td>${fmtDate(d.data_solicitacao)}</td>
       <td>
         ${showEntregue
-          ? `<span class="badge badge-done">✔ Entregue</span>`
-          : `<select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.8rem;padding:.3rem .6rem;">
+          ? `<span class="badge badge-done" style="font-size:.82rem;padding:.3rem .75rem;font-weight:700;">✔ Entregue</span>`
+          : `<select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.85rem;padding:.35rem .7rem;font-weight:700;${stStyle}border-radius:7px;cursor:pointer;">
               <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
               <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
               <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
@@ -3424,7 +3439,10 @@ function renderMeca(){
         }
       </td>
       <td>
-        <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Acessar/Imprimir</button>
+        <div style="position:relative;display:inline-block;" class="meca-obs-wrap">
+          <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Acessar/Imprimir</button>
+          <div class="meca-obs-tip">${obsTooltip}</div>
+        </div>
       </td>
     </tr>`;
   }
