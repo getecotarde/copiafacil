@@ -627,9 +627,19 @@
 
     <!-- PAGE PROFESSOR: MINHAS -->
     <div id="page-minhas" class="page">
-      <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
-        <div><h1>Minhas Solicitações</h1><p>Acompanhe o status dos seus pedidos.</p></div>
-        <button class="btn-secondary" onclick="showPage('solicitar')">+ Nova Solicitação</button>
+      <div class="page-header" style="margin-bottom:.8rem;">
+        <h1>Minhas Solicitações</h1><p>Acompanhe o status dos seus pedidos.</p>
+      </div>
+      <div id="profSenhaBoxMinhas" style="display:none;margin-bottom:.8rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:8px;padding:.7rem 1.1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <span style="font-size:1.2rem;">🔑</span>
+        <div>
+          <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.15rem;">Sua senha inicial</div>
+          <div style="display:flex;align-items:center;gap:.5rem;">
+            <div id="profSenhaValorMinhas" style="font-family:monospace;font-weight:700;font-size:1rem;letter-spacing:.12em;color:var(--primary);">••••••</div>
+            <button id="btnVerSenhaProfMinhas" class="btn-eye" title="Mostrar senha" onclick="toggleSenhaProfBoxMinhas()" style="padding:.18rem .5rem;font-size:.85rem;">👁</button>
+          </div>
+        </div>
+        <span style="font-size:.75rem;color:var(--muted);margin-left:auto;">Guarde em local seguro.</span>
       </div>
 
       <!-- CONTADOR MENSAL -->
@@ -1471,6 +1481,36 @@
   </div>
 </div>
 
+<!-- MODAL PERÍODO DE TESTE -->
+<div class="modal-overlay" id="modalTesteOverlay" onclick="fecharModalTeste(event)" style="z-index:300;">
+  <div class="modal" style="max-width:460px;text-align:center;">
+    <div style="font-size:2.5rem;margin-bottom:.75rem;">🚧</div>
+    <h2 style="font-size:1.1rem;margin-bottom:.75rem;color:var(--primary);">Estamos em Período de Teste</h2>
+    <p style="font-size:.9rem;color:var(--text);line-height:1.65;margin-bottom:1rem;">
+      Neste momento, apenas a <strong>visualização de disponibilidade das cópias</strong> está disponível neste canal.<br><br>
+      Em breve, as novas solicitações por aqui estarão liberadas!<br><br>
+      Enquanto isso, as matrizes deverão ser enviadas diretamente para:
+    </p>
+    <div style="background:#e8f0eb;border:1.5px solid #b8d4bf;border-radius:10px;padding:.9rem 1.2rem;margin-bottom:1.2rem;text-align:left;">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;">
+        <span style="font-size:1.1rem;">👩‍💼</span>
+        <div>
+          <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);">Gabriela</div>
+          <a href="mailto:gabriela.m@edu.pbh.gov.br" style="font-size:.9rem;font-weight:600;color:var(--primary);text-decoration:none;">gabriela.m@edu.pbh.gov.br</a>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <span style="font-size:1.1rem;">👨‍💼</span>
+        <div>
+          <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);">Everton</div>
+          <a href="mailto:everton.correa@edu.pbh.gov.br" style="font-size:.9rem;font-weight:600;color:var(--primary);text-decoration:none;">everton.correa@edu.pbh.gov.br</a>
+        </div>
+      </div>
+    </div>
+    <button onclick="fecharModalTeste()" style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;padding:.65rem 2rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;">Entendido</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <!-- PROGRESS OVERLAY -->
@@ -1620,7 +1660,7 @@ async function iniciarApp() {
   if (perfilAtual==='professor') {
     badge.textContent='👩‍🏫 '+professorData.nome.split(' ')[0];
     badge.className='perfil-badge prof';
-    nav.innerHTML=`<button onclick="showPage('solicitar',this)" class="active">Nova Solicitação</button><button onclick="showPage('minhas',this)">Minhas Solicitações</button>`;
+    nav.innerHTML=`<button onclick="showPage('minhas',this)" class="active">Minhas Solicitações</button><button onclick="avisoPeriodoTeste()" style="opacity:.55;cursor:pointer;">➕ Nova Solicitação</button>`;
     document.getElementById('f-professor').value=professorData.nome;
     document.getElementById('f-disciplina-ro').value=disciplinaDisplay[professorData.disciplina]||professorData.disciplina;
     // Pré-preenche data do pedido com hoje
@@ -1633,8 +1673,15 @@ async function iniciarApp() {
       document.getElementById('profSenhaValor').textContent='••••••';
       const btnV=document.getElementById('btnVerSenhaProf');if(btnV){btnV.textContent='👁';btnV.title='Mostrar senha';}
       box.style.display='flex';
+      // Exibe também na página Minhas
+      const boxM=document.getElementById('profSenhaBoxMinhas');
+      if(boxM){
+        document.getElementById('profSenhaValorMinhas').textContent='••••••';
+        const btnM=document.getElementById('btnVerSenhaProfMinhas');if(btnM){btnM.textContent='👁';btnM.title='Mostrar senha';}
+        boxM.style.display='flex';
+      }
     }
-    showPage('solicitar');
+    showPage('minhas');
   } else if (perfilAtual==='mecanografia') {
     badge.textContent='🖨️ Mecanografia';
     badge.className='perfil-badge meca';
@@ -2322,9 +2369,27 @@ async function submitForm(modo){
   finally{btn.disabled=false;btn.innerHTML='✔ Enviar Solicitação';}
 }
 // ── TOGGLE SENHA (visível / oculta) ──
+function avisoPeriodoTeste(){
+  document.getElementById('modalTesteOverlay').classList.add('open');
+}
+function fecharModalTeste(e){
+  if(!e||e.target===document.getElementById('modalTesteOverlay'))
+    document.getElementById('modalTesteOverlay').classList.remove('open');
+}
+
 function toggleSenhaProfBox() {
   const span = document.getElementById('profSenhaValor');
   const btn = document.getElementById('btnVerSenhaProf');
+  if (!span) return;
+  const visible = span.textContent !== '••••••';
+  span.textContent = visible ? '••••••' : (window._profSenhaReal || '—');
+  btn.textContent = visible ? '👁' : '🙈';
+  btn.title = visible ? 'Mostrar senha' : 'Ocultar senha';
+}
+
+function toggleSenhaProfBoxMinhas() {
+  const span = document.getElementById('profSenhaValorMinhas');
+  const btn = document.getElementById('btnVerSenhaProfMinhas');
   if (!span) return;
   const visible = span.textContent !== '••••••';
   span.textContent = visible ? '••••••' : (window._profSenhaReal || '—');
