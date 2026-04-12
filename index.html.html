@@ -1281,6 +1281,7 @@
             <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas geradas — última importação</span>
             <div style="display:flex;gap:.5rem;">
               <button onclick="baixarRelatorioCreds(window._lastCreds)" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+              <button onclick="imprimirSenhas('professores')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.3);border-radius:6px;cursor:pointer;font-weight:600;">🖨️ Imprimir</button>
               <button onclick="togglePainelSenhas()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
             </div>
           </div>
@@ -1319,6 +1320,7 @@
               <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos de Mecanografia</span>
               <div style="display:flex;gap:.5rem;">
                 <button onclick="baixarCredsMeca()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+                <button onclick="imprimirSenhas('mecanografia')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.3);border-radius:6px;cursor:pointer;font-weight:600;">🖨️ Imprimir</button>
                 <button onclick="togglePainelSenhasMeca()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
               </div>
             </div>
@@ -1493,6 +1495,7 @@
               <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos Adm. Cópias</span>
               <div style="display:flex;gap:.5rem;">
                 <button onclick="baixarCredsAdm('copias')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+                <button onclick="imprimirSenhas('admCopias')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.3);border-radius:6px;cursor:pointer;font-weight:600;">🖨️ Imprimir</button>
                 <button onclick="togglePainelSenhasAdm('copias')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
               </div>
             </div>
@@ -1530,6 +1533,7 @@
               <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Acessos Pedagógico</span>
               <div style="display:flex;gap:.5rem;">
                 <button onclick="baixarCredsAdm('pedagogico')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:var(--accent);color:var(--primary);border:none;border-radius:6px;cursor:pointer;font-weight:600;">⬇ Baixar CSV</button>
+                <button onclick="imprimirSenhas('pedagogico')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.3);border-radius:6px;cursor:pointer;font-weight:600;">🖨️ Imprimir</button>
                 <button onclick="togglePainelSenhasAdm('pedagogico')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
               </div>
             </div>
@@ -1565,7 +1569,10 @@
           <div id="painelSenhasCoordSub" style="display:none;margin-bottom:1.5rem;background:#fffdf8;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--primary);">
               <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;">🔑 Senhas — Coordenação Sub</span>
-              <button onclick="togglePainelSenhasCoordSub()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+              <div style="display:flex;gap:.5rem;">
+                <button onclick="imprimirSenhas('coordSub')" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.3);border-radius:6px;cursor:pointer;font-weight:600;">🖨️ Imprimir</button>
+                <button onclick="togglePainelSenhasCoordSub()" style="font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.3rem .8rem;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ Fechar</button>
+              </div>
             </div>
             <div style="overflow-x:auto;">
               <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
@@ -4536,6 +4543,159 @@ db.auth.getSession().then(async({data:{session}})=>{
   }else{perfilAtual='coordenacao';}
   iniciarApp();
 });
+
+// ── IMPRESSÃO DE LISTAS DE LOGIN/SENHAS ──
+async function imprimirSenhas(tipo) {
+  const now = new Date().toLocaleString('pt-BR');
+
+  // Configurações por tipo
+  const cfgs = {
+    professores: {
+      titulo: 'Professores — Login e Senhas',
+      fetch: async () => {
+        const {data} = await db.from('professores')
+          .select('nome,email,disciplina,senha_inicial,aprovado')
+          .order('nome', {ascending:true});
+        return (data||[]);
+      },
+      colunas: ['Nome', 'E-mail', 'Disciplina', 'Status', 'Senha Inicial'],
+      row: r => [
+        `<strong>${esc(r.nome||'—')}</strong>`,
+        esc(r.email||'—'),
+        esc(disciplinaDisplay[r.disciplina]||r.disciplina||'—'),
+        r.aprovado
+          ? '<span style="color:#1a6a3a;font-weight:700;">✔ Aprovado</span>'
+          : '<span style="color:#a06000;font-weight:700;">⏳ Pendente</span>',
+        `<code style="font-family:monospace;font-size:11px;background:#f5f5f5;padding:1px 5px;border-radius:4px;">${esc(r.senha_inicial||'—')}</code>`
+      ]
+    },
+    mecanografia: {
+      titulo: 'Mecanografia — Login e Senhas',
+      fetch: async () => {
+        const {data} = await db.from('mecanografia')
+          .select('email,senha_inicial,criado_em')
+          .order('criado_em', {ascending:true});
+        return (data||[]);
+      },
+      colunas: ['E-mail', 'Senha Inicial', 'Criado em'],
+      row: r => [
+        esc(r.email||'—'),
+        `<code style="font-family:monospace;font-size:11px;background:#f5f5f5;padding:1px 5px;border-radius:4px;">${esc(r.senha_inicial||'—')}</code>`,
+        r.criado_em ? fmtDate(r.criado_em) : '—'
+      ]
+    },
+    admCopias: {
+      titulo: 'Adm. Cópias — Login e Senhas',
+      fetch: async () => {
+        const {data} = await db.from('administrativo')
+          .select('nome,email,senha_inicial,criado_em')
+          .eq('tipo','copias').order('nome',{ascending:true});
+        return (data||[]);
+      },
+      colunas: ['Nome', 'E-mail', 'Senha Inicial', 'Criado em'],
+      row: r => [
+        `<strong>${esc(r.nome||'—')}</strong>`,
+        esc(r.email||'—'),
+        `<code style="font-family:monospace;font-size:11px;background:#f5f5f5;padding:1px 5px;border-radius:4px;">${esc(r.senha_inicial||'—')}</code>`,
+        r.criado_em ? fmtDate(r.criado_em) : '—'
+      ]
+    },
+    pedagogico: {
+      titulo: 'Pedagógico — Login e Senhas',
+      fetch: async () => {
+        const {data} = await db.from('administrativo')
+          .select('nome,email,senha_inicial,criado_em')
+          .eq('tipo','pedagogico').order('nome',{ascending:true});
+        return (data||[]);
+      },
+      colunas: ['Nome', 'E-mail', 'Senha Inicial', 'Criado em'],
+      row: r => [
+        `<strong>${esc(r.nome||'—')}</strong>`,
+        esc(r.email||'—'),
+        `<code style="font-family:monospace;font-size:11px;background:#f5f5f5;padding:1px 5px;border-radius:4px;">${esc(r.senha_inicial||'—')}</code>`,
+        r.criado_em ? fmtDate(r.criado_em) : '—'
+      ]
+    },
+    coordSub: {
+      titulo: 'Coordenação Sub — Login e Senhas',
+      fetch: async () => {
+        const {data} = await db.from('coordenacao_sub')
+          .select('nome,email,senha_inicial')
+          .order('nome',{ascending:true});
+        return (data||[]);
+      },
+      colunas: ['Nome', 'E-mail', 'Senha Inicial'],
+      row: r => [
+        `<strong>${esc(r.nome||'—')}</strong>`,
+        esc(r.email||'—'),
+        `<code style="font-family:monospace;font-size:11px;background:#f5f5f5;padding:1px 5px;border-radius:4px;">${esc(r.senha_inicial||'—')}</code>`
+      ]
+    }
+  };
+
+  const cfg = cfgs[tipo];
+  if (!cfg) return;
+
+  showToast('⏳ Carregando dados para impressão…');
+  let lista;
+  try { lista = await cfg.fetch(); } catch(e) { showToast('❌ Erro ao carregar dados.',true); return; }
+
+  if (!lista.length) { showToast('⚠️ Nenhum usuário encontrado.',true); return; }
+
+  // Monta cabeçalho
+  const headerHtml = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;
+                margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1a3a2a;">
+      <div>
+        <div style="font-weight:900;font-size:17px;color:#1a3a2a;">🖨️ CópiaFácil</div>
+        <div style="font-size:11px;color:#555;margin-top:2px;">🔑 ${cfg.titulo}</div>
+        <div style="font-size:9px;color:#e05;margin-top:4px;font-style:italic;">
+          ⚠️ Documento confidencial — uso restrito à coordenação
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:10px;color:#555;">${now}</div>
+        <div style="margin-top:6px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#1a3a2a;">${lista.length}</div>
+          <div style="font-size:8px;text-transform:uppercase;letter-spacing:.05em;color:#888;">Usuários</div>
+        </div>
+      </div>
+    </div>`;
+
+  // Monta tabela
+  const thead = `<thead><tr>${cfg.colunas.map(c =>
+    `<th style="text-align:left;padding:5px 8px;font-size:9px;font-weight:700;
+               letter-spacing:.06em;text-transform:uppercase;color:#555;
+               background:#f5f5f5;border-bottom:2px solid #ccc;white-space:nowrap;">${c}</th>`
+  ).join('')}</tr></thead>`;
+
+  const tbody = lista.map((r, i) => {
+    const bg = i % 2 === 1 ? '#fafafa' : '#fff';
+    return `<tr style="background:${bg};">${cfg.row(r).map(cell =>
+      `<td style="padding:5px 8px;font-size:10px;border-bottom:1px solid #eee;vertical-align:middle;">${cell}</td>`
+    ).join('')}</tr>`;
+  }).join('');
+
+  const tableHtml = `<table style="width:100%;border-collapse:collapse;">${thead}<tbody>${tbody}</tbody></table>`;
+
+  // Abre janela dedicada
+  const win = window.open('', '_blank', 'width=900,height:700');
+  win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <title>CópiaFácil — ${cfg.titulo}</title>
+    <style>
+      * { box-sizing:border-box; margin:0; padding:0; }
+      body { font-family:Arial,sans-serif; background:#fff; color:#000; padding:18mm 14mm; }
+      @page { margin:15mm 12mm; size:A4 portrait; }
+      @media print { body { padding:0; } }
+    </style>
+  </head><body>
+    ${headerHtml}
+    ${tableHtml}
+    <script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script>
+  </body></html>`);
+  win.document.close();
+}
 
 // ── TUTORIAL ──
 function abrirTutorial(){ document.getElementById('modalTutorial').classList.add('open'); tutShowPanel(0); }
