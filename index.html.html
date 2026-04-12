@@ -736,6 +736,14 @@
           <input type="date" id="minhasFilterAte" onchange="renderMinhasFiltered()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
         </div>
         <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Tipo</label>
+          <select id="minhasFilterTipo" onchange="renderMinhasFiltered()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
+            <option value="">Todos</option>
+            <option value="PROVA">Prova</option>
+            <option value="ATIVIDADE">Atividade</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
           <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
           <select id="minhasFilterStatus" onchange="renderMinhasFiltered()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
             <option value="">Todos</option>
@@ -783,6 +791,11 @@
           <input type="text" id="mecaFilterText" placeholder="🔍  Buscar…" style="flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" oninput="renderMeca()" />
           <select id="mecaFilterProfessor" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;max-width:200px;" onchange="renderMeca()">
             <option value="">Todos os professores</option>
+          </select>
+          <select id="mecaFilterTipo" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderMeca()">
+            <option value="">Todos os tipos</option>
+            <option value="PROVA">Prova</option>
+            <option value="ATIVIDADE">Atividade</option>
           </select>
           <select id="mecaFilterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderMeca()">
             <option value="">Todos</option>
@@ -988,7 +1001,11 @@
             <select id="filterProfessor" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;max-width:180px;" onchange="renderSolicitacoes()">
               <option value="">Todos os professores</option>
             </select>
-
+            <select id="filterTipo" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
+              <option value="">Todos os tipos</option>
+              <option value="PROVA">Prova</option>
+              <option value="ATIVIDADE">Atividade</option>
+            </select>
             <select id="filterStatus" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" onchange="renderSolicitacoes()">
               <option value="">Todos os status</option>
               <option value="Aguardando">Aguardando</option><option value="Autorizado">Autorizado</option>
@@ -1113,6 +1130,14 @@
                 <input type="date" id="resumoAte" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()" />
               </div>
               <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Tipo</label>
+                <select id="resumoTipo" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()">
+                  <option value="">Todos</option>
+                  <option value="PROVA">Prova</option>
+                  <option value="ATIVIDADE">Atividade</option>
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
                 <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Status</label>
                 <select id="resumoStatus" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;" onchange="renderResumo()">
                   <option value="">Todos</option>
@@ -1152,6 +1177,14 @@
                 <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Professor</label>
                 <select id="resumoMensalProf" onchange="renderResumoMensal()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;max-width:180px;">
                   <option value="">Todos</option>
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.2rem;">
+                <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Tipo</label>
+                <select id="resumoMensalTipo" onchange="renderResumoMensal()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);outline:none;">
+                  <option value="">Todos</option>
+                  <option value="PROVA">Prova</option>
+                  <option value="ATIVIDADE">Atividade</option>
                 </select>
               </div>
               <div style="display:flex;flex-direction:column;gap:.2rem;">
@@ -1358,6 +1391,14 @@
             <option value="Cancelado">Cancelado</option>
           </select>
         </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Tipo</label>
+          <select id="adm1FilterTipo" onchange="renderAdmCopias()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
+            <option value="">Todos</option>
+            <option value="PROVA">Prova</option>
+            <option value="ATIVIDADE">Atividade</option>
+          </select>
+        </div>
         <div style="display:flex;gap:.4rem;align-self:flex-end;flex-wrap:wrap;">
           <button class="btn-secondary" onclick="adm1SetSemana()">Esta semana</button>
           <button class="btn-secondary" onclick="adm1SetMes()">Este mês</button>
@@ -1411,7 +1452,15 @@
           <input type="date" id="adm2FilterAte" onchange="renderAdmArquivos()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;" />
         </div>
         <div style="display:flex;flex-direction:column;gap:.25rem;">
-          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Tipo</label>
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Tipo Solicitação</label>
+          <select id="adm2FilterTipoSolic" onchange="renderAdmArquivos()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
+            <option value="">Todos</option>
+            <option value="PROVA">Prova</option>
+            <option value="ATIVIDADE">Atividade</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <label style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Tipo Anexo</label>
           <select id="adm2FilterTipo" onchange="renderAdmArquivos()" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);outline:none;">
             <option value="">Todos</option>
             <option value="arquivo">Arquivos</option>
@@ -1834,6 +1883,7 @@ function showPage(id,btn) {
 function limparFiltrosSolicitacoes(){
   document.getElementById('filterText').value='';
   document.getElementById('filterProfessor').value='';
+  document.getElementById('filterTipo').value='';
   document.getElementById('filterStatus').value='';
   renderSolicitacoes();
 }
@@ -1845,18 +1895,21 @@ function limparFiltrosProfessores(){
 function limparFiltrosMeca(){
   document.getElementById('mecaFilterText').value='';
   document.getElementById('mecaFilterProfessor').value='';
+  document.getElementById('mecaFilterTipo').value='';
   document.getElementById('mecaFilterStatus').value='';
   renderMeca();
 }
 function limparFiltrosResumo(){
   document.getElementById('resumoDe').value='';
   document.getElementById('resumoAte').value='';
+  document.getElementById('resumoTipo').value='';
   document.getElementById('resumoStatus').value='';
   document.getElementById('resumoProfessor').value='';
   renderResumo();
 }
 function limparFiltrosResumoMensal(){
   document.getElementById('resumoMensalProf').value='';
+  document.getElementById('resumoMensalTipo').value='';
   document.getElementById('resumoMensalStatus').value='';
   renderResumoMensal();
 }
@@ -1919,6 +1972,7 @@ function renderResumoMensal(){
   if(labelEl) labelEl.textContent = label;
 
   const profFiltro = (document.getElementById('resumoMensalProf')||{}).value || '';
+  const tipoFiltro = (document.getElementById('resumoMensalTipo')||{}).value || '';
   const stFiltro = (document.getElementById('resumoMensalStatus')||{}).value || '';
 
   const filtered = allSolic.filter(d=>{
@@ -1926,7 +1980,8 @@ function renderResumoMensal(){
     const dentroMes = dt.getMonth()===mesAlvo && dt.getFullYear()===anoAlvo;
     const dentroProf = !profFiltro || d.professor===profFiltro;
     const dentroSt = !stFiltro || d.status===stFiltro;
-    return dentroMes && dentroProf && dentroSt;
+    const dentroTipo = !tipoFiltro || inferirTipo(d)===tipoFiltro;
+    return dentroMes && dentroProf && dentroSt && dentroTipo;
   });
 
   const totalCopias = filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
@@ -2046,6 +2101,7 @@ function renderResumo(){
   const de=document.getElementById('resumoDe').value;
   const ate=document.getElementById('resumoAte').value;
   const stFiltro=document.getElementById('resumoStatus').value;
+  const tipoFiltro=(document.getElementById('resumoTipo')||{}).value||'';
   const profFiltro=(document.getElementById('resumoProfessor').value||'').toLowerCase();
   const totaisEl=document.getElementById('resumoTotais');
   const container=document.getElementById('resumoContainer');
@@ -2060,7 +2116,8 @@ function renderResumo(){
     const dentroData=dt>=deDate&&dt<=ateDate;
     const dentroStatus=!stFiltro||d.status===stFiltro;
     const dentroProf=!profFiltro||(d.professor||'').toLowerCase()===profFiltro;
-    return dentroData&&dentroStatus&&dentroProf;
+    const dentroTipo=!tipoFiltro||inferirTipo(d)===tipoFiltro;
+    return dentroData&&dentroStatus&&dentroProf&&dentroTipo;
   });
 
   // Totalizadores gerais
@@ -2689,15 +2746,17 @@ function renderMinhasFiltered() {
   const txt = (document.getElementById('minhasFilterText').value || '').toLowerCase();
   const de = document.getElementById('minhasFilterDe').value;
   const ate = document.getElementById('minhasFilterAte').value;
+  const tipo = document.getElementById('minhasFilterTipo').value;
   const st = document.getElementById('minhasFilterStatus').value;
 
   const filtered = data.filter(d => {
     const mTxt = !txt || (d.titulo||'').toLowerCase().includes(txt) || (d.turmas||'').toLowerCase().includes(txt) || (d.obs||'').toLowerCase().includes(txt);
     const mStatus = !st || d.status === st;
+    const mTipo = !tipo || inferirTipo(d) === tipo;
     const dt = new Date(d.data_solicitacao);
     const mDe = !de || dt >= new Date(de + 'T00:00:00');
     const mAte = !ate || dt <= new Date(ate + 'T23:59:59');
-    return mTxt && mStatus && mDe && mAte;
+    return mTxt && mStatus && mTipo && mDe && mAte;
   });
 
   const container = document.getElementById('minhasContainer');
@@ -2741,6 +2800,7 @@ function limparFiltrosMinhas() {
   document.getElementById('minhasFilterText').value = '';
   document.getElementById('minhasFilterDe').value = '';
   document.getElementById('minhasFilterAte').value = '';
+  document.getElementById('minhasFilterTipo').value = '';
   document.getElementById('minhasFilterStatus').value = '';
   renderMinhasFiltered();
 }
@@ -2972,10 +3032,12 @@ function renderSolicitacoes(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
   const prof=(document.getElementById('filterProfessor')||{}).value||'';
+  const tipo=(document.getElementById('filterTipo')||{}).value||'';
   const filtered=allSolic.filter(d=>{
     const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
-    return mTxt&&mProf&&(!st||d.status===st);
+    const mTipo=!tipo||inferirTipo(d)===tipo;
+    return mTxt&&mProf&&mTipo&&(!st||d.status===st);
   });
   const container=document.getElementById('coordContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
@@ -3051,10 +3113,12 @@ function exportarSolicitacoesExcel(){
   const txt=(document.getElementById('filterText').value||'').toLowerCase();
   const st=document.getElementById('filterStatus').value;
   const prof=(document.getElementById('filterProfessor')||{}).value||'';
+  const tipo=(document.getElementById('filterTipo')||{}).value||'';
   const filtered=allSolic.filter(d=>{
     const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
-    return mTxt&&mProf&&(!st||d.status===st);
+    const mTipo=!tipo||inferirTipo(d)===tipo;
+    return mTxt&&mProf&&mTipo&&(!st||d.status===st);
   });
   if(filtered.length===0){showToast('⚠️ Nenhuma solicitação para exportar.',true);return;}
 
@@ -3647,13 +3711,15 @@ function renderMeca(){
   const txt=(document.getElementById('mecaFilterText').value||'').toLowerCase();
   const st=document.getElementById('mecaFilterStatus').value;
   const prof=(document.getElementById('mecaFilterProfessor')||{}).value||'';
+  const tipo=(document.getElementById('mecaFilterTipo')||{}).value||'';
   // Mecanografia exibe Autorizado, Pronto e Entregue; aplica filtros adicionais em cima disso
   const base=allSolic.filter(d=>d.status==='Autorizado'||d.status==='Pronto'||d.status==='Entregue');
   const filtered=base.filter(d=>{
     const m=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
     const mSt=!st||d.status===st;
-    return m&&mProf&&mSt;
+    const mTipo=!tipo||inferirTipo(d)===tipo;
+    return m&&mProf&&mSt&&mTipo;
   });
   const container=document.getElementById('mecaContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação no momento.</p></div>';return;}
@@ -4010,13 +4076,15 @@ function adm1FilteredData(){
   const de=document.getElementById('adm1FilterDe').value;
   const ate=document.getElementById('adm1FilterAte').value;
   const st=document.getElementById('adm1FilterStatus').value;
+  const tipo=(document.getElementById('adm1FilterTipo')||{}).value||'';
   return allSolic.filter(d=>{
     const mProf=!prof||d.professor===prof;
     const dt=new Date(d.data_solicitacao);
     const mDe=!de||dt>=new Date(de+'T00:00:00');
     const mAte=!ate||dt<=new Date(ate+'T23:59:59');
     const mSt=!st||d.status===st;
-    return mProf&&mDe&&mAte&&mSt;
+    const mTipo=!tipo||inferirTipo(d)===tipo;
+    return mProf&&mDe&&mAte&&mSt&&mTipo;
   });
 }
 
@@ -4093,7 +4161,7 @@ function adm1SetMes(){
   renderAdmCopias();
 }
 function limparAdm1(){
-  ['adm1FilterProf','adm1FilterDe','adm1FilterAte','adm1FilterStatus'].forEach(id=>{
+  ['adm1FilterProf','adm1FilterDe','adm1FilterAte','adm1FilterStatus','adm1FilterTipo'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   renderAdmCopias();
@@ -4118,6 +4186,7 @@ function adm2FilteredData(){
   const de=document.getElementById('adm2FilterDe').value;
   const ate=document.getElementById('adm2FilterAte').value;
   const tipo=document.getElementById('adm2FilterTipo').value;
+  const tipoSolic=(document.getElementById('adm2FilterTipoSolic')||{}).value||'';
   return allSolic.filter(d=>{
     const temArq=d.arquivo_url||d.arquivo_url2;
     const temLink=d.drive_link1||d.drive_link2;
@@ -4129,7 +4198,8 @@ function adm2FilteredData(){
     const dt=new Date(d.data_solicitacao);
     const mDe=!de||dt>=new Date(de+'T00:00:00');
     const mAte=!ate||dt<=new Date(ate+'T23:59:59');
-    return mProf&&mTxt&&mDe&&mAte;
+    const mTipoSolic=!tipoSolic||inferirTipo(d)===tipoSolic;
+    return mProf&&mTxt&&mDe&&mAte&&mTipoSolic;
   });
 }
 
@@ -4163,7 +4233,7 @@ function renderAdmArquivos(){
 }
 
 function limparAdm2(){
-  ['adm2FilterText','adm2FilterProf','adm2FilterDe','adm2FilterAte','adm2FilterTipo'].forEach(id=>{
+  ['adm2FilterText','adm2FilterProf','adm2FilterDe','adm2FilterAte','adm2FilterTipo','adm2FilterTipoSolic'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   renderAdmArquivos();
