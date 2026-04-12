@@ -176,22 +176,38 @@
   .empty-state .emoji { font-size: 2.2rem; margin-bottom: .6rem; }
   .empty-state p { font-size: .9rem; }
 
-  /* ── TOOLTIP PARA BOTÕES DE STATUS ── */
-  .status-tooltip-wrap { position: relative; display: inline-block; }
-  .status-tooltip-wrap .status-tip {
-    visibility: hidden; opacity: 0;
-    position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-    background: #1a3a2a; color: #fff; font-size: .78rem; font-weight: 500;
-    padding: .5rem .85rem; border-radius: 8px; white-space: nowrap; z-index: 50;
-    box-shadow: 0 4px 16px rgba(0,0,0,.25); pointer-events: none;
-    transition: opacity .18s ease, visibility .18s ease;
-    max-width: 260px; white-space: normal; text-align: center; line-height: 1.45;
+  /* ── TOOLTIP GLOBAL (se sobrepõe a tudo) ── */
+  #globalTooltip {
+    position: fixed;
+    background: #1a3a2a;
+    color: #fff;
+    font-size: .82rem;
+    font-weight: 500;
+    padding: .6rem 1rem;
+    border-radius: 9px;
+    max-width: 300px;
+    line-height: 1.5;
+    text-align: center;
+    box-shadow: 0 6px 24px rgba(0,0,0,.32);
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity .18s ease;
+    white-space: normal;
   }
-  .status-tooltip-wrap .status-tip::after {
-    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-    border: 5px solid transparent; border-top-color: #1a3a2a;
+  #globalTooltip.visible { opacity: 1; }
+  #globalTooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1a3a2a;
   }
-  .status-tooltip-wrap:hover .status-tip { visibility: visible; opacity: 1; }
+  #globalTooltip.below::after {
+    top: auto; bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: #1a3a2a;
+  }
 
   /* ── BLOCOS RETRÁTEIS DE STATUS ── */
   .status-block { margin-bottom: .6rem; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--border); }
@@ -2634,13 +2650,13 @@ function profCardHtml(d) {
     </div>
     <div class="mc-right">
       ${statusTooltip
-        ? `<div class="status-tooltip-wrap"><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span><div class="status-tip">${statusTooltip}</div></div>`
+        ? `<span class="badge ${statusClass[d.status]||'badge-pending'}" data-tip="${statusTooltip}">${esc(d.status)}</span>`
         : `<span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>`
       }
-      ${d.arquivo_url?`<div class="status-tooltip-wrap"><a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 1</a><div class="status-tip">${fileTooltip}</div></div>`:''}
-      ${d.drive_link1?`<div class="status-tooltip-wrap"><a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 1</a><div class="status-tip">${fileTooltip}</div></div>`:''}
-      ${d.arquivo_url2?`<div class="status-tooltip-wrap"><a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 2</a><div class="status-tip">${fileTooltip}</div></div>`:''}
-      ${d.drive_link2?`<div class="status-tooltip-wrap"><a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 2</a><div class="status-tip">${fileTooltip}</div></div>`:''}
+      ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">⬇ Arquivo 1</a>`:''}
+      ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 1</a>`:''}
+      ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">⬇ Arquivo 2</a>`:''}
+      ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 2</a>`:''}
     </div>
   </div>`;
 }
@@ -3648,14 +3664,11 @@ function renderMeca(){
         ? `📋 Pedido liberado para impressão. ${diasRestantes!==null ? (diasRestantes===0 ? '⚠️ Prazo vencido!' : `⏰ ${diasRestantes} dia${diasRestantes!==1?'s':''} útil${diasRestantes!==1?'is':''} restante${diasRestantes!==1?'s':''} para o fim do prazo.`) : ''} Após imprimir, altere o status para <strong>Pronto</strong>.`
         : '';
       statusCell = d.status==='Autorizado'
-        ? `<div class="status-tooltip-wrap">
-            <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.85rem;padding:.35rem .7rem;font-weight:700;${stStyle}border-radius:7px;cursor:pointer;">
+        ? `<select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.85rem;padding:.35rem .7rem;font-weight:700;${stStyle}border-radius:7px;cursor:pointer;" data-tip="${autorizadoTip}">
               <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
               <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
               <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
-            </select>
-            <div class="status-tip" style="max-width:280px;">${autorizadoTip}</div>
-           </div>`
+            </select>`
         : `<select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.85rem;padding:.35rem .7rem;font-weight:700;${stStyle}border-radius:7px;cursor:pointer;">
             <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
             <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
@@ -4176,6 +4189,70 @@ function tutShowPanel(i){
   document.getElementById('modalTutBody').scrollTop = 0;
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(); });
+</script>
+
+<!-- ── TOOLTIP GLOBAL ── -->
+<div id="globalTooltip"></div>
+<script>
+(function(){
+  const tip = document.getElementById('globalTooltip');
+  let hideTimer = null;
+
+  function showTip(el, html) {
+    clearTimeout(hideTimer);
+    tip.innerHTML = html;
+    tip.classList.add('visible');
+    // Position on next frame so offsetWidth is correct
+    requestAnimationFrame(() => positionTip(el));
+  }
+
+  function hideTip() {
+    hideTimer = setTimeout(() => tip.classList.remove('visible'), 80);
+  }
+
+  function positionTip(el) {
+    const rect = el.getBoundingClientRect();
+    // Reset to measure real dimensions
+    tip.style.left = '0px';
+    tip.style.top = '0px';
+    const tw = tip.offsetWidth;
+    const th = tip.offsetHeight;
+    const margin = 10;
+
+    // position: fixed → use viewport coords directly
+    let top = rect.top - th - 12;
+    let left = rect.left + rect.width / 2 - tw / 2;
+
+    // If goes off top of viewport, place below
+    if (top < margin) {
+      top = rect.bottom + 10;
+      tip.classList.add('below');
+    } else {
+      tip.classList.remove('below');
+    }
+
+    // Clamp horizontally within viewport
+    if (left < margin) left = margin;
+    if (left + tw > window.innerWidth - margin)
+      left = window.innerWidth - tw - margin;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+
+  // Event delegation via data-tip attribute
+  document.addEventListener('mouseover', function(e) {
+    const target = e.target.closest('[data-tip]');
+    if (!target) return;
+    showTip(target, target.getAttribute('data-tip'));
+  });
+  document.addEventListener('mouseout', function(e) {
+    const target = e.target.closest('[data-tip]');
+    if (target) hideTip();
+  });
+  document.addEventListener('scroll', hideTip, true);
+  window.addEventListener('resize', hideTip);
+})();
 </script>
 
 <!-- ═══════════════════════════════════════════════
