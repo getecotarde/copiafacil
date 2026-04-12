@@ -1625,6 +1625,17 @@ const disciplinaDisplay = {
   'ensino religioso':'Ensino Religioso','coordenacao':'Coordenação','outra':'Outra'
 };
 
+// ── CLASSIFICAÇÃO DE TIPO (retrocompatível) ──
+// Quando o campo 'tipo' está vazio/nulo, infere pelo título:
+// títulos com "prova" ou "avaliação" → PROVA; demais → ATIVIDADE
+function inferirTipo(d) {
+  const tipo = (d.tipo || '').trim().toUpperCase();
+  if (tipo === 'PROVA' || tipo === 'ATIVIDADE') return tipo;
+  const titulo = (d.titulo || '').toLowerCase();
+  if (/prova|avalia[cç][aã]o/i.test(titulo)) return 'PROVA';
+  return 'ATIVIDADE';
+}
+
 // ── AUTH TABS ──
 function switchTab(tab) {
   document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='cadastro')));
@@ -1919,8 +1930,8 @@ function renderResumoMensal(){
   });
 
   const totalCopias = filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
-  const copiasProvasMensal = filtered.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
-  const copiasAtivMensal = filtered.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasProvasMensal = filtered.filter(d=>inferirTipo(d)==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtivMensal = filtered.filter(d=>inferirTipo(d)==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const totalSolic = filtered.length;
   const totalProfs = new Set(filtered.map(d=>d.professor)).size;
 
@@ -2055,8 +2066,8 @@ function renderResumo(){
   // Totalizadores gerais
   const totalSolic=filtered.length;
   const totalCopias=filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
-  const copiasProvas=filtered.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
-  const copiasAtiv=filtered.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasProvas=filtered.filter(d=>inferirTipo(d)==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtiv=filtered.filter(d=>inferirTipo(d)==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const totalProfs=new Set(filtered.map(d=>d.professor)).size;
   totaisEl.innerHTML=`
     <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${totalCopias.toLocaleString('pt-BR')}</div><div class="slabel">Total de Cópias</div><div style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">📝 Provas: ${copiasProvas.toLocaleString('pt-BR')} &nbsp;|&nbsp; 📋 Ativ.: ${copiasAtiv.toLocaleString('pt-BR')}</div></div>
@@ -2552,8 +2563,8 @@ function atualizarContadorMensal(data) {
   });
 
   const totalCopias = doMes.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
-  const copiasProvas = doMes.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
-  const copiasAtiv = doMes.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasProvas = doMes.filter(d=>inferirTipo(d)==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtiv = doMes.filter(d=>inferirTipo(d)==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const label = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
 
   document.getElementById('contadorMesLabel').textContent = label;
@@ -2607,8 +2618,8 @@ function atualizarCoordContadorMensal(data) {
   });
 
   const totalCopias = doMes.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
-  const copiasProvas = doMes.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
-  const copiasAtiv = doMes.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasProvas = doMes.filter(d=>inferirTipo(d)==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtiv = doMes.filter(d=>inferirTipo(d)==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const totalProfs = new Set(doMes.map(d => d.professor).filter(Boolean)).size;
   const label = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
 
@@ -4014,8 +4025,8 @@ function renderAdmCopias(){
   const totaisEl=document.getElementById('adm1Totais');
   const container=document.getElementById('adm1Container');
   const totalCopias=filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
-  const copiasProvas=filtered.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
-  const copiasAtiv=filtered.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasProvas=filtered.filter(d=>inferirTipo(d)==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtiv=filtered.filter(d=>inferirTipo(d)==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const totalSolic=filtered.length;
   const totalProfs=new Set(filtered.map(d=>d.professor)).size;
   totaisEl.innerHTML=`
