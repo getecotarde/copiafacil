@@ -176,6 +176,39 @@
   .empty-state .emoji { font-size: 2.2rem; margin-bottom: .6rem; }
   .empty-state p { font-size: .9rem; }
 
+  /* ── TOOLTIP PARA BOTÕES DE STATUS ── */
+  .status-tooltip-wrap { position: relative; display: inline-block; }
+  .status-tooltip-wrap .status-tip {
+    visibility: hidden; opacity: 0;
+    position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: #1a3a2a; color: #fff; font-size: .78rem; font-weight: 500;
+    padding: .5rem .85rem; border-radius: 8px; white-space: nowrap; z-index: 50;
+    box-shadow: 0 4px 16px rgba(0,0,0,.25); pointer-events: none;
+    transition: opacity .18s ease, visibility .18s ease;
+    max-width: 260px; white-space: normal; text-align: center; line-height: 1.45;
+  }
+  .status-tooltip-wrap .status-tip::after {
+    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: #1a3a2a;
+  }
+  .status-tooltip-wrap:hover .status-tip { visibility: visible; opacity: 1; }
+
+  /* ── BLOCOS RETRÁTEIS DE STATUS ── */
+  .status-block { margin-bottom: .6rem; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--border); }
+  .status-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .65rem 1.2rem; cursor: pointer; user-select: none;
+    font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    transition: background .15s;
+  }
+  .status-block-header:hover { filter: brightness(.96); }
+  .status-block-header .sb-arrow {
+    transition: transform .2s ease; font-size: .9rem;
+  }
+  .status-block-header.collapsed .sb-arrow { transform: rotate(-90deg); }
+  .status-block-body { border-top: 1.5px solid var(--border); }
+  .status-block-body.hidden { display: none; }
+
   .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(26,58,42,.2); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: .4rem; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -660,6 +693,7 @@
             <div style="display:flex;align-items:baseline;gap:.4rem;">
               <span id="contadorNum" style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--accent);line-height:1;">—</span>
             </div>
+            <div id="contadorDetalhe" style="color:rgba(255,255,255,.75);margin-top:.2rem;"></div>
           </div>
           <div style="width:1px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0;"></div>
           <div>
@@ -910,6 +944,7 @@
               <div style="display:flex;align-items:baseline;gap:.4rem;">
                 <span id="coordContadorNum" style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--accent);line-height:1;">—</span>
               </div>
+              <div id="coordContadorDetalhe" style="color:rgba(255,255,255,.75);margin-top:.2rem;"></div>
             </div>
             <div style="width:1px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0;"></div>
             <div>
@@ -1133,6 +1168,7 @@
               <div>
                 <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:.15rem;">Total de Cópias</div>
                 <div id="resumoMensalTotalCopias" style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--accent);line-height:1;">—</div>
+                <div id="resumoMensalDetalhe" style="font-size:.72rem;color:rgba(255,255,255,.7);margin-top:.2rem;"></div>
               </div>
               <div style="width:1px;height:36px;background:rgba(255,255,255,.15);"></div>
               <div>
@@ -1496,14 +1532,14 @@
         <span style="font-size:1.1rem;">👩‍💼</span>
         <div>
           <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);">Gabriela</div>
-          <a href="mailto:gabriela.m@edu.pbh.gov.br" style="font-size:.9rem;font-weight:600;color:var(--primary);text-decoration:none;">gabriela.m@edu.pbh.gov.br</a>
+          <a href="/cdn-cgi/l/email-protection#afc8cecdddc6cac3ce81c2efcacbda81dfcdc781c8c0d981cddd" style="font-size:.9rem;font-weight:600;color:var(--primary);text-decoration:none;"><span class="__cf_email__" data-cfemail="81e6e0e3f3e8e4ede0afecc1e4e5f4aff1e3e9afe6eef7afe3f3">[email&#160;protected]</span></a>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:.6rem;">
         <span style="font-size:1.1rem;">👨‍💼</span>
         <div>
           <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);">Everton</div>
-          <a href="mailto:everton.correa@edu.pbh.gov.br" style="font-size:.9rem;font-weight:600;color:var(--primary);text-decoration:none;">everton.correa@edu.pbh.gov.br</a>
+          <a href="/cdn-cgi/l/email-protection#4520332037312a2b6b262a37372024052021306b35272d6b222a336b2737" style="font-size:.9rem;font-weight:600;color:var(--primary);text-decoration:none;"><span class="__cf_email__" data-cfemail="7217041700061d1c5c111d00001713321716075c02101a5c151d045c1000">[email&#160;protected]</span></a>
         </div>
       </div>
     </div>
@@ -1547,7 +1583,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL = 'https://uaedrqrnexcktjynecja.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZWRycXJuZXhja3RqeW5lY2phIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NDY1MTAsImV4cCI6MjA5MDIyMjUxMH0.uNS6boM5ksPEzThO0B8za4FvqsxCP2IEENFO_BGM7Dw';
 const BUCKET      = 'matrizes';
@@ -1855,15 +1891,19 @@ function renderResumoMensal(){
   });
 
   const totalCopias = filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasProvasMensal = filtered.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtivMensal = filtered.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const totalSolic = filtered.length;
   const totalProfs = new Set(filtered.map(d=>d.professor)).size;
 
   const elCopias = document.getElementById('resumoMensalTotalCopias');
   const elSolic = document.getElementById('resumoMensalTotalSolic');
   const elProfs = document.getElementById('resumoMensalTotalProfs');
+  const elDetalhe = document.getElementById('resumoMensalDetalhe');
   if(elCopias) elCopias.textContent = totalCopias.toLocaleString('pt-BR');
   if(elSolic) elSolic.textContent = totalSolic;
   if(elProfs) elProfs.textContent = totalProfs;
+  if(elDetalhe) elDetalhe.textContent = totalCopias>0 ? `📝 Provas: ${copiasProvasMensal.toLocaleString('pt-BR')} | 📋 Atividades: ${copiasAtivMensal.toLocaleString('pt-BR')}` : '';
 
   // Botão próximo
   const btnProx = document.getElementById('btnResumoMensalProx');
@@ -1987,9 +2027,11 @@ function renderResumo(){
   // Totalizadores gerais
   const totalSolic=filtered.length;
   const totalCopias=filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasProvas=filtered.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtiv=filtered.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const totalProfs=new Set(filtered.map(d=>d.professor)).size;
   totaisEl.innerHTML=`
-    <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${totalCopias.toLocaleString('pt-BR')}</div><div class="slabel">Total de Cópias</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${totalCopias.toLocaleString('pt-BR')}</div><div class="slabel">Total de Cópias</div><div style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">📝 Provas: ${copiasProvas.toLocaleString('pt-BR')} &nbsp;|&nbsp; 📋 Ativ.: ${copiasAtiv.toLocaleString('pt-BR')}</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:var(--primary);"></div><div class="num">${totalSolic}</div><div class="slabel">Solicitações</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:#0055aa;"></div><div class="num">${totalProfs}</div><div class="slabel">Professores</div></div>`;
 
@@ -2482,11 +2524,21 @@ function atualizarContadorMensal(data) {
   });
 
   const totalCopias = doMes.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
+  const copiasProvas = doMes.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtiv = doMes.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const label = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
 
   document.getElementById('contadorMesLabel').textContent = label;
   document.getElementById('contadorNum').textContent = totalCopias.toLocaleString('pt-BR');
   document.getElementById('contadorSolicNum').textContent = doMes.length;
+
+  // Detalhamento por tipo
+  const detalheEl = document.getElementById('contadorDetalhe');
+  if(detalheEl) {
+    detalheEl.innerHTML = totalCopias > 0
+      ? `<span style="opacity:.75;font-size:.75rem;">📝 Provas: <strong>${copiasProvas.toLocaleString('pt-BR')}</strong> &nbsp;|&nbsp; 📋 Atividades: <strong>${copiasAtiv.toLocaleString('pt-BR')}</strong></span>`
+      : '';
+  }
 
   // botão "avançar" desabilitado se já no mês atual
   const btnProx = document.getElementById('btnContadorProx');
@@ -2527,6 +2579,8 @@ function atualizarCoordContadorMensal(data) {
   });
 
   const totalCopias = doMes.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
+  const copiasProvas = doMes.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtiv = doMes.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const totalProfs = new Set(doMes.map(d => d.professor).filter(Boolean)).size;
   const label = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
 
@@ -2539,6 +2593,14 @@ function atualizarCoordContadorMensal(data) {
   if (elSolic) elSolic.textContent = doMes.length;
   if (elProfs) elProfs.textContent = totalProfs;
 
+  // Detalhamento por tipo
+  const detalheEl = document.getElementById('coordContadorDetalhe');
+  if(detalheEl) {
+    detalheEl.innerHTML = totalCopias > 0
+      ? `<span style="opacity:.75;font-size:.75rem;">📝 Provas: <strong>${copiasProvas.toLocaleString('pt-BR')}</strong> &nbsp;|&nbsp; 📋 Atividades: <strong>${copiasAtiv.toLocaleString('pt-BR')}</strong></span>`
+      : '';
+  }
+
   const btnProx = document.getElementById('btnCoordContadorProx');
   if (btnProx) {
     btnProx.disabled = _coordContadorOffset >= 0;
@@ -2547,6 +2609,40 @@ function atualizarCoordContadorMensal(data) {
   }
   const btnHoje = document.getElementById('btnCoordContadorHoje');
   if (btnHoje) btnHoje.style.display = _coordContadorOffset < 0 ? 'inline-block' : 'none';
+}
+
+function profCardHtml(d) {
+  // Tooltip para arquivo anexado
+  const fileTooltip = 'Se a quantidade de cópias ou o arquivo estiverem incorretos, informe imediatamente a Gabriela ou o Everton para que efetuem a correção.';
+  // Tooltip para status
+  let statusTooltip = '';
+  if (d.status === 'Pronto') statusTooltip = '📦 Retire suas cópias na Mecanografia.';
+  else if (d.status === 'Aguardando') statusTooltip = '⏳ Aguardando autorização da Coordenação Pedagógica.';
+
+  const hasFile = d.arquivo_url || d.drive_link1 || d.arquivo_url2 || d.drive_link2;
+
+  return `<div class="minha-card">
+    <div>
+      <div class="mc-titulo">${esc(d.titulo)}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</div>
+      <div class="mc-meta">
+        <span>👥 ${esc(d.turmas)}</span>
+        <span>📄 ${d.copias} cóp. × ${d.laudas||1} laudas = <strong>${(d.total_copias||d.copias).toLocaleString('pt-BR')} total</strong></span>
+        <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
+        ${d.obs?`<span>💬 ${esc(d.obs)}</span>`:''}
+      </div>
+      ${d.status!=='Entregue'?`<div class="mc-prazo">⏰ Prazo: ${fmtDate(d.prazo_entrega)}</div>`:''}
+    </div>
+    <div class="mc-right">
+      ${statusTooltip
+        ? `<div class="status-tooltip-wrap"><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span><div class="status-tip">${statusTooltip}</div></div>`
+        : `<span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>`
+      }
+      ${d.arquivo_url?`<div class="status-tooltip-wrap"><a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 1</a><div class="status-tip">${fileTooltip}</div></div>`:''}
+      ${d.drive_link1?`<div class="status-tooltip-wrap"><a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 1</a><div class="status-tip">${fileTooltip}</div></div>`:''}
+      ${d.arquivo_url2?`<div class="status-tooltip-wrap"><a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 2</a><div class="status-tip">${fileTooltip}</div></div>`:''}
+      ${d.drive_link2?`<div class="status-tooltip-wrap"><a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 2</a><div class="status-tip">${fileTooltip}</div></div>`:''}
+    </div>
+  </div>`;
 }
 
 function renderMinhasFiltered() {
@@ -2570,26 +2666,36 @@ function renderMinhasFiltered() {
     container.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação encontrada.</p></div>';
     return;
   }
-  container.innerHTML = filtered.map(d=>`
-    <div class="minha-card">
-      <div>
-        <div class="mc-titulo">${esc(d.titulo)}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</div>
-        <div class="mc-meta">
-          <span>👥 ${esc(d.turmas)}</span>
-          <span>📄 ${d.copias} cóp. × ${d.laudas||1} laudas = <strong>${(d.total_copias||d.copias).toLocaleString('pt-BR')} total</strong></span>
-          <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
-          ${d.obs?`<span>💬 ${esc(d.obs)}</span>`:''}
+
+  // Ordem para perfil professor: Pronto, Autorizado, Aguardando, Entregue
+  const ORDER_PROF = ['Pronto','Autorizado','Aguardando','Entregue','Cancelado'];
+  const blockCfg = {
+    'Pronto':     { label:'✅ Pronto — retire suas cópias na Mecanografia', bg:'#e8f0eb', border:'#b8d4bf', color:'#1a3a2a' },
+    'Autorizado': { label:'🔵 Autorizado — aguardando produção',             bg:'#e8f0fb', border:'#b8cef0', color:'#0055aa' },
+    'Aguardando': { label:'⏳ Aguardando — pendente de autorização',         bg:'#fff8e8', border:'#f0d8a0', color:'#8a6000' },
+    'Entregue':   { label:'📦 Entregue — concluído',                         bg:'#d6f0e0', border:'#a0d8b8', color:'#1a6a3a' },
+    'Cancelado':  { label:'❌ Cancelado',                                    bg:'#fce4de', border:'#f0c0b0', color:'#a02a10' },
+  };
+
+  let html = '';
+  ORDER_PROF.forEach(st => {
+    const items = filtered.filter(d => d.status === st);
+    if (!items.length) return;
+    const cfg = blockCfg[st];
+    const blockId = 'minhas-block-' + st.toLowerCase();
+    html += `
+      <div class="status-block">
+        <div class="status-block-header" style="background:${cfg.bg};color:${cfg.color};border-color:${cfg.border};"
+             onclick="toggleStatusBlock('${blockId}',this)">
+          <span>${cfg.label} (${items.length})</span>
+          <span class="sb-arrow">▾</span>
         </div>
-        ${d.status!=='Entregue'?`<div class="mc-prazo">⏰ Prazo: ${fmtDate(d.prazo_entrega)}</div>`:''}
-      </div>
-      <div class="mc-right">
-        <span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>
-        ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 1</a>`:''}
-        ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 1</a>`:''}
-        ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;">⬇ Arquivo 2</a>`:''}
-        ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;">🔗 Drive 2</a>`:''}
-      </div>
-    </div>`).join('');
+        <div class="status-block-body" id="${blockId}">
+          ${items.map(d => profCardHtml(d)).join('')}
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
 }
 
 function limparFiltrosMinhas() {
@@ -2598,6 +2704,13 @@ function limparFiltrosMinhas() {
   document.getElementById('minhasFilterAte').value = '';
   document.getElementById('minhasFilterStatus').value = '';
   renderMinhasFiltered();
+}
+
+function toggleStatusBlock(blockId, headerEl) {
+  const body = document.getElementById(blockId);
+  if (!body) return;
+  const hidden = body.classList.toggle('hidden');
+  headerEl.classList.toggle('collapsed', hidden);
 }
 
 // ── PROGRESS OVERLAY HELPERS ──
@@ -2838,7 +2951,7 @@ function renderSolicitacoes(){
       <td style="text-align:center;">${d.laudas||'—'}</td>
       <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
       <td>${fmtDate(d.prazo_entrega)}</td>
-      <td style="display:flex;flex-direction:column;gap:.3rem;padding:.8rem 1rem;">
+      <td>
         ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
         ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
         ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
@@ -2848,20 +2961,36 @@ function renderSolicitacoes(){
     </tr>`;
   }
 
-  const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead>`;
+  const thead=`<table><thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead><tbody>`;
 
-  const html=`
-    <div>
-      <button onclick="toggleCoordDemais()" id="btnCoordDemais" style="width:100%;padding:.65rem 1.2rem;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);">
-        <span>📋 Ver solicitações (${filtered.length})</span>
-        <span id="iconCoordDemais" style="transition:transform .25s;">▼</span>
-      </button>
-      <div id="coordDemaisPanel" style="display:none;overflow:hidden;">
-        <table style="border-top:1.5px solid var(--border);">${thead}<tbody>${filtered.map(rowHtml).join('')}</tbody></table>
+  // Coord order: Aguardando, Autorizado, Pronto, Entregue, Cancelado
+  const ORDER_COORD = ['Aguardando','Autorizado','Pronto','Entregue','Cancelado'];
+  const blockCfgCoord = {
+    'Aguardando': { label:'⏳ Aguardando autorização', bg:'#fff8e8', border:'#f0d8a0', color:'#8a6000' },
+    'Autorizado': { label:'🔵 Autorizado — aguardando produção', bg:'#e8f0fb', border:'#b8cef0', color:'#0055aa' },
+    'Pronto':     { label:'✅ Pronto — aguardando retirada', bg:'#e8f0eb', border:'#b8d4bf', color:'#1a3a2a' },
+    'Entregue':   { label:'📦 Entregue — concluído', bg:'#d6f0e0', border:'#a0d8b8', color:'#1a6a3a' },
+    'Cancelado':  { label:'❌ Cancelado', bg:'#fce4de', border:'#f0c0b0', color:'#a02a10' },
+  };
+
+  let html = '';
+  ORDER_COORD.forEach(s => {
+    const items = filtered.filter(d => d.status === s);
+    if (!items.length) return;
+    const cfg = blockCfgCoord[s];
+    const blockId = 'coord-block-' + s.toLowerCase();
+    html += `<div class="status-block">
+      <div class="status-block-header" style="background:${cfg.bg};color:${cfg.color};border-color:${cfg.border};"
+           onclick="toggleStatusBlock('${blockId}',this)">
+        <span>${cfg.label} (${items.length})</span>
+        <span class="sb-arrow">▾</span>
+      </div>
+      <div class="status-block-body" id="${blockId}">
+        <div class="table-wrap">${thead}${items.map(d=>rowHtml(d)).join('')}</tbody></table></div>
       </div>
     </div>`;
-
-  container.innerHTML=html;
+  });
+  container.innerHTML = html;
 }
 
 function toggleCoordDemais(){
@@ -3490,6 +3619,16 @@ function renderMeca(){
   const container=document.getElementById('mecaContainer');
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação no momento.</p></div>';return;}
 
+  function calcDiasRestantes(prazo){
+    if(!prazo)return null;
+    const hoje=new Date();hoje.setHours(0,0,0,0);
+    const p=new Date(prazo);p.setHours(0,0,0,0);
+    let dias=0,cur=new Date(hoje);
+    if(p<=cur)return 0;
+    while(cur<p){cur.setDate(cur.getDate()+1);const dow=cur.getDay();if(dow!==0&&dow!==6)dias++;}
+    return dias;
+  }
+
   function mecaRowHtml(d, showEntregue){
     const obsTooltip = (d.obs && d.obs.trim()) ? esc(d.obs.trim()) : 'SEM RECOMENDAÇÕES!!!';
     const stStyle = d.status==='Autorizado'
@@ -3497,6 +3636,33 @@ function renderMeca(){
       : d.status==='Pronto'
         ? 'background:#e8f0eb;color:#1a3a2a;border:1.5px solid #b8d4bf;'
         : 'background:#d6f0e0;color:#1a6a3a;border:1.5px solid #a0d8b8;';
+
+    // Tooltip para status "Autorizado" na mecanografia
+    let statusCell;
+    if(showEntregue){
+      statusCell=`<span class="badge badge-done" style="font-size:.82rem;padding:.3rem .75rem;font-weight:700;">✔ Entregue</span>`;
+    } else {
+      // Calcular dias restantes para prazo
+      const diasRestantes = calcDiasRestantes(d.prazo_entrega);
+      const autorizadoTip = d.status==='Autorizado'
+        ? `📋 Pedido liberado para impressão. ${diasRestantes!==null ? (diasRestantes===0 ? '⚠️ Prazo vencido!' : `⏰ ${diasRestantes} dia${diasRestantes!==1?'s':''} útil${diasRestantes!==1?'is':''} restante${diasRestantes!==1?'s':''} para o fim do prazo.`) : ''} Após imprimir, altere o status para <strong>Pronto</strong>.`
+        : '';
+      statusCell = d.status==='Autorizado'
+        ? `<div class="status-tooltip-wrap">
+            <select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.85rem;padding:.35rem .7rem;font-weight:700;${stStyle}border-radius:7px;cursor:pointer;">
+              <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
+              <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
+              <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
+            </select>
+            <div class="status-tip" style="max-width:280px;">${autorizadoTip}</div>
+           </div>`
+        : `<select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.85rem;padding:.35rem .7rem;font-weight:700;${stStyle}border-radius:7px;cursor:pointer;">
+            <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
+            <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
+            <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
+           </select>`;
+    }
+
     return `<tr>
       <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
       <td>${esc(d.disciplina)}</td>
@@ -3508,16 +3674,7 @@ function renderMeca(){
       <td style="text-align:center;">${d.laudas||'—'}</td>
       <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
       <td>${fmtDate(d.data_solicitacao)}</td>
-      <td>
-        ${showEntregue
-          ? `<span class="badge badge-done" style="font-size:.82rem;padding:.3rem .75rem;font-weight:700;">✔ Entregue</span>`
-          : `<select class="status-select" onchange="mecaUpdateStatus(${d.id},this.value)" style="font-size:.85rem;padding:.35rem .7rem;font-weight:700;${stStyle}border-radius:7px;cursor:pointer;">
-              <option ${d.status==='Autorizado'?'selected':''}>Autorizado</option>
-              <option ${d.status==='Pronto'?'selected':''}>Pronto</option>
-              <option ${d.status==='Entregue'?'selected':''}>Entregue</option>
-            </select>`
-        }
-      </td>
+      <td>${statusCell}</td>
       <td>
         <div style="position:relative;display:inline-block;" class="meca-obs-wrap">
           <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Acessar/Imprimir</button>
@@ -3529,33 +3686,33 @@ function renderMeca(){
 
   const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Data Pedido</th><th>Status</th><th>Ações</th></tr></thead>`;
 
-  // Separa: Autorizado primeiro (prioritário), depois Pronto, depois Entregue
+  // Demais perfis order: Entregue, Pronto, Autorizado, Aguardando (para meca: Autorizado primeiro, Pronto, Entregue)
   const autorizados=filtered.filter(d=>d.status==='Autorizado');
   const prontos=filtered.filter(d=>d.status==='Pronto');
   const entregues=filtered.filter(d=>d.status==='Entregue');
 
+  const blockDefs = [
+    { items: autorizados, st:'Autorizado', label:'🔵 Autorizados — aguardando produção', bg:'#e8f0fb', border:'#b8cef0', color:'#0055aa', showEnt:false },
+    { items: prontos,     st:'Pronto',     label:'✅ Prontos — aguardando retirada pelo professor', bg:'#e8f0eb', border:'#b8d4bf', color:'#1a3a2a', showEnt:false },
+    { items: entregues,   st:'Entregue',   label:'📦 Entregues — retirada confirmada', bg:'#d6f0e0', border:'#a0d8b8', color:'#1a6a3a', showEnt:true },
+  ];
+
   let html='';
-  if(autorizados.length>0){
-    html+=`
-      <div style="padding:.6rem 1.2rem;background:#e8f0fb;border-bottom:1.5px solid #b8cef0;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#0055aa;">
-        🔵 Autorizados — aguardando produção (${autorizados.length})
+  blockDefs.forEach(bd=>{
+    if(!bd.items.length)return;
+    const blockId='meca-block-'+bd.st.toLowerCase();
+    html+=`<div class="status-block">
+      <div class="status-block-header" style="background:${bd.bg};color:${bd.color};border-color:${bd.border};"
+           onclick="toggleStatusBlock('${blockId}',this)">
+        <span>${bd.label} (${bd.items.length})</span>
+        <span class="sb-arrow">▾</span>
       </div>
-      <table>${thead}<tbody>${autorizados.map(d=>mecaRowHtml(d,false)).join('')}</tbody></table>`;
-  }
-  if(prontos.length>0){
-    html+=`
-      <div style="padding:.6rem 1.2rem;background:#e8f0eb;border-bottom:1.5px solid #b8d4bf;border-top:${autorizados.length?'2px':'0px'} solid var(--border);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);">
-        ✅ Prontos — aguardando retirada pelo professor (${prontos.length})
+      <div class="status-block-body" id="${blockId}">
+        <div class="table-wrap"><table>${thead}<tbody>${bd.items.map(d=>mecaRowHtml(d,bd.showEnt)).join('')}</tbody></table></div>
       </div>
-      <table>${thead}<tbody>${prontos.map(d=>mecaRowHtml(d,false)).join('')}</tbody></table>`;
-  }
-  if(entregues.length>0){
-    html+=`
-      <div style="padding:.6rem 1.2rem;background:#d6f0e0;border-bottom:1.5px solid #a0d8b8;border-top:${(autorizados.length||prontos.length)?'2px':'0px'} solid var(--border);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1a6a3a;">
-        📦 Entregues — retirada confirmada (${entregues.length})
-      </div>
-      <table>${thead}<tbody>${entregues.map(d=>mecaRowHtml(d,true)).join('')}</tbody></table>`;
-  }
+    </div>`;
+  });
+
   if(!autorizados.length&&!prontos.length&&!entregues.length){
     html='<div class="empty-state" style="padding:1.5rem 2rem;"><div class="emoji">✅</div><p>Nenhuma solicitação no momento.</p></div>';
   }
@@ -3832,10 +3989,12 @@ function renderAdmCopias(){
   const totaisEl=document.getElementById('adm1Totais');
   const container=document.getElementById('adm1Container');
   const totalCopias=filtered.reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasProvas=filtered.filter(d=>(d.tipo||'').toUpperCase()==='PROVA').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
+  const copiasAtiv=filtered.filter(d=>(d.tipo||'').toUpperCase()==='ATIVIDADE').reduce((s,d)=>s+(d.total_copias||d.copias||0),0);
   const totalSolic=filtered.length;
   const totalProfs=new Set(filtered.map(d=>d.professor)).size;
   totaisEl.innerHTML=`
-    <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${totalCopias.toLocaleString('pt-BR')}</div><div class="slabel">Total de Cópias</div></div>
+    <div class="stat-card"><div class="accent-dot" style="background:var(--accent);"></div><div class="num">${totalCopias.toLocaleString('pt-BR')}</div><div class="slabel">Total de Cópias</div><div style="font-size:.72rem;color:var(--muted);margin-top:.2rem;">📝 Provas: ${copiasProvas.toLocaleString('pt-BR')} &nbsp;|&nbsp; 📋 Ativ.: ${copiasAtiv.toLocaleString('pt-BR')}</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:var(--primary);"></div><div class="num">${totalSolic}</div><div class="slabel">Solicitações</div></div>
     <div class="stat-card"><div class="accent-dot" style="background:#7c3aed;"></div><div class="num">${totalProfs}</div><div class="slabel">Professores</div></div>`;
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação encontrada.</p></div>';return;}
@@ -4213,9 +4372,4 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
           <div class="tut-summary-grid">
             <div class="tut-summary-item"><div class="si-label">📁 Arquivo</div><p>Clique na área pontilhada → selecione → aguarde o upload.</p></div>
             <div class="tut-summary-item"><div class="si-label">🔗 Link do Drive</div><p>Copie no Drive → cole no campo → veja o preview.</p></div>
-            <div class="tut-summary-item"><div class="si-label">📄 Até 2 anexos</div><p>Combine arquivo e link, ou use apenas um dos dois.</p></div>
-            <div class="tut-summary-item"><div class="si-label">⏱ Prazo</div><p>5 dias úteis a partir da confirmação.</p></div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:1rem;gap:.5rem;flex-wrap:wrap;">
-          <button class="btn-secondary" onclick="tutShowPanel(3)">
+            <div class="tut-summary-item"><div class="si-label">📄 Até 2 anex
