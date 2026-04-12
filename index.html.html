@@ -420,49 +420,140 @@
   }
   .meca-obs-wrap:hover .meca-obs-tip { display: block; }
 
+  /* ── RESPONSIVIDADE: TABLET (≤ 900px) ── */
   @media (max-width: 900px) {
     .form-layout, .form-layout-wide { grid-template-columns: 1fr; }
     .anexos-grid { grid-template-columns: 1fr; }
+
+    /* Totalizadores 3 colunas → 2 colunas */
+    [style*="grid-template-columns:repeat(3,1fr)"],
+    [style*="grid-template-columns: repeat(3, 1fr)"] {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Grade tipo/modo/data dos formulários → 2 colunas */
+    .fg-grid.full > div[style*="grid-template-columns:1fr 1fr 1fr"],
+    .fg-grid.full > div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+      grid-template-columns: 1fr 1fr !important;
+    }
+
+    /* Filtros de resumo — quebra controlada */
+    #resumoSub-periodo > div:first-child,
+    #resumoSub-mensal > div:first-child {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    #resumoSub-periodo > div:first-child > div:last-child,
+    #resumoSub-mensal > div:first-child > div:last-child {
+      width: 100%;
+    }
   }
 
+  /* ── RESPONSIVIDADE: MOBILE (≤ 640px) ── */
   @media (max-width: 640px) {
-    /* ── LAYOUT GERAL ── */
-    header { padding: 0 .75rem; height: auto; min-height: 56px; flex-wrap: wrap; gap: .4rem; padding-top: .5rem; padding-bottom: .5rem; }
-    .logo { font-size: 1.1rem; }
-    .header-right { gap: .4rem; flex-wrap: wrap; }
-    .perfil-badge { font-size: .7rem; padding: .2rem .6rem; }
-    nav { gap: .3rem; flex-wrap: wrap; }
-    nav button { font-size: .75rem; padding: .35rem .65rem; }
-    .btn-sair { font-size: .73rem; padding: .28rem .6rem; }
+    /* ── HEADER ── */
+    header { padding: .5rem .75rem; height: auto; min-height: 56px; flex-wrap: wrap; gap: .35rem; }
+    .logo { font-size: 1.05rem; }
+    .header-right { gap: .35rem; flex-wrap: wrap; width: 100%; justify-content: space-between; }
+    .perfil-badge { font-size: .68rem; padding: .2rem .55rem; }
+    nav { gap: .25rem; flex-wrap: wrap; width: 100%; }
+    nav button { font-size: .73rem; padding: .32rem .6rem; }
+    .btn-sair { font-size: .71rem; padding: .26rem .55rem; }
 
-    main { padding: .75rem; }
-    .card { padding: 1rem 1rem; }
-    .card-sm { padding: .85rem .9rem; }
+    /* ── LAYOUT ── */
+    main { padding: .65rem; }
+    .card { padding: .9rem .95rem; }
+    .card-sm { padding: .8rem .85rem; overflow-x: auto; }
 
     /* ── TÍTULOS ── */
-    .page-header h1 { font-size: 1.2rem; }
-    .page-header p { font-size: .82rem; }
+    .page-header h1 { font-size: 1.15rem; }
+    .page-header p { font-size: .8rem; }
 
     /* ── GRIDS DE FORMULÁRIO ── */
     .form-grid { grid-template-columns: 1fr; }
     .form-grid-3 { grid-template-columns: 1fr; }
     .anexos-grid { grid-template-columns: 1fr; }
 
-    /* ── STATS ── */
-    .stats-row { grid-template-columns: 1fr 1fr; gap: .5rem; }
-    .stat-card { padding: .7rem .9rem; }
-    .stat-card .num { font-size: 1.4rem; }
+    /* Grade tipo/modo/data → coluna única */
+    .fg-grid.full > div[style*="grid-template-columns:1fr 1fr 1fr"],
+    .fg-grid.full > div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* ── TOTALIZADORES ── */
+    [style*="grid-template-columns:repeat(3,1fr)"],
+    [style*="grid-template-columns: repeat(3, 1fr)"] {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    .stats-row { grid-template-columns: 1fr 1fr; gap: .45rem; }
+    .stat-card { padding: .65rem .85rem; }
+    .stat-card .num { font-size: 1.35rem; }
 
     /* ── COORD TABS ── */
-    .coord-tabs { gap: .25rem; overflow-x: auto; padding-bottom: .15rem; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .coord-tabs { gap: .2rem; overflow-x: auto; padding-bottom: .15rem; flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .coord-tabs::-webkit-scrollbar { display: none; }
-    .coord-tab { font-size: .76rem; padding: .45rem .7rem; white-space: nowrap; flex-shrink: 0; }
+    .coord-tab { font-size: .73rem; padding: .42rem .65rem; white-space: nowrap; flex-shrink: 0; }
+
+    /* ── FILTROS GERAIS ── */
+    /* Qualquer barra de filtros flex vira coluna */
+    .card > div[style*="display:flex"][style*="flex-wrap:wrap"],
+    .card > div > div[style*="display:flex"][style*="flex-wrap:wrap"],
+    div[style*="background:var(--surface)"][style*="display:flex"][style*="flex-wrap:wrap"] {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    /* Inputs e selects de filtro ocupam largura total */
+    div[style*="display:flex"][style*="flex-wrap:wrap"] > div[style*="flex-direction:column"] {
+      width: 100% !important;
+      min-width: unset !important;
+    }
+    div[style*="display:flex"][style*="flex-wrap:wrap"] input[type="text"],
+    div[style*="display:flex"][style*="flex-wrap:wrap"] input[type="date"],
+    div[style*="display:flex"][style*="flex-wrap:wrap"] select {
+      width: 100% !important;
+      min-width: unset !important;
+      font-size: .85rem !important;
+    }
+    /* Botões de filtro (Limpar, Excel, etc.) ficam lado a lado */
+    div[style*="display:flex"][style*="flex-wrap:wrap"] > div[style*="align-self:flex-end"],
+    div[style*="display:flex"][style*="flex-wrap:wrap"] > div[style*="gap:.4rem"] {
+      flex-direction: row !important;
+      flex-wrap: wrap !important;
+      width: 100%;
+    }
+    div[style*="display:flex"][style*="flex-wrap:wrap"] .btn-secondary,
+    div[style*="display:flex"][style*="flex-wrap:wrap"] .btn-action {
+      flex: 1 1 auto;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* ── FILTROS INTERNOS DE CARDS (meca, solicitações) ── */
+    div[style*="padding:1rem 1.5rem"][style*="display:flex"],
+    div[style*="padding:1rem"][style*="display:flex"][style*="flex-wrap:wrap"] {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: .5rem !important;
+    }
+    div[style*="padding:1rem 1.5rem"][style*="display:flex"] input,
+    div[style*="padding:1rem 1.5rem"][style*="display:flex"] select,
+    div[style*="padding:1rem"][style*="display:flex"][style*="flex-wrap:wrap"] input,
+    div[style*="padding:1rem"][style*="display:flex"][style*="flex-wrap:wrap"] select {
+      width: 100% !important;
+      min-width: unset !important;
+      max-width: unset !important;
+    }
 
     /* ── DEADLINE BOX ── */
-    .deadline-box { padding: .6rem .85rem; }
-    .deadline-box .icon { font-size: 1.1rem; }
-    .deadline-box strong { font-size: .82rem; }
-    .deadline-box p { font-size: .74rem; }
+    .deadline-box { padding: .55rem .8rem; }
+    .deadline-box .icon { font-size: 1rem; }
+    .deadline-box strong { font-size: .8rem; }
+    .deadline-box p { font-size: .72rem; }
+
+    /* ── CABEÇALHOS COM DEADLINE ── */
+    #page-solicitar > div:first-child,
+    #page-coord > .page-header { flex-direction: column; align-items: flex-start; }
 
     /* ── SOLICITANTE BOX ── */
     .solicitante-box { flex-direction: column; align-items: flex-start; gap: .5rem; }
@@ -473,8 +564,7 @@
     .retro-box label { min-width: unset; width: 100%; }
 
     /* ── BOTÕES DE AÇÃO ── */
-    .btn-action { width: 100%; justify-content: center; font-size: .88rem; padding: .7rem 1rem; }
-    .btn-secondary { font-size: .82rem; padding: .5rem .9rem; }
+    .btn-action { width: 100%; justify-content: center; font-size: .86rem; padding: .68rem 1rem; }
 
     /* ── BOTÕES ENVIAR + LIMPAR ── */
     div:has(> #btnEnviar), div:has(> #btnEnviarCoord) { flex-direction: column; }
@@ -482,40 +572,88 @@
     div:has(> #btnEnviarCoord) .btn-secondary { width: 100%; text-align: center; justify-content: center; }
 
     /* ── MINHA CARD ── */
-    .minha-card { grid-template-columns: 1fr; gap: .6rem; padding: .85rem 1rem; }
+    .minha-card { grid-template-columns: 1fr; gap: .55rem; padding: .8rem .95rem; }
     .mc-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
 
+    /* ── STATUS BLOCK ── */
+    .status-block-header { font-size: .8rem; padding: .55rem .85rem; }
+
     /* ── MODAL ── */
+    .modal { padding: 1.1rem; max-width: 100% !important; width: calc(100vw - 2rem) !important; }
+    .modal-overlay { padding: .75rem; }
     .modal-detail { grid-template-columns: 1fr; }
-    .modal { padding: 1.2rem; }
     .modal-actions { flex-direction: column; }
     .modal-actions button, .modal-actions select { width: 100%; }
 
     /* ── TABELAS ── */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .card[style*="overflow:hidden"], .card[style*="overflow: hidden"] { overflow-x: auto; }
-    .card-sm { overflow-x: auto; }
-    table { font-size: .78rem; min-width: 500px; }
-    thead th { padding: .45rem .6rem; }
-    tbody td { padding: .5rem .6rem; }
+    table { font-size: .75rem; min-width: 520px; }
+    thead th { padding: .42rem .55rem; font-size: .66rem; }
+    tbody td { padding: .48rem .55rem; }
 
     /* ── FILE DROP ── */
-    .file-drop { padding: .85rem .6rem; min-height: 80px; }
-    .file-drop .file-icon { font-size: 1.3rem; }
-    .file-drop p { font-size: .74rem; }
+    .file-drop { padding: .8rem .55rem; min-height: 76px; }
+    .file-drop .file-icon { font-size: 1.25rem; }
+    .file-drop p { font-size: .72rem; }
 
-    /* ── SENHA BOX PROFESSOR/MECA ── */
-    #profSenhaBox, #mecaSenhaBox { flex-direction: column; align-items: flex-start; gap: .5rem; }
+    /* ── SENHA BOX ── */
+    #profSenhaBox, #mecaSenhaBox, #profSenhaBoxMinhas {
+      flex-direction: column; align-items: flex-start; gap: .5rem;
+    }
     #profSenhaBox span[style*="margin-left:auto"],
-    #mecaSenhaBox span[style*="margin-left:auto"] { margin-left: 0 !important; }
+    #mecaSenhaBox span[style*="margin-left:auto"],
+    #profSenhaBoxMinhas span[style*="margin-left:auto"] { margin-left: 0 !important; }
 
-    /* ── CABEÇALHO DA PÁGINA SOLICITAR ── */
-    #page-solicitar > div:first-child { flex-direction: column; align-items: flex-start; }
+    /* ── CONTADOR MENSAL DO PROFESSOR ── */
+    #page-minhas > div[style*="background:linear-gradient"] {
+      flex-direction: column; gap: .75rem; padding: .85rem 1rem;
+    }
+    #page-minhas > div[style*="background:linear-gradient"] > div[style*="display:flex"][style*="align-items:center"][style*="gap:1.5rem"] {
+      flex-wrap: wrap; gap: .75rem;
+    }
+
+    /* ── RESUMO: CABEÇALHO + FILTROS ── */
+    #resumoSub-periodo > div:first-child,
+    #resumoSub-mensal > div:first-child {
+      flex-direction: column; align-items: flex-start; gap: .6rem;
+    }
+    #resumoSub-periodo > div:first-child > div:last-child,
+    #resumoSub-mensal > div:first-child > div:last-child {
+      width: 100%; flex-direction: column !important; align-items: stretch !important;
+    }
+    #resumoSub-periodo > div:first-child > div:last-child input,
+    #resumoSub-periodo > div:first-child > div:last-child select,
+    #resumoSub-mensal > div:first-child > div:last-child input,
+    #resumoSub-mensal > div:first-child > div:last-child select {
+      width: 100% !important;
+    }
+
+    /* ── PROFESSORES: BARRA TOPO ── */
+    #tab-professores > div:first-child {
+      flex-direction: column; align-items: stretch;
+    }
+    #tab-professores > div:first-child > div { width: 100%; }
+
+    /* ── PÁGINA COORD: CABEÇALHO ── */
+    #page-coord > .page-header > div:first-child + * { display: none; }
+
+    /* ── DOWNLOAD BUTTONS NAS TABELAS ── */
+    .btn-download { font-size: .7rem !important; padding: .25rem .45rem !important; }
   }
 
+  /* ── RESPONSIVIDADE: MOBILE PEQUENO (≤ 400px) ── */
   @media (max-width: 400px) {
     .stats-row { grid-template-columns: 1fr; }
+    [style*="grid-template-columns:repeat(3,1fr)"],
+    [style*="grid-template-columns: repeat(3, 1fr)"] {
+      grid-template-columns: 1fr !important;
+    }
     .form-grid-3 { grid-template-columns: 1fr; }
-    nav button { font-size: .7rem; padding: .3rem .5rem; }
+    nav button { font-size: .68rem; padding: .28rem .45rem; }
+    .auth-box { padding: 1.5rem 1.2rem; }
+    table { font-size: .7rem; min-width: 480px; }
+    .coord-tab { font-size: .68rem; padding: .38rem .55rem; }
   }
   /* ── TOOLTIP CUSTOMIZADO PARA TÍTULOS TRUNCADOS ── */
   #cf-tooltip {
