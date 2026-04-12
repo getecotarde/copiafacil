@@ -4739,10 +4739,12 @@ const PRINT_CONFIGS = {
 // Estado do modal
 let _printConfigKey = null;
 let _printSubtitle  = '';
+let _printFiltros   = '';
 
-function abrirModalImpressao(configKey, subtitle) {
+function abrirModalImpressao(configKey, subtitle, filtros) {
   _printConfigKey = configKey;
   _printSubtitle  = subtitle || '';
+  _printFiltros   = filtros || '';
   const cfg = PRINT_CONFIGS[configKey];
   const container = document.getElementById('pmColsContainer');
   container.innerHTML = cfg.cols.map((c, i) => `
@@ -4778,11 +4780,15 @@ function executarImpressao() {
   const now = new Date().toLocaleString('pt-BR');
 
   // Cabeçalho minimalista
+  const filtrosLine = _printFiltros
+    ? `<div style="font-size:9.5px;color:#777;margin-top:4px;font-style:italic;">📅 ${_printFiltros}</div>`
+    : '';
   const headerHtml = `
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1a3a2a;">
       <div>
         <div style="font-family:Arial,sans-serif;font-weight:900;font-size:17px;color:#1a3a2a;letter-spacing:-.02em;">🖨️ CópiaFácil</div>
         <div style="font-size:11px;color:#555;margin-top:2px;">${_printSubtitle || cfg.title}</div>
+        ${filtrosLine}
       </div>
       <div style="text-align:right;">
         <div style="font-size:10px;color:#555;">${now}</div>
@@ -4855,18 +4861,80 @@ function executarImpressao() {
 // ── Entrypoints por relatório ──
 function imprimirRelatorioCoord() {
   const perfilLabel = perfilAtual === 'coordenacaoSub' ? 'Solicitações · Coordenação Sub — GETECO /Tarde' : 'Solicitações · Coordenação — GETECO /Tarde';
-  abrirModalImpressao('coord', perfilLabel);
+  const txt   = (document.getElementById('filterText').value||'').trim();
+  const st    = document.getElementById('filterStatus').value;
+  const prof  = (document.getElementById('filterProfessor')||{}).value||'';
+  const tipo  = (document.getElementById('filterTipo')||{}).value||'';
+  const partes = [];
+  if (prof)  partes.push('Professor: ' + prof);
+  if (tipo)  partes.push('Tipo: ' + tipo);
+  if (st)    partes.push('Status: ' + st);
+  if (txt)   partes.push('Busca: "' + txt + '"');
+  const filtros = partes.length ? partes.join('  |  ') : 'Todos os registros';
+  abrirModalImpressao('coord', perfilLabel, filtros);
 }
+
 function imprimirResumo(modo) {
   const perfilLabel = perfilAtual === 'coordenacaoSub' ? 'Coordenação Sub — GETECO /Tarde' : 'Coordenação — GETECO /Tarde';
-  if (modo === 'periodo') abrirModalImpressao('resumoPeriodo', 'Resumo por Período · ' + perfilLabel);
-  else abrirModalImpressao('resumoMensal', 'Resumo por Mês · ' + (document.getElementById('resumoMensalLabel').textContent||'—') + ' · ' + perfilLabel);
+  if (modo === 'periodo') {
+    const de     = document.getElementById('resumoDe').value;
+    const ate    = document.getElementById('resumoAte').value;
+    const tipo   = document.getElementById('resumoTipo').value;
+    const status = document.getElementById('resumoStatus').value;
+    const prof   = document.getElementById('resumoProfessor').value;
+    const partes = [];
+    if (de)     partes.push('De: ' + de);
+    if (ate)    partes.push('Até: ' + ate);
+    if (prof)   partes.push('Professor: ' + prof);
+    if (tipo)   partes.push('Tipo: ' + tipo);
+    if (status) partes.push('Status: ' + status);
+    const filtros = partes.length ? partes.join('  |  ') : 'Todos os registros';
+    abrirModalImpressao('resumoPeriodo', 'Resumo por Período · ' + perfilLabel, filtros);
+  } else {
+    const mesLabel = document.getElementById('resumoMensalLabel').textContent || '—';
+    const prof   = document.getElementById('resumoMensalProf').value;
+    const tipo   = document.getElementById('resumoMensalTipo').value;
+    const status = document.getElementById('resumoMensalStatus').value;
+    const partes = ['Mês: ' + mesLabel];
+    if (prof)   partes.push('Professor: ' + prof);
+    if (tipo)   partes.push('Tipo: ' + tipo);
+    if (status) partes.push('Status: ' + status);
+    abrirModalImpressao('resumoMensal', 'Resumo por Mês · ' + perfilLabel, partes.join('  |  '));
+  }
 }
+
 function imprimirRelatorioAdm1() {
-  abrirModalImpressao('adm1', 'Cópias por Professor · Adm. Cópias — GETECO /Tarde');
+  const prof  = document.getElementById('adm1FilterProf').value;
+  const de    = document.getElementById('adm1FilterDe').value;
+  const ate   = document.getElementById('adm1FilterAte').value;
+  const st    = document.getElementById('adm1FilterStatus').value;
+  const tipo  = (document.getElementById('adm1FilterTipo')||{}).value||'';
+  const partes = [];
+  if (de)    partes.push('De: ' + de);
+  if (ate)   partes.push('Até: ' + ate);
+  if (prof)  partes.push('Professor: ' + prof);
+  if (st)    partes.push('Status: ' + st);
+  if (tipo)  partes.push('Tipo: ' + tipo);
+  const filtros = partes.length ? partes.join('  |  ') : 'Todos os registros';
+  abrirModalImpressao('adm1', 'Cópias por Professor · Adm. Cópias — GETECO /Tarde', filtros);
 }
+
 function imprimirRelatorioAdm2() {
-  abrirModalImpressao('adm2', 'Arquivos e Links · Perfil Pedagógico — GETECO /Tarde');
+  const txt       = (document.getElementById('adm2FilterText').value||'').trim();
+  const prof      = document.getElementById('adm2FilterProf').value;
+  const de        = document.getElementById('adm2FilterDe').value;
+  const ate       = document.getElementById('adm2FilterAte').value;
+  const tipo      = document.getElementById('adm2FilterTipo').value;
+  const tipoSolic = (document.getElementById('adm2FilterTipoSolic')||{}).value||'';
+  const partes = [];
+  if (de)         partes.push('De: ' + de);
+  if (ate)        partes.push('Até: ' + ate);
+  if (prof)       partes.push('Professor: ' + prof);
+  if (tipoSolic)  partes.push('Tipo solic.: ' + tipoSolic);
+  if (tipo)       partes.push('Tipo anexo: ' + tipo);
+  if (txt)        partes.push('Busca: "' + txt + '"');
+  const filtros = partes.length ? partes.join('  |  ') : 'Todos os registros';
+  abrirModalImpressao('adm2', 'Arquivos e Links · Perfil Pedagógico — GETECO /Tarde', filtros);
 }
 function fecharTutorial(){ document.getElementById('modalTutorial').classList.remove('open'); }
 function tutShowPanel(i){
