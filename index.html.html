@@ -1749,7 +1749,7 @@ async function iniciarApp() {
     await loadMeca();
     showPage('meca');
   } else if (perfilAtual==='coordenacaoSub') {
-    badge.textContent='🗂️ Coordenação';
+    badge.textContent='🗂️ Sub Coordenação';
     badge.className='perfil-badge coord';
     nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
     document.getElementById('cf-professor').value='Coordenação';
@@ -1757,6 +1757,18 @@ async function iniciarApp() {
     const dpCoordSub=document.getElementById('cf-dataPedido');
     if(dpCoordSub&&!dpCoordSub.value) dpCoordSub.value=new Date().toISOString().slice(0,10);
     await loadCoord();
+    // Oculta abas restritas para Sub Coordenação
+    const abasOcultas = ['mecanografia','admcopias','pedagogico','coordsub'];
+    document.querySelectorAll('.coord-tab').forEach(btn => {
+      const onclick = btn.getAttribute('onclick') || '';
+      const match = onclick.match(/switchCoordTab\('([^']+)'/);
+      if (match && abasOcultas.includes(match[1])) {
+        btn.style.display = 'none';
+      }
+    });
+    // Oculta o botão Excluir no modal para Sub Coordenação
+    const btnExcluir = document.getElementById('modalBtnExcluir');
+    if (btnExcluir) btnExcluir.style.display = 'none';
     showPage('coord');
   } else {
     badge.textContent='🗂️ Coordenação';
