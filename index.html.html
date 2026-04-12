@@ -677,38 +677,28 @@
   #cf-tooltip.show { opacity: 1; }
   .ttip { cursor: default; }
 
-  /* ── IMPRESSÃO ── */
-  @media print {
-    body { background: #fff !important; color: #000 !important; font-family: Arial, sans-serif !important; }
-    header, nav, .btn-primary, .btn-action, .btn-secondary, .btn-danger, .btn-approve,
-    .btn-edit, .btn-sair, .coord-tabs, #filterText, #filterProfessor, #filterTipo,
-    #filterStatus, #adm1FilterProf, #adm1FilterDe, #adm1FilterAte, #adm1FilterStatus,
-    #adm1FilterTipo, #adm2FilterText, #adm2FilterProf, #adm2FilterDe, #adm2FilterAte,
-    #adm2FilterTipo, #adm2FilterTipoSolic, .stats-row, #adm1Totais, #adm2Totais,
-    #resumoTotais, #resumoSub-periodo > div:first-child > div:last-child,
-    #resumoSub-mensal > div:first-child > div:last-child,
-    #resumoSub-periodo > div:first-child > div:first-child > div:last-child,
-    .modal-overlay, #toast, #progressOverlay, #cf-tooltip, #globalTooltip,
-    .page-header p, .btn-download, .no-print, .status-block-header .sb-arrow { display: none !important; }
-    .print-only { display: block !important; }
-    .card, .card-sm { box-shadow: none !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
-    table { font-size: 10px !important; border-collapse: collapse !important; width: 100% !important; min-width: unset !important; }
-    thead th { background: #f0f0f0 !important; color: #000 !important; border: 1px solid #aaa !important; padding: 4px 6px !important; font-size: 9px !important; }
-    tbody td { border: 1px solid #ccc !important; padding: 3px 6px !important; }
-    .badge { border: 1px solid #aaa !important; background: #f5f5f5 !important; color: #000 !important; }
-    .status-block { border: 1px solid #ccc !important; margin-bottom: 8px !important; }
-    .status-block-header { background: #f0f0f0 !important; color: #000 !important; border: none !important; font-size: 10px !important; padding: 5px 10px !important; }
-    .status-block-body { display: block !important; }
-    a.btn-download { display: none !important; }
-    .print-header { display: block !important; margin-bottom: 16px; border-bottom: 2px solid #1a3a2a; padding-bottom: 8px; }
-    .print-header h2 { font-size: 16px; color: #1a3a2a; margin: 0 0 4px; }
-    .print-header p { font-size: 10px; color: #555; margin: 0; }
-    .print-totals { display: grid !important; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
-    .print-totals .pt-card { border: 1px solid #ccc; border-radius: 6px; padding: 8px 12px; }
-    .print-totals .pt-num { font-size: 18px; font-weight: 800; color: #1a3a2a; }
-    .print-totals .pt-label { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: .04em; }
-    @page { margin: 15mm 12mm; size: A4 landscape; }
+  /* ── MODAL DE IMPRESSÃO ── */
+  #printModalOverlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    z-index: 9000; align-items: center; justify-content: center; padding: 1rem;
   }
+  #printModalOverlay.open { display: flex; }
+  #printModal {
+    background: var(--surface); border-radius: 16px; padding: 1.8rem 2rem;
+    width: 100%; max-width: 520px; box-shadow: 0 12px 48px rgba(0,0,0,.2);
+    border: 1.5px solid var(--border);
+  }
+  #printModal h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem;
+    color: var(--primary); margin-bottom: .25rem; }
+  #printModal .pm-sub { font-size: .82rem; color: var(--muted); margin-bottom: 1.2rem; }
+  .pm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: .45rem .8rem; margin-bottom: 1.4rem; }
+  .pm-col-item { display: flex; align-items: center; gap: .5rem; font-size: .88rem;
+    cursor: pointer; padding: .35rem .5rem; border-radius: 7px; transition: background .15s; }
+  .pm-col-item:hover { background: #f0ede6; }
+  .pm-col-item input[type=checkbox] { accent-color: var(--primary); width: 15px; height: 15px; flex-shrink: 0; }
+  .pm-actions { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; }
+  .pm-sel-all { font-size: .78rem; color: var(--primary); cursor: pointer; text-decoration: underline;
+    background: none; border: none; font-family: 'DM Sans', sans-serif; padding: 0; margin-bottom: .6rem; }
   .print-only { display: none; }
   .print-header { display: none; }
   .print-totals { display: none; }
@@ -1853,6 +1843,20 @@
       </div>
     </div>
     <button onclick="fecharModalTeste()" style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;padding:.65rem 2rem;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;">Entendido</button>
+  </div>
+</div>
+
+<!-- ── MODAL DE IMPRESSÃO — SELEÇÃO DE COLUNAS ── -->
+<div id="printModalOverlay" onclick="if(event.target===this)fecharModalImpressao()">
+  <div id="printModal">
+    <h3>🖨️ Imprimir Relatório</h3>
+    <p class="pm-sub">Selecione as colunas que devem aparecer na impressão.</p>
+    <button class="pm-sel-all" onclick="pmToggleAll()">Marcar / Desmarcar todas</button>
+    <div class="pm-cols" id="pmColsContainer"></div>
+    <div class="pm-actions">
+      <button class="btn-secondary" onclick="fecharModalImpressao()">Cancelar</button>
+      <button class="btn-action" onclick="executarImpressao()">🖨️ Imprimir</button>
+    </div>
   </div>
 </div>
 
@@ -4520,181 +4524,349 @@ db.auth.getSession().then(async({data:{session}})=>{
 // ── TUTORIAL ──
 function abrirTutorial(){ document.getElementById('modalTutorial').classList.add('open'); tutShowPanel(0); }
 
-// ── IMPRESSÃO DE RELATÓRIOS ──
-function _buildPrintHeader(title, subtitle, filtros) {
+// ── IMPRESSÃO DE RELATÓRIOS — SISTEMA COMPLETO ──
+
+// Configurações de colunas por relatório
+const PRINT_CONFIGS = {
+  coord: {
+    title: 'Solicitações de Cópias',
+    cols: [
+      { key: 'professor',      label: 'Professor(a)',     default: true },
+      { key: 'disciplina',     label: 'Disciplina',       default: true },
+      { key: 'titulo',         label: 'Título',           default: true },
+      { key: 'turmas',         label: 'Turmas',           default: true },
+      { key: 'copias',         label: 'Cópias',           default: true },
+      { key: 'laudas',         label: 'Laudas',           default: false },
+      { key: 'total_copias',   label: 'Total Cópias',     default: true },
+      { key: 'data_solicitacao', label: 'Data Pedido',    default: false },
+      { key: 'prazo_entrega',  label: 'Prazo Entrega',    default: true },
+      { key: 'status',         label: 'Status',           default: true },
+      { key: 'tipo',           label: 'Tipo',             default: false },
+      { key: 'obs',            label: 'Observações',      default: false },
+    ],
+    getData: () => {
+      const txt = (document.getElementById('filterText').value||'').toLowerCase();
+      const st = document.getElementById('filterStatus').value;
+      const prof = (document.getElementById('filterProfessor')||{}).value||'';
+      const tipo = (document.getElementById('filterTipo')||{}).value||'';
+      return allSolic.filter(d => {
+        const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
+        return mTxt&&(!prof||d.professor===prof)&&(!tipo||inferirTipo(d)===tipo)&&(!st||d.status===st);
+      });
+    },
+    getCell: (d, key) => {
+      if (key==='professor') return `<strong>${esc(d.professor||'—')}</strong>`;
+      if (key==='disciplina') return esc(disciplinaDisplay[d.disciplina]||d.disciplina||'—');
+      if (key==='titulo') return esc(d.titulo||'—');
+      if (key==='turmas') return esc(d.turmas||'—');
+      if (key==='copias') return d.copias||'—';
+      if (key==='laudas') return d.laudas||'—';
+      if (key==='total_copias') return (d.total_copias||d.copias||0).toLocaleString('pt-BR');
+      if (key==='data_solicitacao') return fmtDate(d.data_solicitacao);
+      if (key==='prazo_entrega') return fmtDate(d.prazo_entrega);
+      if (key==='status') return esc(d.status||'—');
+      if (key==='tipo') return inferirTipo(d);
+      if (key==='obs') return esc(d.obs||'—');
+      return '—';
+    },
+    getTotals: (data) => [
+      { num: data.length, label: 'Solicitações' },
+      { num: data.reduce((s,d)=>s+(d.total_copias||d.copias||0),0).toLocaleString('pt-BR'), label: 'Total de Cópias' },
+      { num: new Set(data.map(d=>d.professor)).size, label: 'Professores' },
+    ]
+  },
+
+  resumoPeriodo: {
+    title: 'Resumo por Período',
+    cols: [
+      { key: 'professor',    label: 'Professor(a)',   default: true },
+      { key: 'disciplina',   label: 'Disciplina',     default: true },
+      { key: 'solicitacoes', label: 'Solicitações',   default: true },
+      { key: 'totalCopias',  label: 'Total Cópias',   default: true },
+      { key: 'provas',       label: 'Cópias Provas',  default: false },
+      { key: 'atividades',   label: 'Cópias Ativ.',   default: false },
+      { key: 'ultimaData',   label: 'Última Solic.',  default: true },
+      { key: 'statusTop',    label: 'Status Predom.', default: false },
+    ],
+    getData: () => {
+      const de = document.getElementById('resumoDe').value;
+      const ate = document.getElementById('resumoAte').value;
+      const tipo = document.getElementById('resumoTipo').value;
+      const status = document.getElementById('resumoStatus').value;
+      const profVal = document.getElementById('resumoProfessor').value;
+      const filtered = allSolic.filter(d => {
+        const dt = new Date(d.data_solicitacao);
+        return (!de||dt>=new Date(de+'T00:00:00'))&&(!ate||dt<=new Date(ate+'T23:59:59'))
+          &&(!tipo||inferirTipo(d)===tipo)&&(!status||d.status===status)&&(!profVal||d.professor===profVal);
+      });
+      // Agrupa por professor
+      const map = {};
+      filtered.forEach(d => {
+        const k = d.professor||'—';
+        if (!map[k]) map[k]={professor:k,disciplina:d.disciplina,items:[],totalCopias:0,provas:0,atividades:0};
+        map[k].items.push(d);
+        map[k].totalCopias += (d.total_copias||d.copias||0);
+        if (inferirTipo(d)==='PROVA') map[k].provas+=(d.total_copias||d.copias||0);
+        else map[k].atividades+=(d.total_copias||d.copias||0);
+      });
+      return Object.values(map).sort((a,b)=>b.totalCopias-a.totalCopias);
+    },
+    getCell: (r, key) => {
+      if (key==='professor') return `<strong>${esc(r.professor)}</strong>`;
+      if (key==='disciplina') return esc(disciplinaDisplay[r.disciplina]||r.disciplina||'—');
+      if (key==='solicitacoes') return r.items.length;
+      if (key==='totalCopias') return r.totalCopias.toLocaleString('pt-BR');
+      if (key==='provas') return r.provas.toLocaleString('pt-BR');
+      if (key==='atividades') return r.atividades.toLocaleString('pt-BR');
+      if (key==='ultimaData') return r.items[0]?fmtDate(r.items[0].data_solicitacao):'—';
+      if (key==='statusTop') {
+        const sc={}; r.items.forEach(s=>{sc[s.status]=(sc[s.status]||0)+1;});
+        return Object.entries(sc).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+      }
+      return '—';
+    },
+    getTotals: (data) => [
+      { num: data.reduce((s,r)=>s+r.items.length,0), label: 'Solicitações' },
+      { num: data.reduce((s,r)=>s+r.totalCopias,0).toLocaleString('pt-BR'), label: 'Total de Cópias' },
+      { num: data.length, label: 'Professores' },
+    ]
+  },
+
+  resumoMensal: {
+    title: 'Resumo por Mês',
+    cols: [
+      { key: 'professor',    label: 'Professor(a)',   default: true },
+      { key: 'disciplina',   label: 'Disciplina',     default: true },
+      { key: 'solicitacoes', label: 'Solicitações',   default: true },
+      { key: 'totalCopias',  label: 'Total Cópias',   default: true },
+      { key: 'provas',       label: 'Cópias Provas',  default: false },
+      { key: 'atividades',   label: 'Cópias Ativ.',   default: false },
+      { key: 'ultimaData',   label: 'Última Solic.',  default: false },
+      { key: 'statusTop',    label: 'Status Predom.', default: false },
+    ],
+    getData: () => {
+      // reutiliza a lógica do resumo mensal
+      const profVal = document.getElementById('resumoMensalProf').value;
+      const tipo = document.getElementById('resumoMensalTipo').value;
+      const status = document.getElementById('resumoMensalStatus').value;
+      const now = new Date();
+      const ano = now.getFullYear() + Math.floor((now.getMonth() + _resumoMensalOffset) / 12);
+      const mes = ((now.getMonth() + _resumoMensalOffset) % 12 + 12) % 12;
+      const ini = new Date(ano, mes, 1);
+      const fim = new Date(ano, mes + 1, 0, 23, 59, 59);
+      const filtered = allSolic.filter(d => {
+        const dt = new Date(d.data_solicitacao);
+        return dt>=ini&&dt<=fim&&(!profVal||d.professor===profVal)&&(!tipo||inferirTipo(d)===tipo)&&(!status||d.status===status);
+      });
+      const map = {};
+      filtered.forEach(d => {
+        const k = d.professor||'—';
+        if (!map[k]) map[k]={professor:k,disciplina:d.disciplina,items:[],totalCopias:0,provas:0,atividades:0};
+        map[k].items.push(d);
+        map[k].totalCopias += (d.total_copias||d.copias||0);
+        if (inferirTipo(d)==='PROVA') map[k].provas+=(d.total_copias||d.copias||0);
+        else map[k].atividades+=(d.total_copias||d.copias||0);
+      });
+      return Object.values(map).sort((a,b)=>b.totalCopias-a.totalCopias);
+    },
+    getCell: (r, key) => PRINT_CONFIGS.resumoPeriodo.getCell(r, key),
+    getTotals: (data) => PRINT_CONFIGS.resumoPeriodo.getTotals(data),
+  },
+
+  adm1: {
+    title: 'Cópias por Professor',
+    cols: [
+      { key: 'professor',    label: 'Professor(a)',    default: true },
+      { key: 'disciplina',   label: 'Disciplina',      default: true },
+      { key: 'solicitacoes', label: 'Solicitações',    default: true },
+      { key: 'totalCopias',  label: 'Total Cópias',    default: true },
+      { key: 'provas',       label: 'Cópias Provas',   default: false },
+      { key: 'atividades',   label: 'Cópias Ativ.',    default: false },
+      { key: 'ultimaData',   label: 'Última Solic.',   default: true },
+      { key: 'statusTop',    label: 'Status Predom.',  default: true },
+    ],
+    getData: () => {
+      const filtered = adm1FilteredData();
+      const map = {};
+      filtered.forEach(d => {
+        const k = d.professor||'—';
+        if (!map[k]) map[k]={professor:k,disciplina:d.disciplina,items:[],totalCopias:0,provas:0,atividades:0};
+        map[k].items.push(d);
+        map[k].totalCopias += (d.total_copias||d.copias||0);
+        if (inferirTipo(d)==='PROVA') map[k].provas+=(d.total_copias||d.copias||0);
+        else map[k].atividades+=(d.total_copias||d.copias||0);
+      });
+      return Object.values(map).sort((a,b)=>b.totalCopias-a.totalCopias);
+    },
+    getCell: (r, key) => PRINT_CONFIGS.resumoPeriodo.getCell(r, key),
+    getTotals: (data) => PRINT_CONFIGS.resumoPeriodo.getTotals(data),
+  },
+
+  adm2: {
+    title: 'Arquivos e Links por Professor',
+    cols: [
+      { key: 'professor', label: 'Professor(a)', default: true },
+      { key: 'titulo',    label: 'Título',       default: true },
+      { key: 'data',      label: 'Data',         default: true },
+      { key: 'arquivo1',  label: 'Arquivo 1',    default: false },
+      { key: 'drive1',    label: 'Drive 1',      default: false },
+      { key: 'arquivo2',  label: 'Arquivo 2',    default: false },
+      { key: 'drive2',    label: 'Drive 2',      default: false },
+      { key: 'status',    label: 'Status',       default: true },
+      { key: 'tipo',      label: 'Tipo',         default: true },
+    ],
+    getData: () => adm2FilteredData(),
+    getCell: (d, key) => {
+      if (key==='professor') return `<strong>${esc(d.professor||'—')}</strong>`;
+      if (key==='titulo') return esc(d.titulo||'—');
+      if (key==='data') return fmtDate(d.data_solicitacao);
+      if (key==='arquivo1') return d.arquivo_url ? esc(d.arquivo||'Sim') : '—';
+      if (key==='drive1') return d.drive_link1 ? esc(d.drive_link1.substring(0,40)+'…') : '—';
+      if (key==='arquivo2') return d.arquivo_url2 ? esc(d.arquivo2||'Sim') : '—';
+      if (key==='drive2') return d.drive_link2 ? esc(d.drive_link2.substring(0,40)+'…') : '—';
+      if (key==='status') return esc(d.status||'—');
+      if (key==='tipo') return inferirTipo(d);
+      return '—';
+    },
+    getTotals: (data) => [
+      { num: data.length, label: 'Solicitações com Anexo' },
+      { num: data.reduce((s,d)=>s+[d.arquivo_url,d.arquivo_url2].filter(Boolean).length,0), label: 'Arquivos' },
+      { num: data.reduce((s,d)=>s+[d.drive_link1,d.drive_link2].filter(Boolean).length,0), label: 'Links Drive' },
+    ]
+  }
+};
+
+// Estado do modal
+let _printConfigKey = null;
+let _printSubtitle  = '';
+
+function abrirModalImpressao(configKey, subtitle) {
+  _printConfigKey = configKey;
+  _printSubtitle  = subtitle || '';
+  const cfg = PRINT_CONFIGS[configKey];
+  const container = document.getElementById('pmColsContainer');
+  container.innerHTML = cfg.cols.map((c, i) => `
+    <label class="pm-col-item">
+      <input type="checkbox" id="pmCol_${i}" value="${c.key}" ${c.default ? 'checked' : ''}>
+      ${c.label}
+    </label>`).join('');
+  document.getElementById('printModalOverlay').classList.add('open');
+}
+
+function fecharModalImpressao() {
+  document.getElementById('printModalOverlay').classList.remove('open');
+}
+
+function pmToggleAll() {
+  const boxes = document.querySelectorAll('#pmColsContainer input[type=checkbox]');
+  const allChecked = Array.from(boxes).every(b => b.checked);
+  boxes.forEach(b => b.checked = !allChecked);
+}
+
+function executarImpressao() {
+  const cfg = PRINT_CONFIGS[_printConfigKey];
+  if (!cfg) return;
+
+  // Colunas selecionadas
+  const selectedKeys = Array.from(document.querySelectorAll('#pmColsContainer input[type=checkbox]:checked'))
+    .map(b => b.value);
+  if (!selectedKeys.length) { alert('Selecione ao menos uma coluna.'); return; }
+
+  const selectedCols = cfg.cols.filter(c => selectedKeys.includes(c.key));
+  const data = cfg.getData();
+  const totals = cfg.getTotals(data);
   const now = new Date().toLocaleString('pt-BR');
-  return `<div class="print-header">
-    <h2>🖨️ CópiaFácil — ${title}</h2>
-    <p>${subtitle ? subtitle + ' &nbsp;|&nbsp; ' : ''}Filtros: ${filtros || 'nenhum'} &nbsp;|&nbsp; Gerado em: ${now}</p>
-  </div>`;
+
+  // Cabeçalho minimalista
+  const headerHtml = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1a3a2a;">
+      <div>
+        <div style="font-family:Arial,sans-serif;font-weight:900;font-size:17px;color:#1a3a2a;letter-spacing:-.02em;">🖨️ CópiaFácil</div>
+        <div style="font-size:11px;color:#555;margin-top:2px;">${_printSubtitle || cfg.title}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:10px;color:#555;">${now}</div>
+        <div style="display:flex;gap:16px;margin-top:6px;">
+          ${totals.map(t=>`<div style="text-align:center;">
+            <div style="font-size:16px;font-weight:800;color:#1a3a2a;">${t.num}</div>
+            <div style="font-size:8px;text-transform:uppercase;letter-spacing:.05em;color:#888;">${t.label}</div>
+          </div>`).join('<div style="width:1px;background:#ddd;align-self:stretch;"></div>')}
+        </div>
+      </div>
+    </div>`;
+
+  // Tabela
+  const thead = `<thead><tr>${selectedCols.map(c=>
+    `<th style="text-align:left;padding:5px 7px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#555;background:#f5f5f5;border-bottom:2px solid #ccc;white-space:nowrap;">${c.label}</th>`
+  ).join('')}</tr></thead>`;
+
+  // Linhas — para tabelas agrupadas (coordenação) itera normalmente
+  const rows = data.map((item, idx) => {
+    const bg = idx % 2 === 1 ? '#fafafa' : '#fff';
+    const cells = selectedCols.map(c =>
+      `<td style="padding:4px 7px;font-size:10px;border-bottom:1px solid #eee;vertical-align:middle;">${cfg.getCell(item, c.key)}</td>`
+    ).join('');
+    return `<tr style="background:${bg};">${cells}</tr>`;
+  });
+
+  // Linha de totais no rodapé da tabela (quando aplicável)
+  let totalRow = '';
+  if (selectedKeys.includes('totalCopias') || selectedKeys.includes('total_copias')) {
+    const totalNum = data.reduce((s, r) => {
+      const v = r.totalCopias ?? (r.total_copias || r.copias || 0);
+      return s + (typeof v === 'number' ? v : 0);
+    }, 0);
+    if (totalNum > 0) {
+      const cells = selectedCols.map(c => {
+        if (c.key === 'professor') return `<td style="padding:5px 7px;font-size:10px;font-weight:700;background:#f0ede6;border-top:2px solid #bbb;">TOTAL GERAL</td>`;
+        if (c.key === 'totalCopias' || c.key === 'total_copias') return `<td style="padding:5px 7px;font-size:10px;font-weight:800;color:#1a3a2a;background:#f0ede6;border-top:2px solid #bbb;">${totalNum.toLocaleString('pt-BR')}</td>`;
+        return `<td style="background:#f0ede6;border-top:2px solid #bbb;"></td>`;
+      }).join('');
+      totalRow = `<tr>${cells}</tr>`;
+    }
+  }
+
+  const tableHtml = `<table style="width:100%;border-collapse:collapse;font-size:10px;">${thead}<tbody>${rows.join('')}${totalRow}</tbody></table>`;
+
+  // Abre janela de impressão isolada
+  const win = window.open('', '_blank', 'width=1100,height=750');
+  win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <title>CópiaFácil — ${cfg.title}</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: Arial, sans-serif; background: #fff; color: #000; padding: 18mm 14mm; }
+      @page { margin: 15mm 12mm; size: A4 landscape; }
+      @media print { body { padding: 0; } }
+    </style>
+  </head><body>
+    ${headerHtml}
+    ${tableHtml}
+    <script>
+      window.onload = function() {
+        setTimeout(function(){ window.print(); }, 300);
+      };
+    <\/script>
+  </body></html>`);
+  win.document.close();
+  fecharModalImpressao();
 }
 
+// ── Entrypoints por relatório ──
 function imprimirRelatorioCoord() {
-  const txt = (document.getElementById('filterText').value || '').trim();
-  const st = document.getElementById('filterStatus').value;
-  const prof = (document.getElementById('filterProfessor') || {}).value || '';
-  const tipo = (document.getElementById('filterTipo') || {}).value || '';
-  const partes = [];
-  if (txt) partes.push('Busca: "' + txt + '"');
-  if (prof) partes.push('Professor: ' + prof);
-  if (tipo) partes.push('Tipo: ' + tipo);
-  if (st) partes.push('Status: ' + st);
-  const filtros = partes.length ? partes.join(' | ') : 'Todos';
-  const perfilLabel = perfilAtual === 'coordenacaoSub' ? 'Coordenação Sub — GETECO /Tarde' : 'Coordenação Master — GETECO /Tarde';
-  const totAg = allSolic.filter(d => d.status === 'Aguardando').length;
-  const totAt = allSolic.filter(d => d.status === 'Autorizado').length;
-  const totEnt = allSolic.filter(d => d.status === 'Entregue').length;
-  document.getElementById('coordPrintHeader').innerHTML = _buildPrintHeader(
-    'Solicitações de Cópias',
-    perfilLabel,
-    filtros
-  ) + `<div class="print-totals">
-    <div class="pt-card"><div class="pt-num">${totAg}</div><div class="pt-label">Aguardando</div></div>
-    <div class="pt-card"><div class="pt-num">${totAt}</div><div class="pt-label">Autorizado</div></div>
-    <div class="pt-card"><div class="pt-num">${totEnt}</div><div class="pt-label">Entregue</div></div>
-  </div>`;
-  document.getElementById('coordPrintHeader').style.display = 'block';
-  window.print();
-  setTimeout(() => { document.getElementById('coordPrintHeader').style.display = 'none'; }, 500);
+  const perfilLabel = perfilAtual === 'coordenacaoSub' ? 'Solicitações · Coordenação Sub — GETECO /Tarde' : 'Solicitações · Coordenação — GETECO /Tarde';
+  abrirModalImpressao('coord', perfilLabel);
 }
-
 function imprimirResumo(modo) {
   const perfilLabel = perfilAtual === 'coordenacaoSub' ? 'Coordenação Sub — GETECO /Tarde' : 'Coordenação — GETECO /Tarde';
-
-  if (modo === 'periodo') {
-    const de = document.getElementById('resumoDe').value;
-    const ate = document.getElementById('resumoAte').value;
-    const tipo = document.getElementById('resumoTipo').value;
-    const status = document.getElementById('resumoStatus').value;
-    const profVal = document.getElementById('resumoProfessor').value;
-    const partes = [];
-    if (de) partes.push('De: ' + de);
-    if (ate) partes.push('Até: ' + ate);
-    if (tipo) partes.push('Tipo: ' + tipo);
-    if (status) partes.push('Status: ' + status);
-    if (profVal) partes.push('Professor: ' + profVal);
-    const filtros = partes.length ? partes.join(' | ') : 'Todos';
-
-    // Calcula totais com base nos dados filtrados
-    const filtered = allSolic.filter(d => {
-      const dt = new Date(d.data_solicitacao);
-      const mDe = !de || dt >= new Date(de + 'T00:00:00');
-      const mAte = !ate || dt <= new Date(ate + 'T23:59:59');
-      const mTipo = !tipo || inferirTipo(d) === tipo;
-      const mSt = !status || d.status === status;
-      const mProf = !profVal || d.professor === profVal;
-      return mDe && mAte && mTipo && mSt && mProf;
-    });
-    const totalCopias = filtered.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
-    const totalSolic = filtered.length;
-    const totalProfs = new Set(filtered.map(d => d.professor)).size;
-
-    document.getElementById('resumoPeriodoPrintHeader').innerHTML = _buildPrintHeader(
-      'Resumo de Cópias — Por Período',
-      perfilLabel,
-      filtros
-    ) + `<div class="print-totals">
-      <div class="pt-card"><div class="pt-num">${totalCopias.toLocaleString('pt-BR')}</div><div class="pt-label">Total de Cópias</div></div>
-      <div class="pt-card"><div class="pt-num">${totalSolic}</div><div class="pt-label">Solicitações</div></div>
-      <div class="pt-card"><div class="pt-num">${totalProfs}</div><div class="pt-label">Professores</div></div>
-    </div>`;
-    document.getElementById('resumoPeriodoPrintHeader').style.display = 'block';
-    window.print();
-    setTimeout(() => { document.getElementById('resumoPeriodoPrintHeader').style.display = 'none'; }, 500);
-
-  } else {
-    // modo === 'mensal'
-    const mesLabel = document.getElementById('resumoMensalLabel').textContent || '—';
-    const profVal = document.getElementById('resumoMensalProf').value;
-    const tipo = document.getElementById('resumoMensalTipo').value;
-    const status = document.getElementById('resumoMensalStatus').value;
-    const partes = ['Mês: ' + mesLabel];
-    if (profVal) partes.push('Professor: ' + profVal);
-    if (tipo) partes.push('Tipo: ' + tipo);
-    if (status) partes.push('Status: ' + status);
-    const filtros = partes.join(' | ');
-
-    const totalCopias = document.getElementById('resumoMensalTotalCopias').textContent.replace(/\D/g,'') || '—';
-    const totalSolic = document.getElementById('resumoMensalTotalSolic').textContent || '—';
-    const totalProfs = document.getElementById('resumoMensalTotalProfs').textContent || '—';
-
-    document.getElementById('resumoMensalPrintHeader').innerHTML = _buildPrintHeader(
-      'Resumo de Cópias — Por Mês',
-      perfilLabel,
-      filtros
-    ) + `<div class="print-totals">
-      <div class="pt-card"><div class="pt-num">${Number(totalCopias).toLocaleString('pt-BR') || totalCopias}</div><div class="pt-label">Total de Cópias</div></div>
-      <div class="pt-card"><div class="pt-num">${totalSolic}</div><div class="pt-label">Solicitações</div></div>
-      <div class="pt-card"><div class="pt-num">${totalProfs}</div><div class="pt-label">Professores</div></div>
-    </div>`;
-    document.getElementById('resumoMensalPrintHeader').style.display = 'block';
-    window.print();
-    setTimeout(() => { document.getElementById('resumoMensalPrintHeader').style.display = 'none'; }, 500);
-  }
+  if (modo === 'periodo') abrirModalImpressao('resumoPeriodo', 'Resumo por Período · ' + perfilLabel);
+  else abrirModalImpressao('resumoMensal', 'Resumo por Mês · ' + (document.getElementById('resumoMensalLabel').textContent||'—') + ' · ' + perfilLabel);
 }
-
 function imprimirRelatorioAdm1() {
-  const prof = document.getElementById('adm1FilterProf').value;
-  const de = document.getElementById('adm1FilterDe').value;
-  const ate = document.getElementById('adm1FilterAte').value;
-  const st = document.getElementById('adm1FilterStatus').value;
-  const tipo = (document.getElementById('adm1FilterTipo') || {}).value || '';
-  const partes = [];
-  if (prof) partes.push('Professor: ' + prof);
-  if (de) partes.push('De: ' + de);
-  if (ate) partes.push('Até: ' + ate);
-  if (st) partes.push('Status: ' + st);
-  if (tipo) partes.push('Tipo: ' + tipo);
-  const filtros = partes.length ? partes.join(' | ') : 'Todos';
-  const filtered = adm1FilteredData();
-  const totalCopias = filtered.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
-  const totalSolic = filtered.length;
-  const totalProfs = new Set(filtered.map(d => d.professor)).size;
-  document.getElementById('adm1PrintHeader').innerHTML = _buildPrintHeader(
-    'Relatório de Cópias por Professor',
-    'Perfil Adm. Cópias — GETECO /Tarde',
-    filtros
-  ) + `<div class="print-totals">
-    <div class="pt-card"><div class="pt-num">${totalCopias.toLocaleString('pt-BR')}</div><div class="pt-label">Total de Cópias</div></div>
-    <div class="pt-card"><div class="pt-num">${totalSolic}</div><div class="pt-label">Solicitações</div></div>
-    <div class="pt-card"><div class="pt-num">${totalProfs}</div><div class="pt-label">Professores</div></div>
-  </div>`;
-  document.getElementById('adm1PrintHeader').style.display = 'block';
-  window.print();
-  setTimeout(() => { document.getElementById('adm1PrintHeader').style.display = 'none'; }, 500);
+  abrirModalImpressao('adm1', 'Cópias por Professor · Adm. Cópias — GETECO /Tarde');
 }
-
 function imprimirRelatorioAdm2() {
-  const txt = (document.getElementById('adm2FilterText').value || '').trim();
-  const prof = document.getElementById('adm2FilterProf').value;
-  const de = document.getElementById('adm2FilterDe').value;
-  const ate = document.getElementById('adm2FilterAte').value;
-  const tipo = document.getElementById('adm2FilterTipo').value;
-  const tipoSolic = (document.getElementById('adm2FilterTipoSolic') || {}).value || '';
-  const partes = [];
-  if (txt) partes.push('Busca: "' + txt + '"');
-  if (prof) partes.push('Professor: ' + prof);
-  if (de) partes.push('De: ' + de);
-  if (ate) partes.push('Até: ' + ate);
-  if (tipo) partes.push('Tipo anexo: ' + tipo);
-  if (tipoSolic) partes.push('Tipo solic.: ' + tipoSolic);
-  const filtros = partes.length ? partes.join(' | ') : 'Todos';
-  const filtered = adm2FilteredData();
-  const totalArqs = filtered.reduce((s, d) => s + [d.arquivo_url, d.arquivo_url2].filter(Boolean).length, 0);
-  const totalLinks = filtered.reduce((s, d) => s + [d.drive_link1, d.drive_link2].filter(Boolean).length, 0);
-  const totalProfs = new Set(filtered.map(d => d.professor)).size;
-  document.getElementById('adm2PrintHeader').innerHTML = _buildPrintHeader(
-    'Arquivos e Links por Professor',
-    'Perfil Pedagógico — GETECO /Tarde',
-    filtros
-  ) + `<div class="print-totals">
-    <div class="pt-card"><div class="pt-num">${filtered.length}</div><div class="pt-label">Solicitações com Anexo</div></div>
-    <div class="pt-card"><div class="pt-num">${totalArqs}</div><div class="pt-label">Arquivos</div></div>
-    <div class="pt-card"><div class="pt-num">${totalLinks}</div><div class="pt-label">Links Drive</div></div>
-  </div>`;
-  document.getElementById('adm2PrintHeader').style.display = 'block';
-  window.print();
-  setTimeout(() => { document.getElementById('adm2PrintHeader').style.display = 'none'; }, 500);
+  abrirModalImpressao('adm2', 'Arquivos e Links · Perfil Pedagógico — GETECO /Tarde');
 }
 function fecharTutorial(){ document.getElementById('modalTutorial').classList.remove('open'); }
 function tutShowPanel(i){
