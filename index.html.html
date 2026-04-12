@@ -676,6 +676,42 @@
   }
   #cf-tooltip.show { opacity: 1; }
   .ttip { cursor: default; }
+
+  /* ── IMPRESSÃO ── */
+  @media print {
+    body { background: #fff !important; color: #000 !important; font-family: Arial, sans-serif !important; }
+    header, nav, .btn-primary, .btn-action, .btn-secondary, .btn-danger, .btn-approve,
+    .btn-edit, .btn-sair, .coord-tabs, #filterText, #filterProfessor, #filterTipo,
+    #filterStatus, #adm1FilterProf, #adm1FilterDe, #adm1FilterAte, #adm1FilterStatus,
+    #adm1FilterTipo, #adm2FilterText, #adm2FilterProf, #adm2FilterDe, #adm2FilterAte,
+    #adm2FilterTipo, #adm2FilterTipoSolic, .stats-row, #adm1Totais, #adm2Totais,
+    #resumoTotais, #resumoSub-periodo > div:first-child > div:last-child,
+    #resumoSub-mensal > div:first-child > div:last-child,
+    #resumoSub-periodo > div:first-child > div:first-child > div:last-child,
+    .modal-overlay, #toast, #progressOverlay, #cf-tooltip, #globalTooltip,
+    .page-header p, .btn-download, .no-print, .status-block-header .sb-arrow { display: none !important; }
+    .print-only { display: block !important; }
+    .card, .card-sm { box-shadow: none !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
+    table { font-size: 10px !important; border-collapse: collapse !important; width: 100% !important; min-width: unset !important; }
+    thead th { background: #f0f0f0 !important; color: #000 !important; border: 1px solid #aaa !important; padding: 4px 6px !important; font-size: 9px !important; }
+    tbody td { border: 1px solid #ccc !important; padding: 3px 6px !important; }
+    .badge { border: 1px solid #aaa !important; background: #f5f5f5 !important; color: #000 !important; }
+    .status-block { border: 1px solid #ccc !important; margin-bottom: 8px !important; }
+    .status-block-header { background: #f0f0f0 !important; color: #000 !important; border: none !important; font-size: 10px !important; padding: 5px 10px !important; }
+    .status-block-body { display: block !important; }
+    a.btn-download { display: none !important; }
+    .print-header { display: block !important; margin-bottom: 16px; border-bottom: 2px solid #1a3a2a; padding-bottom: 8px; }
+    .print-header h2 { font-size: 16px; color: #1a3a2a; margin: 0 0 4px; }
+    .print-header p { font-size: 10px; color: #555; margin: 0; }
+    .print-totals { display: grid !important; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+    .print-totals .pt-card { border: 1px solid #ccc; border-radius: 6px; padding: 8px 12px; }
+    .print-totals .pt-num { font-size: 18px; font-weight: 800; color: #1a3a2a; }
+    .print-totals .pt-label { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: .04em; }
+    @page { margin: 15mm 12mm; size: A4 landscape; }
+  }
+  .print-only { display: none; }
+  .print-header { display: none; }
+  .print-totals { display: none; }
 </style>
 </head>
 <body>
@@ -1210,8 +1246,12 @@
             <button class="btn-secondary" onclick="exportarSolicitacoesExcel()" title="Exportar tabela para Excel" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">
               📊 Exportar Excel
             </button>
+            <button class="btn-secondary no-print" onclick="imprimirRelatorioCoord()" title="Imprimir relatório" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">
+              🖨️ Imprimir
+            </button>
             <button class="btn-secondary" onclick="limparFiltrosSolicitacoes()" style="white-space:nowrap;">✕ Limpar</button>
           </div>
+          <div id="coordPrintHeader" class="print-header"></div>
           <div id="coordContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
@@ -1353,8 +1393,10 @@
 
               <button class="btn-secondary" onclick="setResumoSemana()">Esta semana</button>
               <button class="btn-secondary" onclick="limparFiltrosResumo()">✕ Limpar</button>
+              <button class="btn-secondary no-print" onclick="imprimirResumo('periodo')" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">🖨️ Imprimir</button>
             </div>
           </div>
+          <div id="resumoPeriodoPrintHeader" class="print-header"></div>
           <div id="resumoTotais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
           <div class="card" style="padding:0;overflow:hidden;">
             <div id="resumoContainer"><div class="empty-state"><div class="emoji">📊</div><p>Selecione um período para ver o resumo.</p></div></div>
@@ -1396,6 +1438,7 @@
               </div>
               <button class="btn-secondary" onclick="resumoMensalIrHoje()">Mês atual</button>
               <button class="btn-secondary" onclick="limparFiltrosResumoMensal()">✕ Limpar</button>
+              <button class="btn-secondary no-print" onclick="imprimirResumo('mensal')" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">🖨️ Imprimir</button>
             </div>
           </div>
 
@@ -1428,6 +1471,7 @@
             </div>
           </div>
 
+          <div id="resumoMensalPrintHeader" class="print-header"></div>
           <div class="card" style="padding:0;overflow:hidden;">
             <div id="resumoMensalContainer"><div class="empty-state"><div class="emoji">🗓️</div><p>Carregando…</p></div></div>
           </div>
@@ -1600,6 +1644,7 @@
           <button class="btn-secondary" onclick="adm1SetMes()">Este mês</button>
           <button class="btn-secondary" onclick="limparAdm1()">✕ Limpar</button>
           <button class="btn-action" onclick="exportarAdm1()">📊 Excel</button>
+          <button class="btn-secondary no-print" onclick="imprimirRelatorioAdm1()" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">🖨️ Imprimir</button>
         </div>
       </div>
     </div>
@@ -1607,6 +1652,7 @@
     <!-- Totalizadores -->
     <div id="adm1Totais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
 
+    <div id="adm1PrintHeader" class="print-header"></div>
     <!-- Tabela agrupada -->
     <div class="card" style="padding:0;overflow:hidden;">
       <div id="adm1Container"><div class="empty-state"><div class="emoji">📊</div><p>Use os filtros acima para consultar.</p></div></div>
@@ -1666,6 +1712,7 @@
         <div style="display:flex;gap:.4rem;align-self:flex-end;flex-wrap:wrap;">
           <button class="btn-secondary" onclick="limparAdm2()">✕ Limpar</button>
           <button class="btn-action" onclick="exportarAdm2()">📊 Excel</button>
+          <button class="btn-secondary no-print" onclick="imprimirRelatorioAdm2()" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">🖨️ Imprimir</button>
         </div>
       </div>
     </div>
@@ -1673,6 +1720,7 @@
     <!-- Totalizadores -->
     <div id="adm2Totais" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem;"></div>
 
+    <div id="adm2PrintHeader" class="print-header"></div>
     <!-- Tabela -->
     <div class="card" style="padding:0;overflow:hidden;">
       <div id="adm2Container"><div class="empty-state"><div class="emoji">📁</div><p>Use os filtros acima para consultar.</p></div></div>
@@ -4471,6 +4519,183 @@ db.auth.getSession().then(async({data:{session}})=>{
 
 // ── TUTORIAL ──
 function abrirTutorial(){ document.getElementById('modalTutorial').classList.add('open'); tutShowPanel(0); }
+
+// ── IMPRESSÃO DE RELATÓRIOS ──
+function _buildPrintHeader(title, subtitle, filtros) {
+  const now = new Date().toLocaleString('pt-BR');
+  return `<div class="print-header">
+    <h2>🖨️ CópiaFácil — ${title}</h2>
+    <p>${subtitle ? subtitle + ' &nbsp;|&nbsp; ' : ''}Filtros: ${filtros || 'nenhum'} &nbsp;|&nbsp; Gerado em: ${now}</p>
+  </div>`;
+}
+
+function imprimirRelatorioCoord() {
+  const txt = (document.getElementById('filterText').value || '').trim();
+  const st = document.getElementById('filterStatus').value;
+  const prof = (document.getElementById('filterProfessor') || {}).value || '';
+  const tipo = (document.getElementById('filterTipo') || {}).value || '';
+  const partes = [];
+  if (txt) partes.push('Busca: "' + txt + '"');
+  if (prof) partes.push('Professor: ' + prof);
+  if (tipo) partes.push('Tipo: ' + tipo);
+  if (st) partes.push('Status: ' + st);
+  const filtros = partes.length ? partes.join(' | ') : 'Todos';
+  const perfilLabel = perfilAtual === 'coordenacaoSub' ? 'Coordenação Sub — GETECO /Tarde' : 'Coordenação Master — GETECO /Tarde';
+  const totAg = allSolic.filter(d => d.status === 'Aguardando').length;
+  const totAt = allSolic.filter(d => d.status === 'Autorizado').length;
+  const totEnt = allSolic.filter(d => d.status === 'Entregue').length;
+  document.getElementById('coordPrintHeader').innerHTML = _buildPrintHeader(
+    'Solicitações de Cópias',
+    perfilLabel,
+    filtros
+  ) + `<div class="print-totals">
+    <div class="pt-card"><div class="pt-num">${totAg}</div><div class="pt-label">Aguardando</div></div>
+    <div class="pt-card"><div class="pt-num">${totAt}</div><div class="pt-label">Autorizado</div></div>
+    <div class="pt-card"><div class="pt-num">${totEnt}</div><div class="pt-label">Entregue</div></div>
+  </div>`;
+  document.getElementById('coordPrintHeader').style.display = 'block';
+  window.print();
+  setTimeout(() => { document.getElementById('coordPrintHeader').style.display = 'none'; }, 500);
+}
+
+function imprimirResumo(modo) {
+  const perfilLabel = perfilAtual === 'coordenacaoSub' ? 'Coordenação Sub — GETECO /Tarde' : 'Coordenação — GETECO /Tarde';
+
+  if (modo === 'periodo') {
+    const de = document.getElementById('resumoDe').value;
+    const ate = document.getElementById('resumoAte').value;
+    const tipo = document.getElementById('resumoTipo').value;
+    const status = document.getElementById('resumoStatus').value;
+    const profVal = document.getElementById('resumoProfessor').value;
+    const partes = [];
+    if (de) partes.push('De: ' + de);
+    if (ate) partes.push('Até: ' + ate);
+    if (tipo) partes.push('Tipo: ' + tipo);
+    if (status) partes.push('Status: ' + status);
+    if (profVal) partes.push('Professor: ' + profVal);
+    const filtros = partes.length ? partes.join(' | ') : 'Todos';
+
+    // Calcula totais com base nos dados filtrados
+    const filtered = allSolic.filter(d => {
+      const dt = new Date(d.data_solicitacao);
+      const mDe = !de || dt >= new Date(de + 'T00:00:00');
+      const mAte = !ate || dt <= new Date(ate + 'T23:59:59');
+      const mTipo = !tipo || inferirTipo(d) === tipo;
+      const mSt = !status || d.status === status;
+      const mProf = !profVal || d.professor === profVal;
+      return mDe && mAte && mTipo && mSt && mProf;
+    });
+    const totalCopias = filtered.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
+    const totalSolic = filtered.length;
+    const totalProfs = new Set(filtered.map(d => d.professor)).size;
+
+    document.getElementById('resumoPeriodoPrintHeader').innerHTML = _buildPrintHeader(
+      'Resumo de Cópias — Por Período',
+      perfilLabel,
+      filtros
+    ) + `<div class="print-totals">
+      <div class="pt-card"><div class="pt-num">${totalCopias.toLocaleString('pt-BR')}</div><div class="pt-label">Total de Cópias</div></div>
+      <div class="pt-card"><div class="pt-num">${totalSolic}</div><div class="pt-label">Solicitações</div></div>
+      <div class="pt-card"><div class="pt-num">${totalProfs}</div><div class="pt-label">Professores</div></div>
+    </div>`;
+    document.getElementById('resumoPeriodoPrintHeader').style.display = 'block';
+    window.print();
+    setTimeout(() => { document.getElementById('resumoPeriodoPrintHeader').style.display = 'none'; }, 500);
+
+  } else {
+    // modo === 'mensal'
+    const mesLabel = document.getElementById('resumoMensalLabel').textContent || '—';
+    const profVal = document.getElementById('resumoMensalProf').value;
+    const tipo = document.getElementById('resumoMensalTipo').value;
+    const status = document.getElementById('resumoMensalStatus').value;
+    const partes = ['Mês: ' + mesLabel];
+    if (profVal) partes.push('Professor: ' + profVal);
+    if (tipo) partes.push('Tipo: ' + tipo);
+    if (status) partes.push('Status: ' + status);
+    const filtros = partes.join(' | ');
+
+    const totalCopias = document.getElementById('resumoMensalTotalCopias').textContent.replace(/\D/g,'') || '—';
+    const totalSolic = document.getElementById('resumoMensalTotalSolic').textContent || '—';
+    const totalProfs = document.getElementById('resumoMensalTotalProfs').textContent || '—';
+
+    document.getElementById('resumoMensalPrintHeader').innerHTML = _buildPrintHeader(
+      'Resumo de Cópias — Por Mês',
+      perfilLabel,
+      filtros
+    ) + `<div class="print-totals">
+      <div class="pt-card"><div class="pt-num">${Number(totalCopias).toLocaleString('pt-BR') || totalCopias}</div><div class="pt-label">Total de Cópias</div></div>
+      <div class="pt-card"><div class="pt-num">${totalSolic}</div><div class="pt-label">Solicitações</div></div>
+      <div class="pt-card"><div class="pt-num">${totalProfs}</div><div class="pt-label">Professores</div></div>
+    </div>`;
+    document.getElementById('resumoMensalPrintHeader').style.display = 'block';
+    window.print();
+    setTimeout(() => { document.getElementById('resumoMensalPrintHeader').style.display = 'none'; }, 500);
+  }
+}
+
+function imprimirRelatorioAdm1() {
+  const prof = document.getElementById('adm1FilterProf').value;
+  const de = document.getElementById('adm1FilterDe').value;
+  const ate = document.getElementById('adm1FilterAte').value;
+  const st = document.getElementById('adm1FilterStatus').value;
+  const tipo = (document.getElementById('adm1FilterTipo') || {}).value || '';
+  const partes = [];
+  if (prof) partes.push('Professor: ' + prof);
+  if (de) partes.push('De: ' + de);
+  if (ate) partes.push('Até: ' + ate);
+  if (st) partes.push('Status: ' + st);
+  if (tipo) partes.push('Tipo: ' + tipo);
+  const filtros = partes.length ? partes.join(' | ') : 'Todos';
+  const filtered = adm1FilteredData();
+  const totalCopias = filtered.reduce((s, d) => s + (d.total_copias || d.copias || 0), 0);
+  const totalSolic = filtered.length;
+  const totalProfs = new Set(filtered.map(d => d.professor)).size;
+  document.getElementById('adm1PrintHeader').innerHTML = _buildPrintHeader(
+    'Relatório de Cópias por Professor',
+    'Perfil Adm. Cópias — GETECO /Tarde',
+    filtros
+  ) + `<div class="print-totals">
+    <div class="pt-card"><div class="pt-num">${totalCopias.toLocaleString('pt-BR')}</div><div class="pt-label">Total de Cópias</div></div>
+    <div class="pt-card"><div class="pt-num">${totalSolic}</div><div class="pt-label">Solicitações</div></div>
+    <div class="pt-card"><div class="pt-num">${totalProfs}</div><div class="pt-label">Professores</div></div>
+  </div>`;
+  document.getElementById('adm1PrintHeader').style.display = 'block';
+  window.print();
+  setTimeout(() => { document.getElementById('adm1PrintHeader').style.display = 'none'; }, 500);
+}
+
+function imprimirRelatorioAdm2() {
+  const txt = (document.getElementById('adm2FilterText').value || '').trim();
+  const prof = document.getElementById('adm2FilterProf').value;
+  const de = document.getElementById('adm2FilterDe').value;
+  const ate = document.getElementById('adm2FilterAte').value;
+  const tipo = document.getElementById('adm2FilterTipo').value;
+  const tipoSolic = (document.getElementById('adm2FilterTipoSolic') || {}).value || '';
+  const partes = [];
+  if (txt) partes.push('Busca: "' + txt + '"');
+  if (prof) partes.push('Professor: ' + prof);
+  if (de) partes.push('De: ' + de);
+  if (ate) partes.push('Até: ' + ate);
+  if (tipo) partes.push('Tipo anexo: ' + tipo);
+  if (tipoSolic) partes.push('Tipo solic.: ' + tipoSolic);
+  const filtros = partes.length ? partes.join(' | ') : 'Todos';
+  const filtered = adm2FilteredData();
+  const totalArqs = filtered.reduce((s, d) => s + [d.arquivo_url, d.arquivo_url2].filter(Boolean).length, 0);
+  const totalLinks = filtered.reduce((s, d) => s + [d.drive_link1, d.drive_link2].filter(Boolean).length, 0);
+  const totalProfs = new Set(filtered.map(d => d.professor)).size;
+  document.getElementById('adm2PrintHeader').innerHTML = _buildPrintHeader(
+    'Arquivos e Links por Professor',
+    'Perfil Pedagógico — GETECO /Tarde',
+    filtros
+  ) + `<div class="print-totals">
+    <div class="pt-card"><div class="pt-num">${filtered.length}</div><div class="pt-label">Solicitações com Anexo</div></div>
+    <div class="pt-card"><div class="pt-num">${totalArqs}</div><div class="pt-label">Arquivos</div></div>
+    <div class="pt-card"><div class="pt-num">${totalLinks}</div><div class="pt-label">Links Drive</div></div>
+  </div>`;
+  document.getElementById('adm2PrintHeader').style.display = 'block';
+  window.print();
+  setTimeout(() => { document.getElementById('adm2PrintHeader').style.display = 'none'; }, 500);
+}
 function fecharTutorial(){ document.getElementById('modalTutorial').classList.remove('open'); }
 function tutShowPanel(i){
   document.querySelectorAll('.tut-panel').forEach((p,idx)=>{ p.classList.toggle('active', idx===i); });
