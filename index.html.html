@@ -517,11 +517,69 @@
     .form-grid-3 { grid-template-columns: 1fr; }
     nav button { font-size: .7rem; padding: .3rem .5rem; }
   }
+  /* ── TOOLTIP CUSTOMIZADO PARA TÍTULOS TRUNCADOS ── */
+  #cf-tooltip {
+    position: fixed;
+    z-index: 9999;
+    background: var(--primary);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .82rem;
+    line-height: 1.45;
+    padding: .5rem .85rem;
+    border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.22);
+    pointer-events: none;
+    max-width: 480px;
+    white-space: normal;
+    word-break: break-word;
+    opacity: 0;
+    transition: opacity .15s ease;
+  }
+  #cf-tooltip.show { opacity: 1; }
+  .ttip { cursor: default; }
 </style>
 </head>
 <body>
 
 <!-- AUTH -->
+<div id="cf-tooltip"></div>
+<script>
+(function(){
+  const tip = document.getElementById('cf-tooltip');
+  let hideTimer;
+  document.addEventListener('mouseover', function(e){
+    const el = e.target.closest('.ttip');
+    if (!el) return;
+    const text = el.dataset.tip || '';
+    if (!text) return;
+    clearTimeout(hideTimer);
+    tip.textContent = text;
+    tip.classList.add('show');
+    moveTip(e);
+  });
+  document.addEventListener('mousemove', function(e){
+    if (!tip.classList.contains('show')) return;
+    if (!e.target.closest('.ttip')) return;
+    moveTip(e);
+  });
+  document.addEventListener('mouseout', function(e){
+    if (!e.target.closest('.ttip')) return;
+    hideTimer = setTimeout(() => tip.classList.remove('show'), 80);
+  });
+  function moveTip(e){
+    const margin = 14;
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = e.clientX + margin;
+    let y = e.clientY + margin;
+    if (x + tw > window.innerWidth - 8) x = e.clientX - tw - margin;
+    if (y + th > window.innerHeight - 8) y = e.clientY - th - margin;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  }
+})();
+</script>
+
 <div class="auth-screen" id="telaAuth">
   <div class="auth-box">
     <div class="auth-logo">🖨️ <em>CópiaFácil</em></div>
@@ -2039,7 +2097,7 @@ function renderResumoMensal(){
         <td>${esc(disciplinaDisplay[r.disciplina]||r.disciplina||'—')}</td>
         <td style="text-align:center;">${r.solicitacoes.length}</td>
         <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${r.totalCopias.toLocaleString('pt-BR')}</td>
-        <td style="max-width:220px;">${r.solicitacoes.map(s=>`<div style="font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;" title="${esc(s.titulo)}">• ${esc(s.titulo)}</div>`).join('')}</td>
+        <td style="max-width:220px;">${r.solicitacoes.map(s=>`<div class="ttip" data-tip="${esc(s.titulo)}" style="font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;">• ${esc(s.titulo)}</div>`).join('')}</td>
         <td>${r.solicitacoes.map(s=>`<div style="margin-bottom:.2rem;"><span class="badge ${statusClass[s.status]||'badge-pending'}" style="font-size:.68rem;">${esc(s.status)}</span></div>`).join('')}</td>
       </tr>`).join('')}
       <tr style="background:#f5f0e8;border-top:2px solid var(--border);">
@@ -2159,7 +2217,7 @@ function renderResumo(){
           <td style="text-align:center;">${r.solicitacoes.length}</td>
           <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${r.totalCopias.toLocaleString('pt-BR')}</td>
           <td style="max-width:220px;">
-            ${r.solicitacoes.map(s=>`<div style="font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;" title="${esc(s.titulo)}">• ${esc(s.titulo)}</div>`).join('')}
+            ${r.solicitacoes.map(s=>`<div class="ttip" data-tip="${esc(s.titulo)}" style="font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;">• ${esc(s.titulo)}</div>`).join('')}
           </td>
           <td>
             ${r.solicitacoes.map(s=>`<div style="margin-bottom:.2rem;"><span class="badge ${statusClass[s.status]||'badge-pending'}" style="font-size:.68rem;">${esc(s.status)}</span></div>`).join('')}
@@ -3046,7 +3104,7 @@ function renderSolicitacoes(){
     return `<tr onclick="openModal(${d.id})" style="cursor:pointer">
       <td><strong>${esc(d.professor)}</strong>${d.professor==='Coordenação'?` <span class="badge badge-coord" style="font-size:.65rem;padding:.1rem .4rem;">coord</span>`:''}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.65rem;padding:.1rem .4rem;">📋 retroativo</span>`:''}</td>
       <td>${esc(d.disciplina)}</td>
-      <td style="max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
+      <td class="ttip" data-tip="${esc(d.titulo)}" style="max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
       <td>${esc(d.turmas)}</td>
       <td style="text-align:center;">${d.copias}</td>
       <td style="text-align:center;">${d.laudas||'—'}</td>
@@ -3768,7 +3826,7 @@ function renderMeca(){
     return `<tr>
       <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
       <td>${esc(d.disciplina)}</td>
-      <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
+      <td class="ttip" data-tip="${esc(d.titulo)}" style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
       <td>${esc(d.turmas)}</td>
       <td style="text-align:center;">
         <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:#fff;background:var(--primary);border-radius:7px;padding:.2rem .65rem;display:inline-block;">${d.copias}</span>
@@ -4222,7 +4280,7 @@ function renderAdmArquivos(){
     </tr></thead>
     <tbody>${filtered.map(d=>`<tr>
       <td><strong>${esc(d.professor)}</strong></td>
-      <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
+      <td class="ttip" data-tip="${esc(d.titulo)}" style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
       <td style="font-size:.82rem;">${fmtDate(d.data_solicitacao)}</td>
       <td>${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 ${esc(d.arquivo||'Baixar')}</a>`:'<span style="color:var(--muted);font-size:.8rem;">—</span>'}</td>
       <td>${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive</a>`:'—'}</td>
