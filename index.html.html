@@ -359,6 +359,44 @@
   .modal-detail .d-value { font-size: .88rem; font-weight: 500; color: var(--text); }
   .modal-actions { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 1rem; }
   .status-select { padding: .45rem .75rem; border-radius: 7px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: .85rem; background: var(--bg); cursor: pointer; }
+
+  /* STATUS UPDATE DESTAQUE */
+  .modal-status-block { background: linear-gradient(135deg,#1a3a2a 0%,#2a5a3a 100%); border-radius: 10px; padding: .9rem 1.1rem; margin-bottom: 1rem; }
+  .modal-status-block label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: .5rem; }
+  .modal-status-block select { width: 100%; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600; padding: .6rem 1rem; border: 2px solid var(--accent); border-radius: 8px; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; outline: none; transition: background .2s; }
+  .modal-status-block select option { background: #1a3a2a; color: #fff; }
+  .modal-status-block select:focus { background: rgba(255,255,255,.2); }
+
+  /* MODAL EDIT FORM */
+  .modal-edit-section { background: #fef8ec; border: 1.5px solid #f0d090; border-radius: 10px; padding: .9rem 1rem; margin-bottom: 1rem; }
+  .modal-edit-section .edit-title { font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #a06000; margin-bottom: .7rem; display: flex; align-items: center; gap: .4rem; }
+  .modal-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
+  .modal-edit-grid .mef { display: flex; flex-direction: column; gap: .25rem; }
+  .modal-edit-grid .mef label { font-size: .68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .modal-edit-grid .mef input { font-family: 'DM Sans', sans-serif; font-size: .9rem; padding: .48rem .75rem; border: 1.5px solid var(--border); border-radius: 7px; background: var(--surface); color: var(--text); outline: none; transition: border-color .2s; width: 100%; }
+  .modal-edit-grid .mef input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,160,32,.15); }
+  .modal-edit-total { margin-top: .55rem; background: var(--primary); border-radius: 7px; padding: .45rem .85rem; font-size: .84rem; font-family: 'Syne', sans-serif; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: space-between; }
+  .btn-save-edit { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .88rem; padding: .5rem 1.1rem; background: var(--accent); color: var(--primary); border: none; border-radius: 7px; cursor: pointer; transition: background .2s; margin-top: .65rem; width: 100%; }
+  .btn-save-edit:hover { background: #d49018; }
+  .btn-save-edit:disabled { opacity: .55; cursor: not-allowed; }
+
+  /* DELETE BUTTON MENOR */
+  .btn-danger-sm { font-family: 'DM Sans', sans-serif; font-size: .75rem; padding: .28rem .65rem; background: transparent; color: var(--accent2); border: 1.5px solid var(--accent2); border-radius: 6px; cursor: pointer; transition: all .2s; opacity: .7; }
+  .btn-danger-sm:hover { background: var(--accent2); color: #fff; opacity: 1; }
+
+  /* CONFIRM DELETE OVERLAY */
+  .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .confirm-overlay.open { opacity: 1; pointer-events: all; }
+  .confirm-box { background: var(--surface); border-radius: 14px; padding: 1.6rem 1.8rem; max-width: 380px; width: 90%; text-align: center; transform: scale(.93); transition: transform .2s; box-shadow: 0 12px 40px rgba(0,0,0,.2); }
+  .confirm-overlay.open .confirm-box { transform: scale(1); }
+  .confirm-box .ci { font-size: 2.4rem; margin-bottom: .6rem; }
+  .confirm-box h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--primary); margin-bottom: .4rem; }
+  .confirm-box p { font-size: .86rem; color: var(--muted); line-height: 1.55; margin-bottom: 1.2rem; }
+  .confirm-btns { display: flex; gap: .6rem; justify-content: center; }
+  .confirm-btns .btn-cancel-del { font-family: 'DM Sans', sans-serif; font-size: .88rem; padding: .55rem 1.3rem; background: var(--bg); color: var(--text); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all .2s; }
+  .confirm-btns .btn-cancel-del:hover { border-color: var(--primary); }
+  .confirm-btns .btn-confirm-del { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .88rem; padding: .55rem 1.3rem; background: var(--accent2); color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background .2s; }
+  .confirm-btns .btn-confirm-del:hover { background: #a03010; }
   .arquivo-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; padding: .75rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .8rem; flex-wrap: wrap; }
   .arquivo-info { display: flex; align-items: center; gap: .5rem; font-size: .88rem; font-weight: 500; }
 
@@ -1737,16 +1775,49 @@
     <h2 id="modalTitle"></h2>
     <div class="modal-detail" id="modalDetail"></div>
     <div id="modalArquivo"></div>
-    <div style="margin-bottom:1rem;">
-      <label style="display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">Atualizar Status</label>
-      <select class="status-select" id="modalStatus" onchange="updateStatus()">
-        <option value="Aguardando">Aguardando</option><option value="Autorizado">Autorizado</option>
-        <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
+
+    <!-- EDIÇÃO INLINE (só aparece em status Aguardando) -->
+    <div class="modal-edit-section" id="modalEditSection" style="display:none;">
+      <div class="edit-title">✏️ Editar pedido</div>
+      <div class="modal-edit-grid">
+        <div class="mef"><label>Nº de Cópias</label><input type="number" id="meditCopias" min="1" max="9999" oninput="recalcModalTotal()" /></div>
+        <div class="mef"><label>Nº de Laudas</label><input type="number" id="meditLaudas" min="1" max="99" oninput="recalcModalTotal()" /></div>
+      </div>
+      <div class="modal-edit-total">
+        <span>Total de cópias</span>
+        <span id="meditTotal">—</span>
+      </div>
+      <button class="btn-save-edit" id="meditSaveBtn" onclick="saveModalEdit()">💾 Salvar alterações</button>
+    </div>
+
+    <!-- STATUS DESTACADO -->
+    <div class="modal-status-block" id="modalStatusBlock">
+      <label>🔄 Atualizar Status</label>
+      <select id="modalStatus" onchange="updateStatus()">
+        <option value="Aguardando">⏳ Aguardando</option>
+        <option value="Autorizado">✅ Autorizado</option>
+        <option value="Pronto">📦 Pronto</option>
+        <option value="Entregue">🎉 Entregue</option>
+        <option value="Cancelado">❌ Cancelado</option>
       </select>
     </div>
+
     <div class="modal-actions">
-      <button class="btn-danger" id="modalBtnExcluir" onclick="deleteItem()">🗑 Excluir</button>
+      <button class="btn-danger-sm" id="modalBtnExcluir" onclick="confirmDelete()">🗑 Excluir</button>
       <button class="btn-secondary" onclick="closeModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="confirm-overlay" id="confirmDeleteOverlay">
+  <div class="confirm-box">
+    <div class="ci">🗑️</div>
+    <h3>Excluir solicitação?</h3>
+    <p id="confirmDeleteMsg">Esta ação não pode ser desfeita. O arquivo vinculado também será removido.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancel-del" onclick="closeConfirmDelete()">Cancelar</button>
+      <button class="btn-confirm-del" onclick="deleteItem()">Sim, excluir</button>
     </div>
   </div>
 </div>
@@ -3647,7 +3718,7 @@ function openModal(id){
     <div class="d-item"><div class="d-label">Professor(a)</div><div class="d-value">${esc(item.professor)}</div></div>
     <div class="d-item"><div class="d-label">Disciplina</div><div class="d-value">${esc(item.disciplina)}</div></div>
     <div class="d-item"><div class="d-label">Turmas</div><div class="d-value">${esc(item.turmas)}</div></div>
-    <div class="d-item"><div class="d-label">Qtd. de Cópias</div><div class="d-value">${item.copias}</div></div>
+    <div class="d-item"><div class="d-label">Cópias × Laudas</div><div class="d-value">${item.copias} × ${item.laudas||1} = <strong>${(item.total_copias||item.copias).toLocaleString('pt-BR')} total</strong></div></div>
     <div class="d-item"><div class="d-label">Data da Solicitação</div><div class="d-value">${fmtDate(item.data_solicitacao)}</div></div>
     <div class="d-item"><div class="d-label">Prazo de Entrega</div><div class="d-value" style="color:var(--accent2);font-weight:600;">${fmtDate(item.prazo_entrega)}</div></div>
     ${item.obs?`<div class="d-item" style="grid-column:1/-1"><div class="d-label">Observações</div><div class="d-value">${esc(item.obs)}</div></div>`:''}`;
@@ -3668,14 +3739,50 @@ function openModal(id){
     arquivosHtml += `<div style="margin-top:.8rem;background:#e8f0eb;border-radius:8px;padding:.6rem 1rem;font-size:.84rem;color:#1a3a2a;">📋 <strong>Registro retroativo</strong> — cópias realizadas fora da plataforma.</div>`;
   }
   document.getElementById('modalArquivo').innerHTML = arquivosHtml;
+
+  // Seção de edição: só exibe quando status === Aguardando
+  const editSection = document.getElementById('modalEditSection');
+  if(item.status==='Aguardando' && perfilAtual!=='coordenacaoSub'){
+    document.getElementById('meditCopias').value = item.copias||1;
+    document.getElementById('meditLaudas').value = item.laudas||1;
+    recalcModalTotal();
+    editSection.style.display='block';
+  } else {
+    editSection.style.display='none';
+  }
+
   document.getElementById('modalOverlay').classList.add('open');
-  // Oculta botão excluir para perfil Coordenação Sub
   const btnDel = document.getElementById('modalBtnExcluir');
   if(btnDel) btnDel.style.display = perfilAtual==='coordenacaoSub' ? 'none' : '';
 }
 
 function closeModal(e){
   if(!e||e.target===document.getElementById('modalOverlay')){document.getElementById('modalOverlay').classList.remove('open');currentSolicId=null;}
+}
+
+function recalcModalTotal(){
+  const c=parseInt(document.getElementById('meditCopias').value)||0;
+  const l=parseInt(document.getElementById('meditLaudas').value)||0;
+  const el=document.getElementById('meditTotal');
+  if(c>0&&l>0) el.textContent=(c*l).toLocaleString('pt-BR')+' cópias no total';
+  else el.textContent='—';
+}
+
+async function saveModalEdit(){
+  if(!currentSolicId)return;
+  const copias=parseInt(document.getElementById('meditCopias').value);
+  const laudas=parseInt(document.getElementById('meditLaudas').value);
+  if(!copias||!laudas||copias<1||laudas<1){showToast('⚠️ Verifique os valores.',true);return;}
+  const total=copias*laudas;
+  const btn=document.getElementById('meditSaveBtn');
+  btn.disabled=true;btn.textContent='Salvando…';
+  const {error}=await db.from('solicitacoes').update({copias,laudas,total_copias:total}).eq('id',currentSolicId);
+  btn.disabled=false;btn.textContent='💾 Salvar alterações';
+  if(error){showToast('❌ Erro ao salvar.',true);return;}
+  const idx=allSolic.findIndex(d=>d.id===currentSolicId);
+  if(idx!==-1){allSolic[idx].copias=copias;allSolic[idx].laudas=laudas;allSolic[idx].total_copias=total;}
+  renderStats();renderSolicitacoes();
+  showToast('✔ Pedido atualizado com sucesso!');
 }
 
 async function updateStatus(){
@@ -3685,13 +3792,28 @@ async function updateStatus(){
   if(error){showToast('❌ Erro ao atualizar.',true);return;}
   const idx=allSolic.findIndex(d=>d.id===currentSolicId);
   if(idx!==-1)allSolic[idx].status=newStatus;
+  // Oculta/exibe edição conforme novo status
+  const editSection=document.getElementById('modalEditSection');
+  if(editSection) editSection.style.display=newStatus==='Aguardando'?'block':'none';
   renderStats();renderSolicitacoes();
   showToast('✔ Status atualizado para "'+newStatus+'"');
 }
 
-async function deleteItem(){
+function confirmDelete(){
   if(!currentSolicId)return;
-  if(!confirm('Excluir esta solicitação?'))return;
+  const item=allSolic.find(d=>d.id===currentSolicId);
+  const msg=item?`"${item.titulo}" será excluída permanentemente. Esta ação não pode ser desfeita.`:'Esta ação não pode ser desfeita.';
+  document.getElementById('confirmDeleteMsg').textContent=msg;
+  document.getElementById('confirmDeleteOverlay').classList.add('open');
+}
+
+function closeConfirmDelete(){
+  document.getElementById('confirmDeleteOverlay').classList.remove('open');
+}
+
+async function deleteItem(){
+  closeConfirmDelete();
+  if(!currentSolicId)return;
   const item=allSolic.find(d=>d.id===currentSolicId);
   if(item&&item.arquivo_path)await db.storage.from(BUCKET).remove([item.arquivo_path]);
   if(item&&item.arquivo_path2)await db.storage.from(BUCKET).remove([item.arquivo_path2]);
