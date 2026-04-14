@@ -1935,6 +1935,17 @@
   <div id="printModal">
     <h3>🖨️ Imprimir Relatório</h3>
     <p class="pm-sub">Selecione as colunas que devem aparecer na impressão.</p>
+    <div id="pmStatusFilterBlock" style="display:none;margin-bottom:1rem;">
+      <label style="font-size:.73rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.35rem;">Filtrar por Status</label>
+      <select id="pmStatusFilter" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;width:100%;transition:border-color .2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <option value="">Todos os status</option>
+        <option value="Aguardando">Aguardando</option>
+        <option value="Autorizado">Autorizado</option>
+        <option value="Pronto">Pronto</option>
+        <option value="Entregue">Entregue</option>
+        <option value="Cancelado">Cancelado</option>
+      </select>
+    </div>
     <button class="pm-sel-all" onclick="pmToggleAll()">Marcar / Desmarcar todas</button>
     <div class="pm-cols" id="pmColsContainer"></div>
     <div class="pm-actions">
@@ -5062,6 +5073,23 @@ function abrirModalImpressao(configKey, subtitle, filtros) {
       <input type="checkbox" id="pmCol_${i}" value="${c.key}" ${c.default ? 'checked' : ''}>
       ${c.label}
     </label>`).join('');
+
+  // Mostrar filtro de status apenas para relatórios que suportam filtragem por status
+  const statusBlock = document.getElementById('pmStatusFilterBlock');
+  const statusSelect = document.getElementById('pmStatusFilter');
+  const configsComStatus = ['coord', 'adm1', 'adm2'];
+  if (configsComStatus.includes(configKey)) {
+    statusBlock.style.display = 'block';
+    // Pré-preenche com o filtro de status já ativo na tela
+    const filterIdMap = { coord: 'filterStatus', adm1: 'adm1FilterStatus', adm2: null };
+    const filterId = filterIdMap[configKey];
+    const currentStatus = filterId ? (document.getElementById(filterId)||{}).value||'' : '';
+    statusSelect.value = currentStatus;
+  } else {
+    statusBlock.style.display = 'none';
+    statusSelect.value = '';
+  }
+
   document.getElementById('printModalOverlay').classList.add('open');
 }
 
@@ -5085,20 +5113,72 @@ function executarImpressao() {
   if (!selectedKeys.length) { alert('Selecione ao menos uma coluna.'); return; }
 
   const selectedCols = cfg.cols.filter(c => selectedKeys.includes(c.key));
-  const data = cfg.getData();
+
+  // Aplica filtro de status do modal (se visível)
+  const statusBlock = document.getElementById('pmStatusFilterBlock');
+  const pmStatus = statusBlock.style.display !== 'none'
+    ? document.getElementById('pmStatusFilter').value
+    : '';
+
+  let data = cfg.getData();
+  if (pmStatus) {
+    // Para configs que retornam registros individuais (coord, adm2), filtra por status
+    // Para configs agrupadas (resumo), o getData já filtra internamente
+    if (_printConfigKey === 'coord' || _printConfigKey === 'adm2') {
+      data = data.filter(d => d.status === pmStatus);
+    }
+    // adm1 já agrupa por professor — re-filtra allSolic com status e reagrupa
+    if (_printConfigKey === 'adm1') {
+      const filtered = allSolic.filter(d => {
+        const prof  = document.getElementById('adm1FilterProf').value;
+        const de    = document.getElementById('adm1FilterDe').value;
+        const ate   = document.getElementById('adm1FilterAte').value;
+        const tipo  = (document.getElementById('adm1FilterTipo')||{}).value||'';
+        const dt = new Date(d.data_solicitacao);
+        return d.status === pmStatus
+          && (!prof || d.professor === prof)
+          && (!de   || dt >= new Date(de+'T00:00:00'))
+          && (!ate  || dt <= new Date(ate+'T23:59:59'))
+          && (!tipo || inferirTipo(d) === tipo);
+      });
+      const map = {};
+      filtered.forEach(d => {
+        const k = d.professor||'—';
+        if (!map[k]) map[k]={professor:k,disciplina:d.disciplina,items:[],totalCopias:0,provas:0,atividades:0};
+        map[k].items.push(d);
+        map[k].totalCopias += (d.total_copias||d.copias||0);
+        if (inferirTipo(d)==='PROVA') map[k].provas+=(d.total_copias||d.copias||0);
+        else map[k].atividades+=(d.total_copias||d.copias||0);
+      });
+      data = Object.values(map).sort((a,b)=>b.totalCopias-a.totalCopias);
+    }
+  }
+
+  // Atualiza linha de filtros no cabeçalho para refletir status escolhido no modal
+  let filtrosLine = _printFiltros;
+  if (pmStatus) {
+    // Substitui ou acrescenta o status nos filtros
+    if (filtrosLine && filtrosLine !== 'Todos os registros') {
+      filtrosLine = filtrosLine.replace(/Status:[^|]*/g, '').replace(/\|\s*$/, '').trim();
+      filtrosLine = filtrosLine ? filtrosLine + '  |  Status: ' + pmStatus : 'Status: ' + pmStatus;
+    } else {
+      filtrosLine = 'Status: ' + pmStatus;
+    }
+  }
+
   const totals = cfg.getTotals(data);
   const now = new Date().toLocaleString('pt-BR');
 
   // Cabeçalho minimalista
-  const filtrosLine = _printFiltros
-    ? `<div style="font-size:9.5px;color:#777;margin-top:4px;font-style:italic;">📅 ${_printFiltros}</div>`
+  const filtrosHtml = filtrosLine
+    ? `<div style="font-size:9.5px;color:#777;margin-top:4px;font-style:italic;">📅 ${filtrosLine}</div>`
     : '';
   const headerHtml = `
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1a3a2a;">
       <div>
         <div style="font-family:Arial,sans-serif;font-weight:900;font-size:17px;color:#1a3a2a;letter-spacing:-.02em;">🖨️ CópiaFácil</div>
         <div style="font-size:11px;color:#555;margin-top:2px;">${_printSubtitle || cfg.title}</div>
-        ${filtrosLine}
+        ${filtrosHtml}
       </div>
       <div style="text-align:right;">
         <div style="font-size:10px;color:#555;">${now}</div>
