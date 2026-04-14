@@ -384,6 +384,20 @@
   .btn-danger-sm { font-family: 'DM Sans', sans-serif; font-size: .75rem; padding: .28rem .65rem; background: transparent; color: var(--accent2); border: 1.5px solid var(--accent2); border-radius: 6px; cursor: pointer; transition: all .2s; opacity: .7; }
   .btn-danger-sm:hover { background: var(--accent2); color: #fff; opacity: 1; }
 
+  /* BULK ACTION BAR */
+  .bulk-bar { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%) translateY(120%); z-index: 250; background: var(--primary); border-radius: 12px; padding: .7rem 1.1rem; display: flex; align-items: center; gap: .8rem; box-shadow: 0 8px 32px rgba(0,0,0,.3); transition: transform .3s cubic-bezier(.34,1.56,.64,1); white-space: nowrap; flex-wrap: wrap; justify-content: center; }
+  .bulk-bar.visible { transform: translateX(-50%) translateY(0); }
+  .bulk-bar .bb-count { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; color: var(--accent); min-width: 90px; }
+  .bulk-bar select { font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 600; padding: .45rem .85rem; border: 2px solid var(--accent); border-radius: 8px; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; outline: none; }
+  .bulk-bar select option { background: #1a3a2a; color: #fff; }
+  .bulk-bar .bb-apply { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .88rem; padding: .45rem 1.1rem; background: var(--accent); color: var(--primary); border: none; border-radius: 8px; cursor: pointer; transition: background .2s; }
+  .bulk-bar .bb-apply:hover { background: #d49018; }
+  .bulk-bar .bb-cancel { font-family: 'DM Sans', sans-serif; font-size: .82rem; padding: .4rem .8rem; background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); border: 1.5px solid rgba(255,255,255,.2); border-radius: 7px; cursor: pointer; transition: all .2s; }
+  .bulk-bar .bb-cancel:hover { background: rgba(255,255,255,.18); color: #fff; }
+  /* row checkbox */
+  .row-cb { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  tr.row-selected { background: #fef8ec !important; outline: 2px solid var(--accent); outline-offset: -2px; }
+
   /* CONFIRM DELETE OVERLAY */
   .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; pointer-events: none; transition: opacity .2s; }
   .confirm-overlay.open { opacity: 1; pointer-events: all; }
@@ -3394,7 +3408,8 @@ function renderSolicitacoes(){
   if(filtered.length===0){container.innerHTML='<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação.</p></div>';return;}
 
   function rowHtml(d){
-    return `<tr onclick="openModal(${d.id})" style="cursor:pointer">
+    return `<tr onclick="coordRowClick(event,${d.id})" style="cursor:pointer" data-id="${d.id}">
+      <td onclick="event.stopPropagation()" style="width:32px;text-align:center;"><input type="checkbox" class="row-cb coord-cb" data-id="${d.id}" onchange="updateBulkBar('coord')" /></td>
       <td><strong>${esc(d.professor)}</strong>${d.professor==='Coordenação'?` <span class="badge badge-coord" style="font-size:.65rem;padding:.1rem .4rem;">coord</span>`:''}${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.65rem;padding:.1rem .4rem;">📋 retroativo</span>`:''}</td>
       <td>${esc(d.disciplina)}</td>
       <td class="ttip" data-tip="${esc(d.titulo)}" style="max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
@@ -3413,7 +3428,7 @@ function renderSolicitacoes(){
     </tr>`;
   }
 
-  const thead=`<table><thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead><tbody>`;
+  const thead=`<table><thead><tr><th style='width:32px;'><input type='checkbox' class='row-cb' id='coordSelAll' onchange='toggleSelectAll("coord",this.checked)' title='Selecionar todos' /></th><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Prazo</th><th>Arquivos</th><th>Status</th></tr></thead><tbody>`;
 
   // Coord order: Aguardando, Autorizado, Pronto, Entregue, Cancelado
   const ORDER_COORD = ['Aguardando','Autorizado','Pronto','Entregue','Cancelado'];
@@ -3443,6 +3458,9 @@ function renderSolicitacoes(){
     </div>`;
   });
   container.innerHTML = html;
+  // restore checkboxes state
+  selectedCoord.forEach(id=>{ const cb=document.querySelector(`.coord-cb[data-id="${id}"]`); if(cb){ cb.checked=true; const tr=cb.closest('tr'); if(tr) tr.classList.add('row-selected'); } });
+  const selAll=document.getElementById('coordSelAll'); if(selAll) selAll.checked=false;
 }
 
 function toggleCoordDemais(){
@@ -4167,7 +4185,8 @@ function renderMeca(){
            </select>`;
     }
 
-    return `<tr>
+    return `<tr data-id="${d.id}">
+      <td onclick="event.stopPropagation()" style="width:32px;text-align:center;"><input type="checkbox" class="row-cb meca-cb" data-id="${d.id}" onchange="updateBulkBar('meca')" /></td>
       <td><strong>${esc(d.professor)}</strong>${d.retroativo?` <span class="badge" style="background:#e8f0eb;color:#1a3a2a;font-size:.7rem;">📋 Retroativo</span>`:''}</td>
       <td>${esc(d.disciplina)}</td>
       <td class="ttip" data-tip="${esc(d.titulo)}" style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(d.titulo)}</td>
@@ -4188,7 +4207,7 @@ function renderMeca(){
     </tr>`;
   }
 
-  const thead=`<thead><tr><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Data Pedido</th><th>Status</th><th>Ações</th></tr></thead>`;
+  const thead=`<thead><tr><th style='width:32px;'><input type='checkbox' class='row-cb' id='mecaSelAll' onchange='toggleSelectAll("meca",this.checked)' title='Selecionar todos' /></th><th>Professor(a)</th><th>Disciplina</th><th>Título</th><th>Turmas</th><th>Cópias</th><th>Laudas</th><th>Total</th><th>Data Pedido</th><th>Status</th><th>Ações</th></tr></thead>`;
 
   // Demais perfis order: Entregue, Pronto, Autorizado, Aguardando (para meca: Autorizado primeiro, Pronto, Entregue)
   const autorizados=filtered.filter(d=>d.status==='Autorizado');
@@ -4222,6 +4241,9 @@ function renderMeca(){
   }
 
   container.innerHTML=html;
+  // restore meca checkboxes
+  selectedMeca.forEach(id=>{ const cb=document.querySelector(`.meca-cb[data-id="${id}"]`); if(cb){ cb.checked=true; const tr=cb.closest('tr'); if(tr) tr.classList.add('row-selected'); } });
+  const mecaAll=document.getElementById('mecaSelAll'); if(mecaAll) mecaAll.checked=false;
 }
 
 function toggleMecaDemais(){
@@ -4236,6 +4258,81 @@ function toggleMecaDemais(){
     const n=parseInt(spans[0].textContent.match(/\d+/));
     spans[0].textContent=open?`📦 Ocultar demais solicitações (${n})`:`📦 Ver demais solicitações (${n})`;
   }
+}
+
+
+// ── SELEÇÃO MÚLTIPLA E ATUALIZAÇÃO EM LOTE ──
+let selectedCoord = new Set();
+let selectedMeca  = new Set();
+
+function coordRowClick(e, id){
+  // Se clicou no checkbox diretamente, já trata pelo onchange; 
+  // Se clicou na linha, verifica se há seleção ativa ou abre modal
+  if(e.target.classList.contains('row-cb')) return;
+  if(selectedCoord.size > 0){
+    // modo seleção: toggle a linha
+    const cb = document.querySelector(`.coord-cb[data-id="${id}"]`);
+    if(cb){ cb.checked = !cb.checked; updateBulkBar('coord'); }
+  } else {
+    openModal(id);
+  }
+}
+
+function updateBulkBar(prefix){
+  const cbClass = prefix === 'coord' ? '.coord-cb' : '.meca-cb';
+  const sel     = prefix === 'coord' ? selectedCoord : selectedMeca;
+  sel.clear();
+  document.querySelectorAll(cbClass+':checked').forEach(cb => sel.add(Number(cb.dataset.id)));
+  // highlight rows
+  document.querySelectorAll(cbClass).forEach(cb => {
+    const tr = cb.closest('tr');
+    if(tr) tr.classList.toggle('row-selected', cb.checked);
+  });
+  const bar   = document.getElementById(prefix==='coord'?'bulkBarCoord':'bulkBarMeca');
+  const count = document.getElementById(prefix==='coord'?'bulkCountCoord':'bulkCountMeca');
+  const n     = sel.size;
+  count.textContent = n + (n===1?' selecionado':' selecionados');
+  if(n > 0) bar.classList.add('visible');
+  else       bar.classList.remove('visible');
+}
+
+function toggleSelectAll(prefix, checked){
+  const cbClass = prefix === 'coord' ? '.coord-cb' : '.meca-cb';
+  document.querySelectorAll(cbClass).forEach(cb => { cb.checked = checked; });
+  updateBulkBar(prefix);
+}
+
+function clearBulkSelection(prefix){
+  const cbClass = prefix === 'coord' ? '.coord-cb' : '.meca-cb';
+  const selAll  = document.getElementById(prefix==='coord'?'coordSelAll':'mecaSelAll');
+  document.querySelectorAll(cbClass).forEach(cb => { cb.checked = false; });
+  if(selAll) selAll.checked = false;
+  updateBulkBar(prefix);
+}
+
+async function applyBulkStatus(prefix){
+  const sel       = prefix === 'coord' ? selectedCoord : selectedMeca;
+  const selId     = prefix === 'coord' ? 'bulkStatusCoord' : 'bulkStatusMeca';
+  const newStatus = document.getElementById(selId).value;
+  if(!newStatus){ showToast('⚠️ Selecione um status.',true); return; }
+  if(sel.size === 0){ showToast('⚠️ Nenhuma solicitação selecionada.',true); return; }
+  const ids = [...sel];
+  // Update each id
+  let erros = 0;
+  for(const id of ids){
+    const {error} = await db.from('solicitacoes').update({status:newStatus}).eq('id',id);
+    if(error) erros++;
+    else {
+      const idx = allSolic.findIndex(d=>d.id===id);
+      if(idx!==-1) allSolic[idx].status = newStatus;
+    }
+  }
+  clearBulkSelection(prefix);
+  document.getElementById(selId).value = '';
+  if(prefix==='coord'){ renderStats(); renderSolicitacoes(); }
+  else { renderMeca(); renderMecaStats(); }
+  if(erros > 0) showToast(`⚠️ ${erros} erro(s) ao atualizar.`,true);
+  else showToast(`✔ ${ids.length} solicitaç${ids.length===1?'ão':'ões'} atualizada${ids.length===1?'':'s'} para "${newStatus}"`);
 }
 
 async function mecaUpdateStatus(id,newStatus){
@@ -4824,7 +4921,35 @@ async function imprimirSenhas(tipo) {
     ${headerHtml}
     ${tableHtml}
     <script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script>
-  </body></html>`);
+  
+<!-- BULK STATUS BAR - COORD -->
+<div class="bulk-bar" id="bulkBarCoord">
+  <span class="bb-count" id="bulkCountCoord">0 selecionados</span>
+  <select id="bulkStatusCoord">
+    <option value="">— Novo status —</option>
+    <option value="Aguardando">⏳ Aguardando</option>
+    <option value="Autorizado">✅ Autorizado</option>
+    <option value="Pronto">📦 Pronto</option>
+    <option value="Entregue">🎉 Entregue</option>
+    <option value="Cancelado">❌ Cancelado</option>
+  </select>
+  <button class="bb-apply" onclick="applyBulkStatus('coord')">Aplicar</button>
+  <button class="bb-cancel" onclick="clearBulkSelection('coord')">✕ Cancelar</button>
+</div>
+
+<!-- BULK STATUS BAR - MECA -->
+<div class="bulk-bar" id="bulkBarMeca">
+  <span class="bb-count" id="bulkCountMeca">0 selecionados</span>
+  <select id="bulkStatusMeca">
+    <option value="">— Novo status —</option>
+    <option value="Autorizado">✅ Autorizado</option>
+    <option value="Pronto">📦 Pronto</option>
+    <option value="Entregue">🎉 Entregue</option>
+  </select>
+  <button class="bb-apply" onclick="applyBulkStatus('meca')">Aplicar</button>
+  <button class="bb-cancel" onclick="clearBulkSelection('meca')">✕ Cancelar</button>
+</div>
+</body></html>`);
   win.document.close();
 }
 
@@ -5151,7 +5276,38 @@ function executarImpressao() {
       body { font-family: Arial, sans-serif; background: #fff; color: #000; padding: 18mm 14mm; }
       @page { margin: 15mm 12mm; size: A4 landscape; }
       @media print { body { padding: 0; } }
-    </style>
+    
+  /* ── SELEÇÃO MÚLTIPLA ── */
+  .sel-cb-wrap { display:flex; align-items:center; justify-content:center; width:28px; }
+  .sel-cb { width:16px; height:16px; accent-color:var(--primary); cursor:pointer; flex-shrink:0; }
+  tr.sel-selected { background:#e8f0eb !important; outline:2px solid var(--primary); outline-offset:-2px; }
+  tr.sel-selected:hover { background:#d8e8d8 !important; }
+
+  .bulk-bar {
+    position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%) translateY(120%);
+    background:var(--primary); color:#fff; border-radius: 14px;
+    padding:.75rem 1.2rem; display:flex; align-items:center; gap:.9rem;
+    box-shadow:0 8px 32px rgba(0,0,0,.3); z-index:500;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    white-space:nowrap; flex-wrap:wrap; justify-content:center;
+  }
+  .bulk-bar.open { transform:translateX(-50%) translateY(0); }
+  .bulk-bar .bulk-count { font-family:'Syne',sans-serif; font-weight:800; font-size:.95rem; }
+  .bulk-bar label { font-size:.8rem; opacity:.7; margin-right:.2rem; }
+  .bulk-bar select { font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:600;
+    padding:.42rem .9rem; border:2px solid var(--accent); border-radius:8px;
+    background:rgba(255,255,255,.12); color:#fff; cursor:pointer; outline:none; }
+  .bulk-bar select option { background:#1a3a2a; color:#fff; }
+  .bulk-btn-apply { font-family:'Syne',sans-serif; font-weight:700; font-size:.88rem;
+    padding:.44rem 1.1rem; background:var(--accent); color:var(--primary);
+    border:none; border-radius:8px; cursor:pointer; transition:background .2s; }
+  .bulk-btn-apply:hover { background:#d49018; }
+  .bulk-btn-apply:disabled { opacity:.5; cursor:not-allowed; }
+  .bulk-btn-cancel { font-family:'DM Sans',sans-serif; font-size:.82rem;
+    padding:.38rem .8rem; background:rgba(255,255,255,.12); color:rgba(255,255,255,.8);
+    border:1.5px solid rgba(255,255,255,.2); border-radius:8px; cursor:pointer; transition:all .2s; }
+  .bulk-btn-cancel:hover { background:rgba(255,255,255,.2); color:#fff; }
+</style>
   </head><body>
     ${headerHtml}
     ${tableHtml}
@@ -5160,7 +5316,8 @@ function executarImpressao() {
         setTimeout(function(){ window.print(); }, 300);
       };
     <\/script>
-  </body></html>`);
+  
+</body></html>`);
   win.document.close();
   fecharModalImpressao();
 }
@@ -5314,6 +5471,8 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
   document.addEventListener('scroll', hideTip, true);
   window.addEventListener('resize', hideTip);
 })();
+
+
 </script>
 
 <!-- ═══════════════════════════════════════════════
