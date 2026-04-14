@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CópiaFácil — Solicitação de Matrizes - GETECO /Tarde</title>
+<title>CópiaFácil — Solicitação de Matrizes - GETECO /Tarde — 6º e 7º ANOS/Projeto Piloto</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -785,7 +785,7 @@
 <div class="auth-screen" id="telaAuth">
   <div class="auth-box">
     <div class="auth-logo">🖨️ <em>CópiaFácil</em></div>
-    <p class="auth-sub">Sistema de Solicitação de Matrizes - GETECO /Tarde</p>
+    <p class="auth-sub">Sistema de Solicitação de Matrizes - GETECO /Tarde — 6º e 7º ANOS/Projeto Piloto</p>
 
     <div id="painelLogin">
       <div class="fg"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') fazerLogin()" /></div>
@@ -2161,6 +2161,9 @@ async function iniciarApp() {
     // Oculta o botão Excluir no modal para Sub Coordenação
     const btnExcluir = document.getElementById('modalBtnExcluir');
     if (btnExcluir) btnExcluir.style.display = 'none';
+    // Oculta o box "Pedido já realizado e atendido" para Sub Coordenação
+    const retroBoxSub = document.querySelector('.retro-box');
+    if (retroBoxSub) retroBoxSub.style.display = 'none';
     showPage('coord');
   } else {
     badge.textContent='🗂️ Coordenação';
