@@ -438,6 +438,20 @@
   .viewer-fallback p { color: var(--muted); font-size: .9rem; line-height: 1.6; }
   .viewer-fallback a { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; padding: .6rem 1.4rem; background: var(--accent); color: var(--primary); border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: .5rem; }
 
+  /* ── VIEWER BOTTOM PANEL ── */
+  .viewer-bottom { flex-shrink: 0; background: var(--surface); border-top: 1.5px solid var(--border); padding: .75rem 1.2rem; display: none; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
+  .viewer-bottom.visible { display: flex; }
+  .viewer-bottom-group { display: flex; flex-direction: column; gap: .3rem; flex: 1; min-width: 160px; }
+  .viewer-bottom-group label { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .viewer-bottom-group select { font-family: 'DM Sans', sans-serif; font-size: .88rem; padding: .5rem .8rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; transition: border-color .2s; }
+  .viewer-bottom-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
+  .viewer-bottom-group textarea { font-family: 'DM Sans', sans-serif; font-size: .85rem; padding: .5rem .8rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; resize: vertical; min-height: 60px; transition: border-color .2s; }
+  .viewer-bottom-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
+  .viewer-bottom-group textarea::placeholder { color: var(--muted); font-size: .82rem; }
+  .btn-viewer-save { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem; padding: .52rem 1.2rem; background: var(--accent); color: var(--primary); border: none; border-radius: 8px; cursor: pointer; transition: all .2s; white-space: nowrap; flex-shrink: 0; align-self: flex-end; }
+  .btn-viewer-save:hover { background: #d49018; transform: translateY(-1px); }
+  .btn-viewer-save:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
   /* ── MODAL PROFESSOR ── */
   .mfg { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .85rem; }
   .mfg label { font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
@@ -1827,6 +1841,24 @@
       <p>Não foi possível exibir este arquivo diretamente.<br>Use o botão abaixo para abrir:</p>
       <a id="viewerFallbackLink" href="#" target="_blank">↗ Abrir arquivo</a>
     </div>
+    <!-- PAINEL INFERIOR: STATUS + OBSERVAÇÕES -->
+    <div class="viewer-bottom" id="viewerBottomPanel">
+      <div class="viewer-bottom-group" style="max-width:210px;">
+        <label>🔄 Status</label>
+        <select id="viewerStatusSelect">
+          <option value="Aguardando">⏳ Aguardando</option>
+          <option value="Autorizado">✅ Autorizado</option>
+          <option value="Pronto">📦 Pronto</option>
+          <option value="Entregue">🎉 Entregue</option>
+          <option value="Cancelado">❌ Cancelado</option>
+        </select>
+      </div>
+      <div class="viewer-bottom-group">
+        <label>📝 Observações extras</label>
+        <textarea id="viewerObsExtra" placeholder="Anotações internas sobre este arquivo / pedido…"></textarea>
+      </div>
+      <button class="btn-viewer-save" id="viewerSaveBtn" onclick="salvarViewerStatus()">💾 Salvar</button>
+    </div>
   </div>
 </div>
 
@@ -3158,10 +3190,10 @@ function profCardHtml(d) {
         ? `<span class="badge ${statusClass[d.status]||'badge-pending'}" data-tip="${statusTooltip}">${esc(d.status)}</span>`
         : `<span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>`
       }
-      ${d.arquivo_url?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url)}', 'Arquivo 1')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">📄 Arquivo 1</a>`:''}
-      ${d.drive_link1?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link1)}', 'Drive 1')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 1</a>`:''}
-      ${d.arquivo_url2?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url2)}', 'Arquivo 2')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">📄 Arquivo 2</a>`:''}
-      ${d.drive_link2?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link2)}', 'Drive 2')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 2</a>`:''}
+      ${d.arquivo_url?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url)}', 'Arquivo 1', '${esc(d.id)}')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">📄 Arquivo 1</a>`:''}
+      ${d.drive_link1?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link1)}', 'Drive 1', '${esc(d.id)}')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 1</a>`:''}
+      ${d.arquivo_url2?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url2)}', 'Arquivo 2', '${esc(d.id)}')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">📄 Arquivo 2</a>`:''}
+      ${d.drive_link2?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link2)}', 'Drive 2', '${esc(d.id)}')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 2</a>`:''}
     </div>
   </div>`;
 }
@@ -3478,10 +3510,10 @@ function renderSolicitacoes(){
       <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
       <td>${fmtDate(d.prazo_entrega)}</td>
       <td>
-        ${d.arquivo_url?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.arquivo_url)}', 'Arquivo 1')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
-        ${d.drive_link1?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.drive_link1)}', 'Drive 1')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
-        ${d.arquivo_url2?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.arquivo_url2)}', 'Arquivo 2')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
-        ${d.drive_link2?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.drive_link2)}', 'Drive 2')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
+        ${d.arquivo_url?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.arquivo_url)}', 'Arquivo 1', '${esc(d.id)}')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+        ${d.drive_link1?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.drive_link1)}', 'Drive 1', '${esc(d.id)}')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
+        ${d.arquivo_url2?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.arquivo_url2)}', 'Arquivo 2', '${esc(d.id)}')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
+        ${d.drive_link2?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.drive_link2)}', 'Drive 2', '${esc(d.id)}')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
       </td>
       <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
     </tr>`;
@@ -3795,19 +3827,21 @@ function openModal(id){
     <div class="d-item"><div class="d-label">Cópias × Laudas</div><div class="d-value">${item.copias} × ${item.laudas||1} = <strong>${(item.total_copias||item.copias).toLocaleString('pt-BR')} total</strong></div></div>
     <div class="d-item"><div class="d-label">Data da Solicitação</div><div class="d-value">${fmtDate(item.data_solicitacao)}</div></div>
     <div class="d-item"><div class="d-label">Prazo de Entrega</div><div class="d-value" style="color:var(--accent2);font-weight:600;">${fmtDate(item.prazo_entrega)}</div></div>
-    ${item.obs?`<div class="d-item" style="grid-column:1/-1"><div class="d-label">Observações</div><div class="d-value">${esc(item.obs)}</div></div>`:''}`;
+    ${item.obs?`<div class="d-item" style="grid-column:1/-1"><div class="d-label">Observações</div><div class="d-value">${esc(item.obs)}</div></div>`:''}
+    ${item.obs_viewer?`<div class="d-item" style="grid-column:1/-1"><div class="d-label">📝 Obs. internas (viewer)</div><div class="d-value" style="color:#555;font-style:italic;">${esc(item.obs_viewer)}</div></div>`:''}`;
+
   let arquivosHtml = '';
   if (item.arquivo_url) {
-    arquivosHtml += `<div class="arquivo-box"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo||'Arquivo 1')}</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.arquivo_url)}', '${esc(item.arquivo||"Arquivo 1")}')" class="btn-download">📄 Visualizar arquivo 1</a></div>`;
+    arquivosHtml += `<div class="arquivo-box"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo||'Arquivo 1')}</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.arquivo_url)}', '${esc(item.arquivo||"Arquivo 1")}', '${esc(item.id)}')" class="btn-download">📄 Visualizar arquivo 1</a></div>`;
   }
   if (item.drive_link1) {
-    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 1</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.drive_link1)}', 'Drive — Arquivo 1')" class="btn-download" style="background:#4285f4;">🔗 Visualizar no Drive</a></div>`;
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 1</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.drive_link1)}', 'Drive — Arquivo 1', '${esc(item.id)}')" class="btn-download" style="background:#4285f4;">🔗 Visualizar no Drive</a></div>`;
   }
   if (item.arquivo_url2) {
-    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo2||'Arquivo 2')}</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.arquivo_url2)}', '${esc(item.arquivo2||"Arquivo 2")}')" class="btn-download">📄 Visualizar arquivo 2</a></div>`;
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo2||'Arquivo 2')}</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.arquivo_url2)}', '${esc(item.arquivo2||"Arquivo 2")}', '${esc(item.id)}')" class="btn-download">📄 Visualizar arquivo 2</a></div>`;
   }
   if (item.drive_link2) {
-    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 2</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.drive_link2)}', 'Drive — Arquivo 2')" class="btn-download" style="background:#4285f4;">🔗 Visualizar no Drive</a></div>`;
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 2</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.drive_link2)}', 'Drive — Arquivo 2', '${esc(item.id)}')" class="btn-download" style="background:#4285f4;">🔗 Visualizar no Drive</a></div>`;
   }
   if (item.retroativo) {
     arquivosHtml += `<div style="margin-top:.8rem;background:#e8f0eb;border-radius:8px;padding:.6rem 1rem;font-size:.84rem;color:#1a3a2a;">📋 <strong>Registro retroativo</strong> — cópias realizadas fora da plataforma.</div>`;
@@ -5459,7 +5493,9 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
 })();
 
 // ── VISUALIZADOR DE ARQUIVO EMBUTIDO ──
-function abrirViewer(url, titulo) {
+let viewerSolicId = null; // id da solicitação associada ao viewer atual
+
+function abrirViewer(url, titulo, solicId) {
   const overlay = document.getElementById('viewerOverlay');
   const iframe = document.getElementById('viewerIframe');
   const iframeWrap = document.getElementById('viewerIframeWrap');
@@ -5467,10 +5503,25 @@ function abrirViewer(url, titulo) {
   const titleEl = document.getElementById('viewerTitle');
   const extLink = document.getElementById('viewerExtLink');
   const fallbackLink = document.getElementById('viewerFallbackLink');
+  const bottomPanel = document.getElementById('viewerBottomPanel');
+  const statusSelect = document.getElementById('viewerStatusSelect');
+  const obsExtra = document.getElementById('viewerObsExtra');
 
   titleEl.textContent = titulo || 'Visualizando arquivo…';
   extLink.href = url;
   fallbackLink.href = url;
+
+  // Painel inferior: só exibe para coord/meca com id de solicitação
+  viewerSolicId = solicId || null;
+  const podeEditar = viewerSolicId && (perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub' || perfilAtual === 'mecanografia');
+  if (podeEditar) {
+    bottomPanel.classList.add('visible');
+    const item = (typeof allSolic !== 'undefined' ? allSolic : []).find(d => d.id === viewerSolicId);
+    statusSelect.value = item ? (item.status || 'Aguardando') : 'Aguardando';
+    obsExtra.value = item ? (item.obs_viewer || '') : '';
+  } else {
+    bottomPanel.classList.remove('visible');
+  }
 
   // Para PDFs do Supabase ou URLs diretas, usa o iframe nativo
   // Para links do Google Drive, converte para embed
@@ -5492,11 +5543,35 @@ function abrirViewer(url, titulo) {
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
+async function salvarViewerStatus() {
+  if (!viewerSolicId) return;
+  const newStatus = document.getElementById('viewerStatusSelect').value;
+  const obsViewer = document.getElementById('viewerObsExtra').value.trim();
+  const btn = document.getElementById('viewerSaveBtn');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+  const { error } = await db.from('solicitacoes').update({ status: newStatus, obs_viewer: obsViewer }).eq('id', viewerSolicId);
+  btn.disabled = false; btn.textContent = '💾 Salvar';
+  if (error) { showToast('❌ Erro ao salvar.', true); return; }
+  // Atualiza cache local
+  const idx = (typeof allSolic !== 'undefined' ? allSolic : []).findIndex(d => d.id === viewerSolicId);
+  if (idx !== -1) { allSolic[idx].status = newStatus; allSolic[idx].obs_viewer = obsViewer; }
+  // Sincroniza modal de status se estiver aberto na mesma solicitação
+  if (typeof currentSolicId !== 'undefined' && currentSolicId === viewerSolicId) {
+    const sel = document.getElementById('modalStatus');
+    if (sel) sel.value = newStatus;
+  }
+  if (typeof renderStats === 'function') renderStats();
+  if (typeof renderSolicitacoes === 'function') renderSolicitacoes();
+  showToast('✔ Status e observações salvos!');
+}
+
 function fecharViewer() {
   const overlay = document.getElementById('viewerOverlay');
   overlay.classList.remove('open');
   document.body.style.overflow = '';
   setTimeout(() => { document.getElementById('viewerIframe').src = ''; }, 300);
+  viewerSolicId = null;
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharViewer(); });
 </script>
