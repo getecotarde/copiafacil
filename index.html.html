@@ -400,6 +400,44 @@
   .arquivo-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; padding: .75rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .8rem; flex-wrap: wrap; }
   .arquivo-info { display: flex; align-items: center; gap: .5rem; font-size: .88rem; font-weight: 500; }
 
+  /* ── VISUALIZADOR DE ARQUIVO EMBUTIDO ── */
+  .viewer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: stretch; justify-content: center; z-index: 500; opacity: 0; pointer-events: none; transition: opacity .25s; padding: 1rem; }
+  .viewer-overlay.open { opacity: 1; pointer-events: all; }
+  .viewer-box { background: var(--surface); border-radius: 14px; display: flex; flex-direction: column; width: 100%; max-width: 1100px; overflow: hidden; transform: scale(.96); transition: transform .25s; box-shadow: 0 24px 64px rgba(0,0,0,.35); }
+  .viewer-overlay.open .viewer-box { transform: scale(1); }
+  .viewer-header { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1.2rem; background: var(--primary); flex-shrink: 0; gap: 1rem; }
+  .viewer-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .viewer-header-btns { display: flex; gap: .5rem; flex-shrink: 0; }
+  .btn-viewer-ext { font-family: 'DM Sans', sans-serif; font-size: .78rem; padding: .32rem .75rem; background: rgba(255,255,255,.15); color: #fff; border: 1.5px solid rgba(255,255,255,.3); border-radius: 7px; cursor: pointer; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; white-space: nowrap; }
+  .btn-viewer-ext:hover { background: var(--accent); color: var(--primary); border-color: var(--accent); }
+  .btn-viewer-close { font-family: 'DM Sans', sans-serif; font-size: .8rem; padding: .32rem .75rem; background: transparent; color: rgba(255,255,255,.7); border: 1.5px solid rgba(255,255,255,.25); border-radius: 7px; cursor: pointer; transition: all .2s; }
+  .btn-viewer-close:hover { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+  .viewer-iframe-wrap { flex: 1; overflow: hidden; min-height: 0; background: #333; }
+  .viewer-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+  .viewer-fallback { display: none; flex: 1; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; padding: 2rem; text-align: center; }
+  .viewer-fallback .vf-icon { font-size: 3rem; }
+  .viewer-fallback p { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .viewer-fallback a { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; padding: .6rem 1.4rem; background: var(--accent); color: var(--primary); border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: .5rem; }
+
+  /* ── VISUALIZADOR DE ARQUIVO EMBUTIDO ── */
+  .viewer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: stretch; justify-content: center; z-index: 500; opacity: 0; pointer-events: none; transition: opacity .25s; padding: 1rem; }
+  .viewer-overlay.open { opacity: 1; pointer-events: all; }
+  .viewer-box { background: var(--surface); border-radius: 14px; display: flex; flex-direction: column; width: 100%; max-width: 1100px; overflow: hidden; transform: scale(.96); transition: transform .25s; box-shadow: 0 24px 64px rgba(0,0,0,.35); }
+  .viewer-overlay.open .viewer-box { transform: scale(1); }
+  .viewer-header { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1.2rem; background: var(--primary); flex-shrink: 0; gap: 1rem; }
+  .viewer-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .viewer-header-btns { display: flex; gap: .5rem; flex-shrink: 0; }
+  .btn-viewer-ext { font-family: 'DM Sans', sans-serif; font-size: .78rem; padding: .32rem .75rem; background: rgba(255,255,255,.15); color: #fff; border: 1.5px solid rgba(255,255,255,.3); border-radius: 7px; cursor: pointer; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; white-space: nowrap; }
+  .btn-viewer-ext:hover { background: var(--accent); color: var(--primary); border-color: var(--accent); }
+  .btn-viewer-close { font-family: 'DM Sans', sans-serif; font-size: .8rem; padding: .32rem .75rem; background: transparent; color: rgba(255,255,255,.7); border: 1.5px solid rgba(255,255,255,.25); border-radius: 7px; cursor: pointer; transition: all .2s; }
+  .btn-viewer-close:hover { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+  .viewer-iframe-wrap { flex: 1; overflow: hidden; min-height: 0; background: #333; }
+  .viewer-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+  .viewer-fallback { display: none; flex: 1; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; padding: 2rem; text-align: center; }
+  .viewer-fallback .vf-icon { font-size: 3rem; }
+  .viewer-fallback p { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .viewer-fallback a { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; padding: .6rem 1.4rem; background: var(--accent); color: var(--primary); border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: .5rem; }
+
   /* ── MODAL PROFESSOR ── */
   .mfg { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .85rem; }
   .mfg label { font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
@@ -906,7 +944,7 @@
                 </div>
                 <div class="drive-preview" id="f-drive1-preview">
                   <span class="dp-icon">🔗</span>
-                  <a id="f-drive1-preview-link" href="#" target="_blank">Ver arquivo</a>
+                  <a id="f-drive1-preview-link" href="javascript:void(0)" onclick="abrirViewer(document.getElementById('f-drive1').value, 'Drive — Arquivo 1')">Ver arquivo</a>
                 </div>
               </div>
               <!-- Arquivo 2 -->
@@ -925,7 +963,7 @@
                 </div>
                 <div class="drive-preview" id="f-drive2-preview">
                   <span class="dp-icon">🔗</span>
-                  <a id="f-drive2-preview-link" href="#" target="_blank">Ver arquivo</a>
+                  <a id="f-drive2-preview-link" href="javascript:void(0)" onclick="abrirViewer(document.getElementById('f-drive2').value, 'Drive — Arquivo 2')">Ver arquivo</a>
                 </div>
               </div>
             </div>
@@ -1184,7 +1222,7 @@
                   </div>
                   <div class="drive-preview" id="cf-drive1-preview">
                     <span class="dp-icon">🔗</span>
-                    <a id="cf-drive1-preview-link" href="#" target="_blank">Ver arquivo</a>
+                    <a id="cf-drive1-preview-link" href="javascript:void(0)" onclick="abrirViewer(document.getElementById('cf-drive1').value, 'Drive — Arquivo 1')">Ver arquivo</a>
                   </div>
                 </div>
                 <!-- Arquivo 2 -->
@@ -1203,7 +1241,7 @@
                   </div>
                   <div class="drive-preview" id="cf-drive2-preview">
                     <span class="dp-icon">🔗</span>
-                    <a id="cf-drive2-preview-link" href="#" target="_blank">Ver arquivo</a>
+                    <a id="cf-drive2-preview-link" href="javascript:void(0)" onclick="abrirViewer(document.getElementById('cf-drive2').value, 'Drive — Arquivo 2')">Ver arquivo</a>
                   </div>
                 </div>
               </div>
@@ -1770,6 +1808,28 @@
 </div>
 
 <!-- MODAL SOLICITAÇÃO -->
+
+<!-- ── VISUALIZADOR DE ARQUIVO EMBUTIDO ── -->
+<div class="viewer-overlay" id="viewerOverlay" onclick="if(event.target===this)fecharViewer()">
+  <div class="viewer-box">
+    <div class="viewer-header">
+      <div class="viewer-title" id="viewerTitle">Visualizando arquivo…</div>
+      <div class="viewer-header-btns">
+        <a id="viewerExtLink" href="#" target="_blank" class="btn-viewer-ext">↗ Abrir em nova aba</a>
+        <button class="btn-viewer-close" onclick="fecharViewer()">✕ Fechar</button>
+      </div>
+    </div>
+    <div class="viewer-iframe-wrap" id="viewerIframeWrap">
+      <iframe id="viewerIframe" src="" allowfullscreen></iframe>
+    </div>
+    <div class="viewer-fallback" id="viewerFallback">
+      <div class="vf-icon">📄</div>
+      <p>Não foi possível exibir este arquivo diretamente.<br>Use o botão abaixo para abrir:</p>
+      <a id="viewerFallbackLink" href="#" target="_blank">↗ Abrir arquivo</a>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
     <h2 id="modalTitle"></h2>
@@ -3098,10 +3158,10 @@ function profCardHtml(d) {
         ? `<span class="badge ${statusClass[d.status]||'badge-pending'}" data-tip="${statusTooltip}">${esc(d.status)}</span>`
         : `<span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span>`
       }
-      ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">⬇ Arquivo 1</a>`:''}
-      ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 1</a>`:''}
-      ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">⬇ Arquivo 2</a>`:''}
-      ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 2</a>`:''}
+      ${d.arquivo_url?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url)}', 'Arquivo 1')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">📄 Arquivo 1</a>`:''}
+      ${d.drive_link1?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link1)}', 'Drive 1')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 1</a>`:''}
+      ${d.arquivo_url2?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url2)}', 'Arquivo 2')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;" data-tip="${fileTooltip}">📄 Arquivo 2</a>`:''}
+      ${d.drive_link2?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link2)}', 'Drive 2')" class="btn-download" style="font-size:.78rem;padding:.35rem .7rem;background:#4285f4;" data-tip="${fileTooltip}">🔗 Drive 2</a>`:''}
     </div>
   </div>`;
 }
@@ -3418,10 +3478,10 @@ function renderSolicitacoes(){
       <td style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--primary);">${(d.total_copias||d.copias).toLocaleString('pt-BR')}</td>
       <td>${fmtDate(d.prazo_entrega)}</td>
       <td>
-        ${d.arquivo_url?`<a href="${esc(d.arquivo_url)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
-        ${d.drive_link1?`<a href="${esc(d.drive_link1)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
-        ${d.arquivo_url2?`<a href="${esc(d.arquivo_url2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
-        ${d.drive_link2?`<a href="${esc(d.drive_link2)}" target="_blank" onclick="event.stopPropagation()" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
+        ${d.arquivo_url?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.arquivo_url)}', 'Arquivo 1')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 1</a>`:`<span style="color:var(--muted);font-size:.8rem;">—</span>`}
+        ${d.drive_link1?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.drive_link1)}', 'Drive 1')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 1</a>`:''}
+        ${d.arquivo_url2?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.arquivo_url2)}', 'Arquivo 2')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;">📄 Arq. 2</a>`:''}
+        ${d.drive_link2?`<a href="javascript:void(0)" onclick="event.stopPropagation();abrirViewer('${esc(d.drive_link2)}', 'Drive 2')" class="btn-download" style="font-size:.78rem;padding:.3rem .6rem;background:#4285f4;">🔗 Drive 2</a>`:''}
       </td>
       <td><span class="badge ${statusClass[d.status]||'badge-pending'}">${esc(d.status)}</span></td>
     </tr>`;
@@ -3738,16 +3798,16 @@ function openModal(id){
     ${item.obs?`<div class="d-item" style="grid-column:1/-1"><div class="d-label">Observações</div><div class="d-value">${esc(item.obs)}</div></div>`:''}`;
   let arquivosHtml = '';
   if (item.arquivo_url) {
-    arquivosHtml += `<div class="arquivo-box"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo||'Arquivo 1')}</span></div><a href="${esc(item.arquivo_url)}" target="_blank" class="btn-download">⬇ Baixar arquivo 1</a></div>`;
+    arquivosHtml += `<div class="arquivo-box"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo||'Arquivo 1')}</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.arquivo_url)}', '${esc(item.arquivo||"Arquivo 1")}')" class="btn-download">📄 Visualizar arquivo 1</a></div>`;
   }
   if (item.drive_link1) {
-    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 1</span></div><a href="${esc(item.drive_link1)}" target="_blank" class="btn-download" style="background:#4285f4;">🔗 Abrir no Drive</a></div>`;
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 1</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.drive_link1)}', 'Drive — Arquivo 1')" class="btn-download" style="background:#4285f4;">🔗 Visualizar no Drive</a></div>`;
   }
   if (item.arquivo_url2) {
-    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo2||'Arquivo 2')}</span></div><a href="${esc(item.arquivo_url2)}" target="_blank" class="btn-download">⬇ Baixar arquivo 2</a></div>`;
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">📄</span><span>${esc(item.arquivo2||'Arquivo 2')}</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.arquivo_url2)}', '${esc(item.arquivo2||"Arquivo 2")}')" class="btn-download">📄 Visualizar arquivo 2</a></div>`;
   }
   if (item.drive_link2) {
-    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 2</span></div><a href="${esc(item.drive_link2)}" target="_blank" class="btn-download" style="background:#4285f4;">🔗 Abrir no Drive</a></div>`;
+    arquivosHtml += `<div class="arquivo-box" style="margin-top:.5rem;"><div class="arquivo-info"><span style="font-size:1.5rem;">🔗</span><span>Link Drive — Arquivo 2</span></div><a href="javascript:void(0)" onclick="abrirViewer('${esc(item.drive_link2)}', 'Drive — Arquivo 2')" class="btn-download" style="background:#4285f4;">🔗 Visualizar no Drive</a></div>`;
   }
   if (item.retroativo) {
     arquivosHtml += `<div style="margin-top:.8rem;background:#e8f0eb;border-radius:8px;padding:.6rem 1rem;font-size:.84rem;color:#1a3a2a;">📋 <strong>Registro retroativo</strong> — cópias realizadas fora da plataforma.</div>`;
@@ -5397,6 +5457,48 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(
   document.addEventListener('scroll', hideTip, true);
   window.addEventListener('resize', hideTip);
 })();
+
+// ── VISUALIZADOR DE ARQUIVO EMBUTIDO ──
+function abrirViewer(url, titulo) {
+  const overlay = document.getElementById('viewerOverlay');
+  const iframe = document.getElementById('viewerIframe');
+  const iframeWrap = document.getElementById('viewerIframeWrap');
+  const fallback = document.getElementById('viewerFallback');
+  const titleEl = document.getElementById('viewerTitle');
+  const extLink = document.getElementById('viewerExtLink');
+  const fallbackLink = document.getElementById('viewerFallbackLink');
+
+  titleEl.textContent = titulo || 'Visualizando arquivo…';
+  extLink.href = url;
+  fallbackLink.href = url;
+
+  // Para PDFs do Supabase ou URLs diretas, usa o iframe nativo
+  // Para links do Google Drive, converte para embed
+  let embedUrl = url;
+  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+  if (driveMatch) {
+    embedUrl = 'https://drive.google.com/file/d/' + driveMatch[1] + '/preview';
+  }
+
+  iframe.src = '';
+  iframeWrap.style.display = 'flex';
+  fallback.style.display = 'none';
+  iframe.onerror = () => {
+    iframeWrap.style.display = 'none';
+    fallback.style.display = 'flex';
+  };
+  iframe.src = embedUrl;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function fecharViewer() {
+  const overlay = document.getElementById('viewerOverlay');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { document.getElementById('viewerIframe').src = ''; }, 300);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharViewer(); });
 </script>
 
 <!-- ═══════════════════════════════════════════════
