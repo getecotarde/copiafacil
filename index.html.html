@@ -746,25 +746,6 @@
     .coord-tab { font-size: .68rem; padding: .38rem .55rem; }
   }
   /* ── TOOLTIP CUSTOMIZADO PARA TÍTULOS TRUNCADOS ── */
-  #cf-tooltip {
-    position: fixed;
-    z-index: 9999;
-    background: var(--primary);
-    color: #fff;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .82rem;
-    line-height: 1.45;
-    padding: .5rem .85rem;
-    border-radius: 8px;
-    box-shadow: 0 6px 24px rgba(0,0,0,.22);
-    pointer-events: none;
-    max-width: 480px;
-    white-space: normal;
-    word-break: break-word;
-    opacity: 0;
-    transition: opacity .15s ease;
-  }
-  #cf-tooltip.show { opacity: 1; }
   .ttip { cursor: default; }
 
   /* ── MODAL DE IMPRESSÃO ── */
@@ -775,8 +756,8 @@
   #printModalOverlay.open { display: flex; }
   #printModal {
     background: var(--surface); border-radius: 16px; padding: 1.8rem 2rem;
-    width: 100%; max-width: 520px; box-shadow: 0 12px 48px rgba(0,0,0,.2);
-    border: 1.5px solid var(--border);
+    width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 12px 48px rgba(0,0,0,.2); border: 1.5px solid var(--border);
   }
   #printModal h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem;
     color: var(--primary); margin-bottom: .25rem; }
@@ -792,47 +773,33 @@
   .print-only { display: none; }
   .print-header { display: none; }
   .print-totals { display: none; }
+
+  /* ── PRINT MODAL FILTROS AVANÇADOS ── */
+  .pm-filter-section { margin-bottom: 1rem; }
+  .pm-filter-section-title { font-size: .72rem; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: .45rem; display: flex;
+    align-items: center; gap: .35rem; }
+  .pm-checkgroup { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .pm-check-pill { display: inline-flex; align-items: center; gap: .35rem; cursor: pointer;
+    padding: .3rem .65rem; border-radius: 99px; border: 1.5px solid var(--border);
+    background: var(--bg); font-size: .82rem; transition: all .18s; user-select: none; }
+  .pm-check-pill:hover { border-color: var(--primary); background: #e8f0eb; }
+  .pm-check-pill input[type=checkbox] { display: none; }
+  .pm-check-pill.selected { border-color: var(--primary); background: var(--primary); color: #fff; font-weight: 600; }
+  .pm-check-pill.selected::before { content: '✓ '; font-size: .75rem; }
+  .pm-divider { border: none; border-top: 1.5px solid var(--border); margin: 1rem 0; }
+  .pm-order-row { display: flex; align-items: center; gap: .6rem; }
+  .pm-order-row label { font-size: .82rem; color: var(--muted); white-space: nowrap; min-width: 80px; }
+  .pm-order-row select { font-family: 'DM Sans', sans-serif; font-size: .88rem; padding: .45rem .8rem;
+    border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);
+    outline: none; transition: border-color .2s; flex: 1; cursor: pointer; }
+  .pm-order-row select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
+  .pm-filter-note { font-size: .76rem; color: var(--muted); font-style: italic; margin-top: .3rem; }
 </style>
 </head>
 <body>
 
 <!-- AUTH -->
-<div id="cf-tooltip"></div>
-<script>
-(function(){
-  const tip = document.getElementById('cf-tooltip');
-  let hideTimer;
-  document.addEventListener('mouseover', function(e){
-    const el = e.target.closest('.ttip');
-    if (!el) return;
-    const text = el.dataset.tip || '';
-    if (!text) return;
-    clearTimeout(hideTimer);
-    tip.textContent = text;
-    tip.classList.add('show');
-    moveTip(e);
-  });
-  document.addEventListener('mousemove', function(e){
-    if (!tip.classList.contains('show')) return;
-    if (!e.target.closest('.ttip')) return;
-    moveTip(e);
-  });
-  document.addEventListener('mouseout', function(e){
-    if (!e.target.closest('.ttip')) return;
-    hideTimer = setTimeout(() => tip.classList.remove('show'), 80);
-  });
-  function moveTip(e){
-    const margin = 14;
-    const tw = tip.offsetWidth, th = tip.offsetHeight;
-    let x = e.clientX + margin;
-    let y = e.clientY + margin;
-    if (x + tw > window.innerWidth - 8) x = e.clientX - tw - margin;
-    if (y + th > window.innerHeight - 8) y = e.clientY - th - margin;
-    tip.style.left = x + 'px';
-    tip.style.top  = y + 'px';
-  }
-})();
-</script>
 
 <div class="auth-screen" id="telaAuth">
   <div class="auth-box">
@@ -2026,20 +1993,62 @@
 <div id="printModalOverlay" onclick="if(event.target===this)fecharModalImpressao()">
   <div id="printModal">
     <h3>🖨️ Imprimir Relatório</h3>
-    <p class="pm-sub">Selecione as colunas que devem aparecer na impressão.</p>
-    <div id="pmStatusFilterBlock" style="display:none;margin-bottom:1rem;">
-      <label style="font-size:.73rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.35rem;">Filtrar por Status</label>
-      <select id="pmStatusFilter" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;width:100%;transition:border-color .2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
-        <option value="">Todos os status</option>
-        <option value="Aguardando">Aguardando</option>
-        <option value="Autorizado">Autorizado</option>
-        <option value="Pronto">Pronto</option>
-        <option value="Entregue">Entregue</option>
-        <option value="Cancelado">Cancelado</option>
-      </select>
+    <p class="pm-sub">Configure os filtros, ordenação e colunas para a impressão.</p>
+
+    <!-- FILTRO STATUS (multi-check pills) -->
+    <div id="pmStatusFilterBlock" class="pm-filter-section" style="display:none;">
+      <div class="pm-filter-section-title">🔵 Status <span class="pm-filter-note">(pode marcar mais de um)</span></div>
+      <div class="pm-checkgroup" id="pmStatusPills">
+        <label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="Aguardando"> Aguardando</label>
+        <label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="Autorizado"> Autorizado</label>
+        <label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="Pronto"> Pronto</label>
+        <label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="Entregue"> Entregue</label>
+        <label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="Cancelado"> Cancelado</label>
+      </div>
     </div>
+
+    <!-- FILTRO PROFESSOR (multi-check pills dinâmico) -->
+    <div id="pmProfFilterBlock" class="pm-filter-section" style="display:none;">
+      <div class="pm-filter-section-title">👤 Professor <span class="pm-filter-note">(pode marcar mais de um)</span></div>
+      <div class="pm-checkgroup" id="pmProfPills"></div>
+    </div>
+
+    <!-- FILTRO TIPO (multi-check pills) -->
+    <div id="pmTipoFilterBlock" class="pm-filter-section" style="display:none;">
+      <div class="pm-filter-section-title">📋 Tipo <span class="pm-filter-note">(pode marcar mais de um)</span></div>
+      <div class="pm-checkgroup" id="pmTipoPills">
+        <label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="PROVA"> Prova</label>
+        <label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="ATIVIDADE"> Atividade</label>
+        <label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="OUTRO"> Outro</label>
+      </div>
+    </div>
+
+    <!-- ORDENAÇÃO -->
+    <div id="pmOrdemBlock" class="pm-filter-section" style="display:none;">
+      <div class="pm-filter-section-title">↕️ Ordenação</div>
+      <div class="pm-order-row">
+        <label>Ordenar por</label>
+        <select id="pmOrdemCampo">
+          <option value="">Padrão (data desc.)</option>
+          <option value="professor_asc">Alfabética — Professor (A→Z)</option>
+          <option value="professor_desc">Alfabética — Professor (Z→A)</option>
+          <option value="data_asc">Data do Pedido (mais antigas primeiro)</option>
+          <option value="data_desc">Data do Pedido (mais recentes primeiro)</option>
+          <option value="disciplina_asc">Disciplina (A→Z)</option>
+          <option value="copias_desc">Total de Cópias (maior primeiro)</option>
+          <option value="copias_asc">Total de Cópias (menor primeiro)</option>
+          <option value="status_asc">Status (A→Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <hr class="pm-divider">
+
+    <!-- COLUNAS -->
+    <div class="pm-filter-section-title">📊 Colunas visíveis</div>
     <button class="pm-sel-all" onclick="pmToggleAll()">Marcar / Desmarcar todas</button>
     <div class="pm-cols" id="pmColsContainer"></div>
+
     <div class="pm-actions">
       <button class="btn-secondary" onclick="fecharModalImpressao()">Cancelar</button>
       <button class="btn-action" onclick="executarImpressao()">🖨️ Imprimir</button>
@@ -3182,6 +3191,7 @@ function profCardHtml(d) {
         <span>📄 ${d.copias} cóp. × ${d.laudas||1} laudas = <strong>${(d.total_copias||d.copias).toLocaleString('pt-BR')} total</strong></span>
         <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
         ${d.obs?`<span>💬 ${esc(d.obs)}</span>`:''}
+        ${d.obs_viewer?`<span style="color:#c94f2a;font-weight:700;text-transform:uppercase;letter-spacing:.03em;">⚠️ ${esc(d.obs_viewer)}</span>`:''}
       </div>
       ${d.status!=='Entregue'?`<div class="mc-prazo">⏰ Prazo: ${fmtDate(d.prazo_entrega)}</div>`:''}
     </div>
@@ -3207,7 +3217,7 @@ function renderMinhasFiltered() {
   const st = document.getElementById('minhasFilterStatus').value;
 
   const filtered = data.filter(d => {
-    const mTxt = !txt || (d.titulo||'').toLowerCase().includes(txt) || (d.turmas||'').toLowerCase().includes(txt) || (d.obs||'').toLowerCase().includes(txt);
+    const mTxt = !txt || (d.titulo||'').toLowerCase().includes(txt) || (d.turmas||'').toLowerCase().includes(txt) || (d.obs||'').toLowerCase().includes(txt) || (d.obs_viewer||'').toLowerCase().includes(txt);
     const mStatus = !st || d.status === st;
     const mTipo = !tipo || inferirTipo(d) === tipo;
     const dt = new Date(d.data_solicitacao);
@@ -5156,6 +5166,17 @@ let _printConfigKey = null;
 let _printSubtitle  = '';
 let _printFiltros   = '';
 
+function pmTogglePill(label) {
+  const cb = label.querySelector('input[type=checkbox]');
+  cb.checked = !cb.checked;
+  label.classList.toggle('selected', cb.checked);
+}
+
+function pmGetCheckedValues(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} input[type=checkbox]:checked`))
+    .map(cb => cb.value);
+}
+
 function abrirModalImpressao(configKey, subtitle, filtros) {
   _printConfigKey = configKey;
   _printSubtitle  = subtitle || '';
@@ -5168,20 +5189,59 @@ function abrirModalImpressao(configKey, subtitle, filtros) {
       ${c.label}
     </label>`).join('');
 
-  // Mostrar filtro de status apenas para relatórios que suportam filtragem por status
-  const statusBlock = document.getElementById('pmStatusFilterBlock');
-  const statusSelect = document.getElementById('pmStatusFilter');
+  // Configs que suportam filtros avançados
   const configsComStatus = ['coord', 'adm1', 'adm2'];
+  const statusBlock = document.getElementById('pmStatusFilterBlock');
+  const profBlock   = document.getElementById('pmProfFilterBlock');
+  const tipoBlock   = document.getElementById('pmTipoFilterBlock');
+  const ordemBlock  = document.getElementById('pmOrdemBlock');
+
+  // Reset pills de status
+  document.querySelectorAll('#pmStatusPills .pm-check-pill').forEach(lbl => {
+    lbl.classList.remove('selected');
+    lbl.querySelector('input').checked = false;
+  });
+  // Reset pills de tipo
+  document.querySelectorAll('#pmTipoPills .pm-check-pill').forEach(lbl => {
+    lbl.classList.remove('selected');
+    lbl.querySelector('input').checked = false;
+  });
+  document.getElementById('pmOrdemCampo').value = '';
+
   if (configsComStatus.includes(configKey)) {
     statusBlock.style.display = 'block';
-    // Pré-preenche com o filtro de status já ativo na tela
+    tipoBlock.style.display   = 'block';
+    ordemBlock.style.display  = 'block';
+
+    // Pré-marca o status atual da tela (se houver um único selecionado)
     const filterIdMap = { coord: 'filterStatus', adm1: 'adm1FilterStatus', adm2: null };
     const filterId = filterIdMap[configKey];
     const currentStatus = filterId ? (document.getElementById(filterId)||{}).value||'' : '';
-    statusSelect.value = currentStatus;
+    if (currentStatus) {
+      const pill = document.querySelector(`#pmStatusPills input[value="${currentStatus}"]`);
+      if (pill) { pill.checked = true; pill.closest('.pm-check-pill').classList.add('selected'); }
+    }
+
+    // Popula professores dinamicamente de allSolic
+    const profPills = document.getElementById('pmProfPills');
+    const profs = [...new Set((allSolic||[]).map(d=>d.professor).filter(Boolean))].sort();
+    profBlock.style.display = profs.length ? 'block' : 'none';
+    profPills.innerHTML = profs.map(p =>
+      `<label class="pm-check-pill" onclick="pmTogglePill(this)"><input type="checkbox" value="${p.replace(/"/g,'&quot;')}"> ${p}</label>`
+    ).join('');
+    // Pré-marca professor da tela se selecionado (somente se único)
+    const profFilterIdMap = { coord: 'filterProfessor', adm1: 'adm1FilterProf', adm2: 'adm2FilterProf' };
+    const profFilterId = profFilterIdMap[configKey];
+    const currentProf = profFilterId ? (document.getElementById(profFilterId)||{}).value||'' : '';
+    if (currentProf) {
+      const ppill = profPills.querySelector(`input[value="${currentProf}"]`);
+      if (ppill) { ppill.checked = true; ppill.closest('.pm-check-pill').classList.add('selected'); }
+    }
   } else {
     statusBlock.style.display = 'none';
-    statusSelect.value = '';
+    profBlock.style.display   = 'none';
+    tipoBlock.style.display   = 'none';
+    ordemBlock.style.display  = 'none';
   }
 
   document.getElementById('printModalOverlay').classList.add('open');
@@ -5197,6 +5257,27 @@ function pmToggleAll() {
   boxes.forEach(b => b.checked = !allChecked);
 }
 
+function _aplicarOrdem(data, ordem) {
+  if (!ordem) return data;
+  const arr = [...data];
+  const getProf  = d => (d.professor||d.professor_nome||'').toLowerCase();
+  const getData  = d => new Date(d.data_solicitacao||d.created_at||0).getTime();
+  const getDisc  = d => (d.disciplina||'').toLowerCase();
+  const getCopias = d => d.totalCopias ?? (d.total_copias || d.copias || 0);
+  const getStatus = d => (d.status||'').toLowerCase();
+  const sorts = {
+    professor_asc:  (a,b) => getProf(a).localeCompare(getProf(b),'pt-BR'),
+    professor_desc: (a,b) => getProf(b).localeCompare(getProf(a),'pt-BR'),
+    data_asc:       (a,b) => getData(a) - getData(b),
+    data_desc:      (a,b) => getData(b) - getData(a),
+    disciplina_asc: (a,b) => getDisc(a).localeCompare(getDisc(b),'pt-BR'),
+    copias_desc:    (a,b) => getCopias(b) - getCopias(a),
+    copias_asc:     (a,b) => getCopias(a) - getCopias(b),
+    status_asc:     (a,b) => getStatus(a).localeCompare(getStatus(b),'pt-BR'),
+  };
+  return sorts[ordem] ? arr.sort(sorts[ordem]) : arr;
+}
+
 function executarImpressao() {
   const cfg = PRINT_CONFIGS[_printConfigKey];
   if (!cfg) return;
@@ -5208,70 +5289,129 @@ function executarImpressao() {
 
   const selectedCols = cfg.cols.filter(c => selectedKeys.includes(c.key));
 
-  // Aplica filtro de status do modal (se visível)
+  // Lê filtros multi-seleção do modal
   const statusBlock = document.getElementById('pmStatusFilterBlock');
-  const pmStatus = statusBlock.style.display !== 'none'
-    ? document.getElementById('pmStatusFilter').value
-    : '';
+  const hasFilters  = statusBlock.style.display !== 'none';
+  const pmStatuses  = hasFilters ? pmGetCheckedValues('pmStatusPills')  : [];
+  const pmProfs     = hasFilters ? pmGetCheckedValues('pmProfPills')     : [];
+  const pmTipos     = hasFilters ? pmGetCheckedValues('pmTipoPills')     : [];
+  const pmOrdem     = hasFilters ? (document.getElementById('pmOrdemCampo')||{}).value||'' : '';
 
-  let data = cfg.getData();
-  if (pmStatus) {
-    // Para configs que retornam registros individuais (coord, adm2), filtra por status
-    // Para configs agrupadas (resumo), o getData já filtra internamente
-    if (_printConfigKey === 'coord' || _printConfigKey === 'adm2') {
-      data = data.filter(d => d.status === pmStatus);
-    }
-    // adm1 já agrupa por professor — re-filtra allSolic com status e reagrupa
-    if (_printConfigKey === 'adm1') {
-      const filtered = allSolic.filter(d => {
-        const prof  = document.getElementById('adm1FilterProf').value;
-        const de    = document.getElementById('adm1FilterDe').value;
-        const ate   = document.getElementById('adm1FilterAte').value;
-        const tipo  = (document.getElementById('adm1FilterTipo')||{}).value||'';
+  let data;
+
+  // Quando há filtros no modal ativos (coord/adm1/adm2), parte sempre de allSolic
+  // para evitar conflito com filtros únicos já aplicados na tela.
+  if (hasFilters && (_printConfigKey === 'coord' || _printConfigKey === 'adm2')) {
+    // Base: todos os registros, preservando apenas o filtro de texto da tela
+    const txt = (_printConfigKey === 'coord')
+      ? (document.getElementById('filterText')||{}).value||''
+      : (document.getElementById('adm2FilterText')||{}).value||'';
+    const txtLow = txt.toLowerCase();
+
+    // Para adm2 preserva também filtros de data e tipo de anexo da tela
+    let base = allSolic;
+    if (_printConfigKey === 'adm2') {
+      const de  = (document.getElementById('adm2FilterDe')||{}).value||'';
+      const ate = (document.getElementById('adm2FilterAte')||{}).value||'';
+      const tipoAnexo = (document.getElementById('adm2FilterTipo')||{}).value||'';
+      base = allSolic.filter(d => {
         const dt = new Date(d.data_solicitacao);
-        return d.status === pmStatus
-          && (!prof || d.professor === prof)
-          && (!de   || dt >= new Date(de+'T00:00:00'))
-          && (!ate  || dt <= new Date(ate+'T23:59:59'))
-          && (!tipo || inferirTipo(d) === tipo);
+        const temArq = d.arquivo_url||d.arquivo2_url||d.drive_link||d.drive_link2;
+        return (!de  || dt >= new Date(de+'T00:00:00'))
+          &&   (!ate || dt <= new Date(ate+'T23:59:59'))
+          &&   (!tipoAnexo || (tipoAnexo==='arquivo'?(d.arquivo_url||d.arquivo2_url):tipoAnexo==='drive'?(d.drive_link||d.drive_link2):false));
       });
-      const map = {};
-      filtered.forEach(d => {
-        const k = d.professor||'—';
-        if (!map[k]) map[k]={professor:k,disciplina:d.disciplina,items:[],totalCopias:0,provas:0,atividades:0};
-        map[k].items.push(d);
-        map[k].totalCopias += (d.total_copias||d.copias||0);
-        if (inferirTipo(d)==='PROVA') map[k].provas+=(d.total_copias||d.copias||0);
-        else map[k].atividades+=(d.total_copias||d.copias||0);
-      });
-      data = Object.values(map).sort((a,b)=>b.totalCopias-a.totalCopias);
     }
+
+    data = base.filter(d => {
+      const mTxt = !txtLow || (d.professor||'').toLowerCase().includes(txtLow) || (d.titulo||'').toLowerCase().includes(txtLow);
+      const mSt  = !pmStatuses.length || pmStatuses.includes(d.status);
+      const mProf = !pmProfs.length   || pmProfs.includes(d.professor);
+      const mTipo = !pmTipos.length   || pmTipos.includes(inferirTipo(d));
+      return mTxt && mSt && mProf && mTipo;
+    });
+
+  } else if (hasFilters && _printConfigKey === 'adm1') {
+    // adm1 agrupa por professor — refaz a partir de allSolic com filtros de data/tipo da tela + multi-filtros do modal
+    const de   = (document.getElementById('adm1FilterDe')||{}).value||'';
+    const ate  = (document.getElementById('adm1FilterAte')||{}).value||'';
+    const tipoTela = (document.getElementById('adm1FilterTipo')||{}).value||'';
+    const filtered = allSolic.filter(d => {
+      const dt = new Date(d.data_solicitacao);
+      const mSt   = !pmStatuses.length || pmStatuses.includes(d.status);
+      const mProf = !pmProfs.length    || pmProfs.includes(d.professor);
+      const mTipo = !pmTipos.length    || pmTipos.includes(inferirTipo(d));
+      return mSt && mProf && mTipo
+        && (!de  || dt >= new Date(de+'T00:00:00'))
+        && (!ate || dt <= new Date(ate+'T23:59:59'))
+        && (!tipoTela || inferirTipo(d) === tipoTela);
+    });
+    const map = {};
+    filtered.forEach(d => {
+      const k = d.professor||'—';
+      if (!map[k]) map[k]={professor:k,disciplina:d.disciplina,items:[],totalCopias:0,provas:0,atividades:0};
+      map[k].items.push(d);
+      map[k].totalCopias += (d.total_copias||d.copias||0);
+      if (inferirTipo(d)==='PROVA') map[k].provas+=(d.total_copias||d.copias||0);
+      else map[k].atividades+=(d.total_copias||d.copias||0);
+    });
+    data = Object.values(map).sort((a,b)=>b.totalCopias-a.totalCopias);
+
+  } else {
+    // Configs sem filtros no modal (resumo, etc.) — usa getData() normalmente
+    data = cfg.getData();
   }
 
-  // Atualiza linha de filtros no cabeçalho para refletir status escolhido no modal
+  // Aplica ordenação
+  data = _aplicarOrdem(data, pmOrdem);
+
+  // Linha de filtros para cabeçalho
   let filtrosLine = _printFiltros;
-  if (pmStatus) {
-    // Substitui ou acrescenta o status nos filtros
-    if (filtrosLine && filtrosLine !== 'Todos os registros') {
-      filtrosLine = filtrosLine.replace(/Status:[^|]*/g, '').replace(/\|\s*$/, '').trim();
-      filtrosLine = filtrosLine ? filtrosLine + '  |  Status: ' + pmStatus : 'Status: ' + pmStatus;
-    } else {
-      filtrosLine = 'Status: ' + pmStatus;
-    }
+  const extraFiltros = [];
+  if (pmStatuses.length)  extraFiltros.push('Status: ' + pmStatuses.join(', '));
+  if (pmProfs.length)     extraFiltros.push('Professor: ' + pmProfs.join(', '));
+  if (pmTipos.length)     extraFiltros.push('Tipo: ' + pmTipos.join(', '));
+  if (pmOrdem) {
+    const ordemLabels = {
+      professor_asc:'Ordem: Prof. A→Z', professor_desc:'Ordem: Prof. Z→A',
+      data_asc:'Ordem: Data ↑', data_desc:'Ordem: Data ↓',
+      disciplina_asc:'Ordem: Disciplina A→Z', copias_desc:'Ordem: Cópias ↓',
+      copias_asc:'Ordem: Cópias ↑', status_asc:'Ordem: Status A→Z'
+    };
+    extraFiltros.push(ordemLabels[pmOrdem]||'');
+  }
+  if (extraFiltros.length) {
+    filtrosLine = filtrosLine && filtrosLine !== 'Todos os registros'
+      ? filtrosLine + '  |  ' + extraFiltros.join('  |  ')
+      : extraFiltros.join('  |  ');
   }
 
   const totals = cfg.getTotals(data);
   const now = new Date().toLocaleString('pt-BR');
 
-  // Cabeçalho minimalista
+  // Professor(es) selecionados para exibir no cabeçalho
+  const profHeader = pmProfs.length === 1 ? pmProfs[0]
+    : pmProfs.length > 1 ? pmProfs.join(', ')
+    : (() => {
+      // tenta pegar professor do filtro ativo na tela
+      const pfMap = { coord: 'filterProfessor', adm1: 'adm1FilterProf', adm2: 'adm2FilterProf' };
+      const pfId = pfMap[_printConfigKey];
+      return pfId ? (document.getElementById(pfId)||{}).value||'' : '';
+    })();
+
   const filtrosHtml = filtrosLine
     ? `<div style="font-size:9.5px;color:#777;margin-top:4px;font-style:italic;">📅 ${filtrosLine}</div>`
     : '';
+  const profHtml = profHeader
+    ? `<div style="font-size:10.5px;color:#1a3a2a;margin-top:3px;font-weight:600;">👤 ${profHeader}</div>`
+    : '';
+
   const headerHtml = `
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1a3a2a;">
       <div>
         <div style="font-family:Arial,sans-serif;font-weight:900;font-size:17px;color:#1a3a2a;letter-spacing:-.02em;">🖨️ CópiaFácil</div>
         <div style="font-size:11px;color:#555;margin-top:2px;">${_printSubtitle || cfg.title}</div>
+        ${profHtml}
         ${filtrosHtml}
       </div>
       <div style="text-align:right;">
@@ -5290,7 +5430,6 @@ function executarImpressao() {
     `<th style="text-align:left;padding:5px 7px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#555;background:#f5f5f5;border-bottom:2px solid #ccc;white-space:nowrap;">${c.label}</th>`
   ).join('')}</tr></thead>`;
 
-  // Linhas — para tabelas agrupadas (coordenação) itera normalmente
   const rows = data.map((item, idx) => {
     const bg = idx % 2 === 1 ? '#fafafa' : '#fff';
     const cells = selectedCols.map(c =>
@@ -5299,7 +5438,6 @@ function executarImpressao() {
     return `<tr style="background:${bg};">${cells}</tr>`;
   });
 
-  // Linha de totais no rodapé da tabela (quando aplicável)
   let totalRow = '';
   if (selectedKeys.includes('totalCopias') || selectedKeys.includes('total_copias')) {
     const totalNum = data.reduce((s, r) => {
@@ -5318,8 +5456,13 @@ function executarImpressao() {
 
   const tableHtml = `<table style="width:100%;border-collapse:collapse;font-size:10px;">${thead}<tbody>${rows.join('')}${totalRow}</tbody></table>`;
 
-  // Abre janela de impressão isolada
-  const win = window.open('', '_blank', 'width=1100,height=750');
+  // Calcula 65% da tela do usuário para a janela de impressão
+  const sw = Math.round(window.screen.width  * 0.65);
+  const sh = Math.round(window.screen.height * 0.65);
+  const sl = Math.round((window.screen.width  - sw) / 2);
+  const st = Math.round((window.screen.height - sh) / 2);
+
+  const win = window.open('', '_blank', `width=${sw},height=${sh},left=${sl},top=${st},resizable=yes,scrollbars=yes`);
   win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <title>CópiaFácil — ${cfg.title}</title>
@@ -5327,14 +5470,40 @@ function executarImpressao() {
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body { font-family: Arial, sans-serif; background: #fff; color: #000; padding: 18mm 14mm; }
       @page { margin: 15mm 12mm; size: A4 landscape; }
-      @media print { body { padding: 0; } }
+      @media print { body { padding: 0; } .no-print { display: none !important; } }
+      .print-toolbar {
+        position: sticky; top: 0; background: #1a3a2a; color: #fff; padding: .6rem 1.2rem;
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        font-family: Arial, sans-serif; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.3);
+      }
+      .print-toolbar .pt-title { font-size: 13px; font-weight: 900; letter-spacing: -.01em; }
+      .print-toolbar .pt-prof  { font-size: 11px; opacity: .8; margin-top: 2px; }
+      .print-toolbar .pt-right { display: flex; gap: .5rem; }
+      .pt-btn { font-family: Arial, sans-serif; font-size: 12px; font-weight: 700; padding: .4rem .9rem;
+        border: none; border-radius: 6px; cursor: pointer; transition: opacity .15s; }
+      .pt-btn.print { background: #e8a020; color: #1a3a2a; }
+      .pt-btn.close { background: rgba(255,255,255,.15); color: #fff; }
+      .pt-btn:hover { opacity: .85; }
+      .content { padding: 1.2rem 1.4rem; }
     </style>
   </head><body>
-    ${headerHtml}
-    ${tableHtml}
+    <div class="print-toolbar no-print">
+      <div>
+        <div class="pt-title">🖨️ CópiaFácil — ${(_printSubtitle || cfg.title).replace(/</g,'&lt;')}</div>
+        ${profHeader ? `<div class="pt-prof">👤 ${profHeader.replace(/</g,'&lt;')}</div>` : ''}
+      </div>
+      <div class="pt-right">
+        <button class="pt-btn print" onclick="window.print()">🖨️ Imprimir</button>
+        <button class="pt-btn close" onclick="window.close()">✕ Fechar</button>
+      </div>
+    </div>
+    <div class="content">
+      ${headerHtml}
+      ${tableHtml}
+    </div>
     <script>
       window.onload = function() {
-        setTimeout(function(){ window.print(); }, 300);
+        setTimeout(function(){ window.print(); }, 400);
       };
     <\/script>
   </body></html>`);
