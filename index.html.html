@@ -12,6 +12,68 @@
     --accent2: #c94f2a; --text: #1a1a1a; --muted: #6b6b5a; --border: #d8d0c0;
     --success: #2a7a4a; --radius: 12px;
   }
+  [data-theme="dark"] {
+    --bg: #0f1a14; --surface: #172212; --primary: #4ade80; --accent: #f59e0b;
+    --accent2: #f87171; --text: #e8f0eb; --muted: #7a9a85; --border: #2a3d30;
+    --success: #4ade80;
+  }
+  html { transition: background .25s ease, color .25s ease; }
+  body, .card, .card-sm, .auth-box, .pending-box, .modal, .confirm-box, #progressBox,
+  header, .auth-tab, .fg input, .fg select, .fg-grid input, .fg-grid select, .fg-grid textarea,
+  .file-drop, .stat-card, .minha-card, .status-block, .viewer-box,
+  .modal-tut, .modal-tut-nav, .modal-tut-body, .tut-visual, .retro-box {
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+  }
+  [data-theme="dark"] tbody tr:hover { background: #1e2e22 !important; }
+  [data-theme="dark"] .auth-tab.active { background: #1e3028; }
+  [data-theme="dark"] .solicitante-box { background: #1a2e20; border-color: #2a4030; }
+  [data-theme="dark"] .deadline-box { background: linear-gradient(135deg,#0f2018 0%,#162a1e 100%); }
+  [data-theme="dark"] .senha-req { background: #1a2520; }
+  [data-theme="dark"] .auth-erro { background: #3a1a1a; }
+  [data-theme="dark"] .auth-info { background: #1a3020; }
+  [data-theme="dark"] .tut-callout.tip { background: #1a2e20; border-color: #2a4030; }
+  [data-theme="dark"] .tut-callout.warn { background: #2a2010; border-color: #4a3a10; }
+  [data-theme="dark"] .tut-callout.info { background: #1a2030; border-color: #2a3a50; }
+  [data-theme="dark"] .tut-visual { background: #1a2218; }
+  [data-theme="dark"] .drive-preview { background: #1a2030; border-color: #2a3a50; }
+  [data-theme="dark"] .badge-pending   { background: #3a2a00; color: #f59e0b; }
+  [data-theme="dark"] .badge-progress  { background: #0a1a3a; color: #60a5fa; }
+  [data-theme="dark"] .badge-ready     { background: #0f2018; color: #4ade80; }
+  [data-theme="dark"] .badge-done      { background: #0a2218; color: #4ade80; }
+  [data-theme="dark"] .badge-cancelled { background: #3a0a0a; color: #f87171; }
+  [data-theme="dark"] .badge-waiting   { background: #1a0a3a; color: #c084fc; }
+  [data-theme="dark"] .modal-edit-section { background: #2a1e00; border-color: #4a3a10; }
+  [data-theme="dark"] thead th { background: #0f1a14; }
+  [data-theme="dark"] .retro-box { background: #172212; }
+  [data-theme="dark"] #toast { background: #1e3028; }
+  [data-theme="dark"] .tut-mock-dropzone { border-color: #f59e0b; background: #1e2810; }
+  [data-theme="dark"] .tut-mock-dropzone-ok { background: #1a2e20; border-color: #4ade80; color: #4ade80; }
+
+  /* ── BOTÃO TEMA ── */
+  .btn-theme {
+    background: rgba(255,255,255,.1);
+    border: 1.5px solid rgba(255,255,255,.22);
+    color: #fff;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    transition: background .2s, transform .2s, border-color .2s;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-theme:hover { background: rgba(255,255,255,.22); border-color: var(--accent); transform: scale(1.1); }
+  .btn-theme .t-sun, .btn-theme .t-moon {
+    position: absolute;
+    transition: opacity .28s, transform .28s;
+    line-height: 1;
+  }
+  .btn-theme .t-sun  { opacity: 1; transform: rotate(0deg) scale(1); }
+  .btn-theme .t-moon { opacity: 0; transform: rotate(90deg) scale(.4); }
+  [data-theme="dark"] .btn-theme .t-sun  { opacity: 0; transform: rotate(-90deg) scale(.4); }
+  [data-theme="dark"] .btn-theme .t-moon { opacity: 1; transform: rotate(0deg) scale(1); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
@@ -841,6 +903,7 @@
     <div class="header-right">
       <span class="perfil-badge" id="perfilBadge"></span>
       <nav id="navBar"></nav>
+      <button class="btn-theme" id="btnTema" onclick="toggleTema()" title="Alternar tema"><span class="t-sun">☀️</span><span class="t-moon">🌙</span></button>
       <button class="btn-sair" onclick="sair()">Sair</button>
     </div>
   </header>
@@ -5600,6 +5663,24 @@ function tutShowPanel(i){
 document.addEventListener('keydown', e => { if(e.key==='Escape') fecharTutorial(); });
 </script>
 
+
+<script>
+/* ── TOGGLE TEMA CLARO / ESCURO ── */
+(function() {
+  var saved = localStorage.getItem('cf-tema');
+  if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+function toggleTema() {
+  var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('cf-tema', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('cf-tema', 'dark');
+  }
+}
+</script>
 <!-- ── TOOLTIP GLOBAL ── -->
 <div id="globalTooltip"></div>
 <script>
