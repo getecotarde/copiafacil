@@ -13,8 +13,8 @@
     --success: #2a7a4a; --radius: 12px;
   }
   [data-theme="dark"] {
-    --bg: #000000; --surface: #111111; --primary: #ffffff; --accent: #f59e0b;
-    --accent2: #f87171; --text: #ffffff; --muted: #bbbbbb; --border: #333333;
+    --bg: #0f1a14; --surface: #172212; --primary: #4ade80; --accent: #f59e0b;
+    --accent2: #f87171; --text: #e8f0eb; --muted: #7a9a85; --border: #2a3d30;
     --success: #4ade80;
   }
   html { transition: background .25s ease, color .25s ease; }
@@ -24,30 +24,30 @@
   .modal-tut, .modal-tut-nav, .modal-tut-body, .tut-visual, .retro-box {
     transition: background-color .25s ease, color .25s ease, border-color .25s ease;
   }
-  [data-theme="dark"] tbody tr:hover { background: #1a1a1a !important; }
-  [data-theme="dark"] .auth-tab.active { background: #222222; }
-  [data-theme="dark"] .solicitante-box { background: #111111; border-color: #333333; }
-  [data-theme="dark"] .deadline-box { background: linear-gradient(135deg,#000000 0%,#111111 100%); }
-  [data-theme="dark"] .senha-req { background: #111111; }
-  [data-theme="dark"] .auth-erro { background: #2a0000; }
-  [data-theme="dark"] .auth-info { background: #001a0a; }
-  [data-theme="dark"] .tut-callout.tip { background: #111111; border-color: #333333; }
-  [data-theme="dark"] .tut-callout.warn { background: #1a1100; border-color: #333300; }
-  [data-theme="dark"] .tut-callout.info { background: #001122; border-color: #002244; }
-  [data-theme="dark"] .tut-visual { background: #111111; }
-  [data-theme="dark"] .drive-preview { background: #001122; border-color: #002244; }
-  [data-theme="dark"] .badge-pending   { background: #1a1000; color: #f59e0b; }
-  [data-theme="dark"] .badge-progress  { background: #00112a; color: #60a5fa; }
-  [data-theme="dark"] .badge-ready     { background: #001a08; color: #4ade80; }
-  [data-theme="dark"] .badge-done      { background: #001a08; color: #4ade80; }
-  [data-theme="dark"] .badge-cancelled { background: #1a0000; color: #f87171; }
-  [data-theme="dark"] .badge-waiting   { background: #0a0022; color: #c084fc; }
-  [data-theme="dark"] .modal-edit-section { background: #111100; border-color: #333300; }
-  [data-theme="dark"] thead th { background: #000000; }
-  [data-theme="dark"] .retro-box { background: #111111; }
-  [data-theme="dark"] #toast { background: #111111; }
-  [data-theme="dark"] .tut-mock-dropzone { border-color: #f59e0b; background: #111111; }
-  [data-theme="dark"] .tut-mock-dropzone-ok { background: #001a08; border-color: #4ade80; color: #4ade80; }
+  [data-theme="dark"] tbody tr:hover { background: #1e2e22 !important; }
+  [data-theme="dark"] .auth-tab.active { background: #1e3028; }
+  [data-theme="dark"] .solicitante-box { background: #1a2e20; border-color: #2a4030; }
+  [data-theme="dark"] .deadline-box { background: linear-gradient(135deg,#0f2018 0%,#162a1e 100%); }
+  [data-theme="dark"] .senha-req { background: #1a2520; }
+  [data-theme="dark"] .auth-erro { background: #3a1a1a; }
+  [data-theme="dark"] .auth-info { background: #1a3020; }
+  [data-theme="dark"] .tut-callout.tip { background: #1a2e20; border-color: #2a4030; }
+  [data-theme="dark"] .tut-callout.warn { background: #2a2010; border-color: #4a3a10; }
+  [data-theme="dark"] .tut-callout.info { background: #1a2030; border-color: #2a3a50; }
+  [data-theme="dark"] .tut-visual { background: #1a2218; }
+  [data-theme="dark"] .drive-preview { background: #1a2030; border-color: #2a3a50; }
+  [data-theme="dark"] .badge-pending   { background: #3a2a00; color: #f59e0b; }
+  [data-theme="dark"] .badge-progress  { background: #0a1a3a; color: #60a5fa; }
+  [data-theme="dark"] .badge-ready     { background: #0f2018; color: #4ade80; }
+  [data-theme="dark"] .badge-done      { background: #0a2218; color: #4ade80; }
+  [data-theme="dark"] .badge-cancelled { background: #3a0a0a; color: #f87171; }
+  [data-theme="dark"] .badge-waiting   { background: #1a0a3a; color: #c084fc; }
+  [data-theme="dark"] .modal-edit-section { background: #2a1e00; border-color: #4a3a10; }
+  [data-theme="dark"] thead th { background: #0f1a14; }
+  [data-theme="dark"] .retro-box { background: #172212; }
+  [data-theme="dark"] #toast { background: #1e3028; }
+  [data-theme="dark"] .tut-mock-dropzone { border-color: #f59e0b; background: #1e2810; }
+  [data-theme="dark"] .tut-mock-dropzone-ok { background: #1a2e20; border-color: #4ade80; color: #4ade80; }
 
   /* ── BOTÃO TEMA ── */
   .btn-theme {
@@ -540,6 +540,81 @@
   .senha-mask { font-family: monospace; font-weight: 700; letter-spacing: .08em; color: var(--primary); }
   .btn-eye { background: none; border: 1.5px solid var(--border); border-radius: 6px; cursor: pointer; font-size: .82rem; padding: .18rem .5rem; color: var(--muted); transition: all .15s; line-height: 1.4; flex-shrink: 0; }
   .btn-eye:hover { border-color: var(--primary); color: var(--primary); background: rgba(26,58,42,.06); }
+
+  /* ── MODAL PARECER PEDAGÓGICO ── */
+  .modal-parecer-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 10000;
+    display: none; align-items: center; justify-content: center; padding: 1rem;
+  }
+  .modal-parecer-overlay.open { display: flex; }
+  .modal-parecer-box {
+    background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px;
+    padding: 2rem; width: 100%; max-width: 520px;
+    box-shadow: 0 12px 48px rgba(0,0,0,.22); animation: fadeIn .2s ease;
+  }
+  .modal-parecer-box h3 {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem;
+    color: var(--primary); margin-bottom: .35rem;
+  }
+  .modal-parecer-box .mp-sub { font-size: .85rem; color: var(--muted); margin-bottom: 1.4rem; line-height: 1.5; }
+  .mp-opcoes { display: flex; flex-direction: column; gap: .7rem; margin-bottom: 1.2rem; }
+  .mp-opcao {
+    border: 2px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem;
+    cursor: pointer; transition: all .18s; display: flex; align-items: flex-start; gap: .9rem;
+    background: var(--bg);
+  }
+  .mp-opcao:hover { border-color: var(--primary); background: rgba(26,58,42,.04); }
+  .mp-opcao.selected { border-color: var(--primary); background: #e8f0eb; }
+  .mp-opcao .mp-icon { font-size: 1.6rem; flex-shrink: 0; line-height: 1; }
+  .mp-opcao .mp-label { font-weight: 700; font-size: .93rem; color: var(--primary); margin-bottom: .18rem; }
+  .mp-opcao .mp-desc { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+  .mp-opcao-parecer { border-color: #c97020; }
+  .mp-opcao-parecer:hover { border-color: #c97020; background: #fff8ec; }
+  .mp-opcao-parecer.selected { border-color: #c97020; background: #fff3d6; }
+  .mp-opcao-parecer .mp-label { color: #8a4a00; }
+
+  /* ── MODAL INDICAÇÕES ── */
+  .modal-indicacoes-box {
+    background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px;
+    padding: 2rem; width: 100%; max-width: 560px;
+    box-shadow: 0 12px 48px rgba(0,0,0,.22); animation: fadeIn .2s ease;
+  }
+  .modal-indicacoes-box h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: #8a4a00; margin-bottom: .3rem; }
+  .modal-indicacoes-box .mi-sub { font-size: .83rem; color: var(--muted); margin-bottom: 1.2rem; line-height: 1.5; }
+  .mi-categorias { display: flex; flex-direction: column; gap: .6rem; margin-bottom: 1rem; }
+  .mi-cat-row { display: flex; align-items: center; gap: .6rem; }
+  .mi-cat-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #c97020; flex-shrink: 0; }
+  .mi-cat-row label { font-size: .85rem; color: var(--text); cursor: pointer; }
+
+  /* ── BADGE PARECER ── */
+  .badge-parecer { background: #fff3d6; color: #8a4a00; border: 1.5px solid #f0d090; }
+  .badge-encaminhado { background: #e8f0eb; color: #1a5a2a; border: 1.5px solid #a0d8b8; }
+
+  /* ── CARD PARECER PEDAGÓGICO ── */
+  .parecer-card {
+    border: 2px solid #f0c860; border-radius: 12px; padding: 1rem 1.2rem;
+    background: #fffdf0; margin-bottom: .8rem;
+  }
+  .parecer-card-title { font-weight: 700; font-size: .92rem; color: var(--primary); margin-bottom: .35rem; }
+  .parecer-card-meta { font-size: .78rem; color: var(--muted); margin-bottom: .6rem; display: flex; gap: .8rem; flex-wrap: wrap; }
+  .parecer-indicacoes { background: #fff8e8; border: 1.5px solid #f0d8a0; border-radius: 8px; padding: .7rem 1rem; margin-bottom: .7rem; }
+  .parecer-indicacoes-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #8a4a00; margin-bottom: .4rem; }
+  .parecer-indicacoes p { font-size: .84rem; color: var(--text); line-height: 1.5; white-space: pre-wrap; }
+  .parecer-encaminhamento { background: #e8f0eb; border: 1.5px solid #b8d4bf; border-radius: 8px; padding: .7rem 1rem; margin-bottom: .7rem; }
+  .parecer-encaminhamento-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #1a5a2a; margin-bottom: .4rem; }
+
+  /* ── SUBCOORDENADOR — ENVIADOS PARA COORD ── */
+  #painelEnviadosCoord { margin-top: 1.5rem; }
+  .enviados-coord-card {
+    border: 1.5px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem;
+    background: var(--surface); margin-bottom: .8rem;
+  }
+  .enviados-coord-card.com-retorno { border-color: #b8d4bf; background: #f0faf4; }
+  .ec-title { font-weight: 700; font-size: .9rem; color: var(--primary); margin-bottom: .3rem; }
+  .ec-meta { font-size: .75rem; color: var(--muted); margin-bottom: .5rem; display: flex; gap: .7rem; flex-wrap: wrap; }
+  .ec-indicacoes { background: #fff8e8; border: 1.5px solid #f0d8a0; border-radius: 7px; padding: .55rem .8rem; margin-bottom: .5rem; font-size: .82rem; color: var(--text); line-height: 1.5; }
+  .ec-retorno { background: #e8f0eb; border: 1.5px solid #b8d4bf; border-radius: 7px; padding: .55rem .8rem; font-size: .82rem; color: #1a5a2a; line-height: 1.5; }
+  .ec-retorno-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #1a5a2a; margin-bottom: .2rem; }
 
   /* ── TOOLTIP OBSERVAÇÕES MECANOGRAFIA ── */
   .meca-obs-wrap { display: inline-block; position: relative; }
@@ -1177,6 +1252,7 @@
         <button class="coord-tab" onclick="switchCoordTab('mecanografia',this)">🖨️ Mecanografia</button>
         <button class="coord-tab" onclick="switchCoordTab('admcopias',this)">📊 Adm. Cópias</button>
         <button class="coord-tab" onclick="switchCoordTab('pedagogico',this)">📚 Pedagógico</button>
+        <button class="coord-tab" id="tabBtnParecer" style="display:none;" onclick="switchCoordTab('parecer',this)">📋 Parecer Pedagógico <span id="parecerBadgeCount" style="display:none;background:#c97020;color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:99px;margin-left:.3rem;"></span></button>
         <button class="coord-tab" id="coordSubTabBtn" style="display:none;" onclick="switchCoordTab('coordsub',this)">👥 Coord. Sub</button>
       </div>
 
@@ -1360,6 +1436,7 @@
               <option value="">Todos os status</option>
               <option value="Aguardando">Aguardando</option><option value="Autorizado">Autorizado</option>
               <option value="Pronto">Pronto</option><option value="Entregue">Entregue</option><option value="Cancelado">Cancelado</option>
+              <option value="__parecer__">📚 Parecer Pedagógico</option>
             </select>
             <button class="btn-secondary" onclick="exportarSolicitacoesExcel()" title="Exportar tabela para Excel" style="display:flex;align-items:center;gap:.4rem;white-space:nowrap;">
               📊 Exportar Excel
@@ -1710,8 +1787,20 @@
           <div id="coordSubGerenciar"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
         </div>
       </div>
-    </div>
 
+      <!-- TAB PARECER PEDAGÓGICO (visível só para coordenação master) -->
+      <div class="tab-panel" id="tab-parecer">
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--primary);">📋 Pareceres Pedagógicos Pendentes</div>
+            <div style="font-size:.85rem;color:var(--muted);margin-top:.2rem;">Solicitações encaminhadas pelo Sub Coordenador aguardando análise e encaminhamento.</div>
+          </div>
+          <button class="btn-secondary" onclick="renderPainelParecer()">↻ Atualizar</button>
+        </div>
+        <div id="parecerContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+      </div>
+
+    </div>
   </main>
 </div>
 
@@ -2157,6 +2246,102 @@
   </div>
 </div>
 
+<!-- ── MODAL CONFIRMAÇÃO ENVIO (COORD / SUBCOORDENAÇÃO) ── -->
+<div class="modal-parecer-overlay" id="modalConfirmarEnvioOverlay">
+  <div class="modal-parecer-box">
+    <h3>📋 Como registrar esta solicitação?</h3>
+    <p class="mp-sub">Escolha se a solicitação deve ir diretamente para a fila da Mecanografia ou se precisa de um Parecer Pedagógico antes.</p>
+    <div class="mp-opcoes">
+      <div class="mp-opcao" id="mpOpcaoAutorizar" onclick="selecionarOpcaoEnvio('autorizar')">
+        <div class="mp-icon">✅</div>
+        <div>
+          <div class="mp-label">Autorizar diretamente</div>
+          <div class="mp-desc">A solicitação entra imediatamente na fila da Mecanografia com status <strong>Autorizado</strong>.</div>
+        </div>
+      </div>
+      <div class="mp-opcao mp-opcao-parecer" id="mpOpcaoParecer" onclick="selecionarOpcaoEnvio('parecer')">
+        <div class="mp-icon">📚</div>
+        <div>
+          <div class="mp-label">Encaminhar para Parecer Pedagógico</div>
+          <div class="mp-desc">A solicitação fica <strong>Aguardando</strong> e aparece para o Coordenador com o flag de Parecer Pedagógico. Você poderá registrar indicações no próximo passo.</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:.6rem;justify-content:flex-end;">
+      <button class="btn-secondary" onclick="fecharModalConfirmarEnvio()">Cancelar</button>
+      <button class="btn-action" id="btnConfirmarEnvioOk" onclick="confirmarEnvioComOpcao()" disabled style="opacity:.5;cursor:not-allowed;">Confirmar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL INDICAÇÕES SUBCOORDENADOR ── -->
+<div class="modal-parecer-overlay" id="modalIndicacoesOverlay">
+  <div class="modal-indicacoes-box">
+    <h3>📝 Registrar possíveis (in)correções</h3>
+    <p class="mi-sub">Indique abaixo os pontos que devem ser avaliados pelo Coordenador Pedagógico. Essas indicações ficarão visíveis no card do parecer.</p>
+    <div class="mi-categorias" id="miCategorias">
+      <div class="mi-cat-row">
+        <input type="checkbox" id="miCat1" value="Conteúdo fora do currículo previsto" />
+        <label for="miCat1">Conteúdo fora do currículo previsto</label>
+      </div>
+      <div class="mi-cat-row">
+        <input type="checkbox" id="miCat2" value="Nível de dificuldade inadequado para a turma" />
+        <label for="miCat2">Nível de dificuldade inadequado para a turma</label>
+      </div>
+      <div class="mi-cat-row">
+        <input type="checkbox" id="miCat3" value="Questões com enunciado confuso ou incompleto" />
+        <label for="miCat3">Questões com enunciado confuso ou incompleto</label>
+      </div>
+      <div class="mi-cat-row">
+        <input type="checkbox" id="miCat4" value="Ausência de gabarito ou critérios de correção" />
+        <label for="miCat4">Ausência de gabarito ou critérios de correção</label>
+      </div>
+      <div class="mi-cat-row">
+        <input type="checkbox" id="miCat5" value="Erros ortográficos ou gramaticais relevantes" />
+        <label for="miCat5">Erros ortográficos ou gramaticais relevantes</label>
+      </div>
+      <div class="mi-cat-row">
+        <input type="checkbox" id="miCat6" value="Formatação inadequada ou ilegível" />
+        <label for="miCat6">Formatação inadequada ou ilegível</label>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:1.2rem;">
+      <label style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Observações adicionais (opcional)</label>
+      <textarea id="miObsAdicional" rows="3" placeholder="Descreva aqui outros pontos de atenção ou contexto relevante…" style="font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;resize:vertical;transition:border-color .2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    </div>
+    <div style="display:flex;gap:.6rem;justify-content:flex-end;">
+      <button class="btn-secondary" onclick="fecharModalIndicacoes()">Cancelar</button>
+      <button class="btn-action" onclick="confirmarEnvioComParecer()">📤 Registrar e Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL ENCAMINHAMENTO COORDENADOR ── -->
+<div class="modal-parecer-overlay" id="modalEncaminhamentoOverlay">
+  <div class="modal-indicacoes-box">
+    <h3 style="color:var(--primary);">📨 Redigir Encaminhamento</h3>
+    <p class="mi-sub">Registre abaixo o encaminhamento para esta solicitação. Ele será visível para o subcoordenador em "Pedidos enviados para Coord. Pedagógica".</p>
+    <div id="encamInfoSolic" style="background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.83rem;color:var(--muted);"></div>
+    <div id="encamIndicacoesBox" style="margin-bottom:1rem;"></div>
+    <div style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:1.2rem;">
+      <label style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Encaminhamento da Coordenação Pedagógica *</label>
+      <textarea id="encamTexto" rows="4" placeholder="Ex.: A atividade está aprovada com as seguintes ressalvas…" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;resize:vertical;transition:border-color .2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:1.2rem;">
+      <label style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Decisão final</label>
+      <select id="encamDecisao" style="font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;">
+        <option value="Autorizado">✅ Autorizar — vai para a fila da Mecanografia</option>
+        <option value="Aguardando">⏳ Manter aguardando — retornar ao subcoordenador</option>
+        <option value="Cancelado">❌ Cancelar solicitação</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:.6rem;justify-content:flex-end;">
+      <button class="btn-secondary" onclick="fecharModalEncaminhamento()">Cancelar</button>
+      <button class="btn-action" onclick="salvarEncaminhamento()">💾 Salvar Encaminhamento</button>
+    </div>
+  </div>
+</div>
+
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL = 'https://uaedrqrnexcktjynecja.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZWRycXJuZXhja3RqeW5lY2phIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NDY1MTAsImV4cCI6MjA5MDIyMjUxMH0.uNS6boM5ksPEzThO0B8za4FvqsxCP2IEENFO_BGM7Dw';
@@ -2323,14 +2508,14 @@ async function iniciarApp() {
   } else if (perfilAtual==='coordenacaoSub') {
     badge.textContent='🗂️ Sub Coordenação';
     badge.className='perfil-badge coord';
-    nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
+    nav.innerHTML=`<button onclick="showPage('coord',this)" class="active" id="navBtnGestao">Painel de Gestão</button><button onclick="mostrarEnviadosCoord(this)" id="btnNavEnviadosCoord" style="position:relative;">📚 Enviados p/ Coord. Pedagógica <span id="enviadosBadge" style="display:none;background:#c97020;color:#fff;font-size:.62rem;font-weight:700;padding:.1rem .38rem;border-radius:99px;margin-left:.3rem;vertical-align:middle;"></span></button>`;
     document.getElementById('cf-professor').value='Coordenação';
     document.getElementById('cf-disciplina').value='Coordenação';
     const dpCoordSub=document.getElementById('cf-dataPedido');
     if(dpCoordSub&&!dpCoordSub.value) dpCoordSub.value=new Date().toISOString().slice(0,10);
     await loadCoord();
     // Oculta abas restritas para Sub Coordenação
-    const abasOcultas = ['mecanografia','admcopias','pedagogico','coordsub'];
+    const abasOcultas = ['mecanografia','admcopias','pedagogico','coordsub','parecer'];
     document.querySelectorAll('.coord-tab').forEach(btn => {
       const onclick = btn.getAttribute('onclick') || '';
       const match = onclick.match(/switchCoordTab\('([^']+)'/);
@@ -2344,6 +2529,8 @@ async function iniciarApp() {
     // Oculta o box "Pedido já realizado e atendido" para Sub Coordenação
     const retroBoxSub = document.querySelector('.retro-box');
     if (retroBoxSub) retroBoxSub.style.display = 'none';
+    // Carrega badge de retornos
+    atualizarBadgeEnviados();
     showPage('coord');
   } else {
     badge.textContent='🗂️ Coordenação';
@@ -2354,9 +2541,12 @@ async function iniciarApp() {
     const dpCoord=document.getElementById('cf-dataPedido');
     if(dpCoord&&!dpCoord.value) dpCoord.value=new Date().toISOString().slice(0,10);
     await loadCoord();
-    // Exibe aba de Coordenação Sub apenas para o e-mail master
+    // Exibe aba de Coordenação Sub e Parecer Pedagógico apenas para o e-mail master
     const tabCoordSub = document.getElementById('coordSubTabBtn');
     if(tabCoordSub) tabCoordSub.style.display = coordIsMaster ? 'inline-block' : 'none';
+    const tabParecer = document.getElementById('tabBtnParecer');
+    if(tabParecer) tabParecer.style.display = coordIsMaster ? 'inline-block' : 'none';
+    if(coordIsMaster) atualizarBadgeParecer();
     showPage('coord');
   }
 }
@@ -2577,6 +2767,7 @@ function switchCoordTab(tab,btn) {
   if(tab==='admcopias') renderAdmGerenciar('copias');
   if(tab==='pedagogico') renderAdmGerenciar('pedagogico');
   if(tab==='coordsub') renderCoordSubGerenciar();
+  if(tab==='parecer') renderPainelParecer();
   if(tab==='resumo') {
     // Garante que allSolic está carregado antes de renderizar
     if(allSolic.length === 0) {
@@ -2969,6 +3160,10 @@ function toggleRetroativo(modo) {
 }
 
 // ── SUBMIT SOLICITAÇÃO ──
+// Dados temporários do formulário pendente de confirmação
+let _pendingSubmitData = null;
+let _pendingSubmitModo = null;
+
 async function submitForm(modo){
   const isCoord=modo==='coord';
   syncTurmasHidden(isCoord?'cf':'f');
@@ -2981,19 +3176,106 @@ async function submitForm(modo){
   const obs=document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
   const professor=document.getElementById(isCoord?'cf-professor':'f-professor').value;
   const disciplina=document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
-  const arquivoInput=document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
-  const arquivoInput2=document.getElementById(isCoord?'cf-arquivo2':'f-arquivo2');
-  const driveLink1=(document.getElementById(isCoord?'cf-drive1':'f-drive1').value||'').trim();
-  const driveLink2=(document.getElementById(isCoord?'cf-drive2':'f-drive2').value||'').trim();
   const retroativo=isCoord ? document.getElementById('cf-retroativo').checked : false;
-  const dataRealizadaEl=isCoord ? document.getElementById('cf-dataRealizada') : null;
-  const btnId=isCoord?'btnEnviarCoord':'btnEnviar';
   if(!titulo||!turmas||!copias||!laudas){showToast('⚠️ Preencha todos os campos obrigatórios, incluindo Nº de Laudas.',true);return;}
   if(!tipo){showToast('⚠️ Selecione o Tipo da atividade: PROVA ou ATIVIDADE.',true);return;}
   if(!tipoModo){showToast('⚠️ Selecione o Modo da atividade: REGULAR ou ADAPTADA.',true);return;}
-  const totalCopias=parseInt(copias)*parseInt(laudas);
-  const btn=document.getElementById(btnId);
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Enviando…';
+
+  // Para perfis coord e coordenacaoSub (não retroativo): abre modal de confirmação
+  if ((perfilAtual==='coordenacao' || perfilAtual==='coordenacaoSub') && !retroativo) {
+    _pendingSubmitModo = modo;
+    _pendingSubmitData = { titulo, tipo, tipoModo, turmas, copias, laudas, obs, professor, disciplina, retroativo, isCoord };
+    abrirModalConfirmarEnvio();
+    return;
+  }
+  // Para professor ou retroativo: submete diretamente
+  await _executarSubmitForm(modo, retroativo ? 'Entregue' : 'Aguardando', false, null);
+}
+
+function abrirModalConfirmarEnvio() {
+  // Limpa seleção anterior
+  document.getElementById('mpOpcaoAutorizar').classList.remove('selected');
+  document.getElementById('mpOpcaoParecer').classList.remove('selected');
+  const btn = document.getElementById('btnConfirmarEnvioOk');
+  btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed';
+  window._opcaoEnvioSelecionada = null;
+  document.getElementById('modalConfirmarEnvioOverlay').classList.add('open');
+}
+
+function fecharModalConfirmarEnvio() {
+  document.getElementById('modalConfirmarEnvioOverlay').classList.remove('open');
+  _pendingSubmitData = null; _pendingSubmitModo = null;
+}
+
+function selecionarOpcaoEnvio(opcao) {
+  window._opcaoEnvioSelecionada = opcao;
+  document.getElementById('mpOpcaoAutorizar').classList.toggle('selected', opcao==='autorizar');
+  document.getElementById('mpOpcaoParecer').classList.toggle('selected', opcao==='parecer');
+  const btn = document.getElementById('btnConfirmarEnvioOk');
+  btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+}
+
+async function confirmarEnvioComOpcao() {
+  const opcao = window._opcaoEnvioSelecionada;
+  if (!opcao) return;
+  document.getElementById('modalConfirmarEnvioOverlay').classList.remove('open');
+  if (opcao === 'autorizar') {
+    // Submete diretamente como Autorizado
+    await _executarSubmitForm(_pendingSubmitModo, 'Autorizado', false, null);
+  } else {
+    // Abre modal de indicações
+    abrirModalIndicacoes();
+  }
+}
+
+function abrirModalIndicacoes() {
+  // Limpa campos
+  document.querySelectorAll('#miCategorias input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.getElementById('miObsAdicional').value = '';
+  document.getElementById('modalIndicacoesOverlay').classList.add('open');
+}
+
+function fecharModalIndicacoes() {
+  document.getElementById('modalIndicacoesOverlay').classList.remove('open');
+}
+
+async function confirmarEnvioComParecer() {
+  // Coleta indicações selecionadas
+  const cats = [...document.querySelectorAll('#miCategorias input[type="checkbox"]:checked')].map(cb => cb.value);
+  const obsAd = document.getElementById('miObsAdicional').value.trim();
+  let indicacoes = cats.length ? cats.join('\n') : '';
+  if (obsAd) indicacoes += (indicacoes ? '\n\n' : '') + obsAd;
+  if (!indicacoes) {
+    showToast('⚠️ Registre ao menos uma indicação ou observação.', true);
+    return;
+  }
+  document.getElementById('modalIndicacoesOverlay').classList.remove('open');
+  await _executarSubmitForm(_pendingSubmitModo, 'Aguardando', true, indicacoes);
+}
+
+async function _executarSubmitForm(modo, statusInicial, comParecer, indicacoesSub) {
+  const isCoord = modo === 'coord';
+  const d = _pendingSubmitData || {};
+  // Para submissão de professor, coleta diretamente do DOM
+  const titulo = d.titulo || document.getElementById(isCoord?'cf-titulo':'f-titulo').value.trim();
+  const tipo = d.tipo || document.getElementById(isCoord?'cf-tipo':'f-tipo').value;
+  const tipoModo = d.tipoModo || document.getElementById(isCoord?'cf-modo':'f-modo').value;
+  const turmas = d.turmas || document.getElementById(isCoord?'cf-turmas':'f-turmas').value.trim();
+  const copias = d.copias || document.getElementById(isCoord?'cf-copias':'f-copias').value;
+  const laudas = d.laudas || document.getElementById(isCoord?'cf-laudas':'f-laudas').value;
+  const obs = d.obs !== undefined ? d.obs : document.getElementById(isCoord?'cf-obs':'f-obs').value.trim();
+  const professor = d.professor || document.getElementById(isCoord?'cf-professor':'f-professor').value;
+  const disciplina = d.disciplina || document.getElementById(isCoord?'cf-disciplina':'f-disciplina-ro').value;
+  const retroativo = d.retroativo !== undefined ? d.retroativo : (isCoord ? document.getElementById('cf-retroativo').checked : false);
+  const dataRealizadaEl = isCoord ? document.getElementById('cf-dataRealizada') : null;
+  const arquivoInput = document.getElementById(isCoord?'cf-arquivo':'f-arquivo');
+  const arquivoInput2 = document.getElementById(isCoord?'cf-arquivo2':'f-arquivo2');
+  const driveLink1 = (document.getElementById(isCoord?'cf-drive1':'f-drive1').value||'').trim();
+  const driveLink2 = (document.getElementById(isCoord?'cf-drive2':'f-drive2').value||'').trim();
+  const totalCopias = parseInt(copias)*parseInt(laudas);
+  const btnId = isCoord?'btnEnviarCoord':'btnEnviar';
+  const btn = document.getElementById(btnId);
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Enviando…';
   try {
     let arquivoPath=null,arquivoUrl=null,arquivoNome=null;
     let arquivoPath2=null,arquivoUrl2=null,arquivoNome2=null;
@@ -3009,26 +3291,43 @@ async function submitForm(modo){
     }
     btn.innerHTML='<span class="spinner"></span> Salvando…';
     const now=new Date();
-    let prazo, statusInicial, dataSolicitacao;
+    let prazo, dataSolicitacao;
     if (retroativo) {
-      const dataRef = dataRealizadaEl.value ? new Date(dataRealizadaEl.value+'T12:00:00') : now;
+      const dataRef = dataRealizadaEl&&dataRealizadaEl.value ? new Date(dataRealizadaEl.value+'T12:00:00') : now;
       dataSolicitacao = dataRef.toISOString();
       prazo = dataRef;
       statusInicial = 'Entregue';
     } else {
-      // Usa a data do pedido inserida pelo usuário (ou hoje se não preenchida)
       const dataPedidoEl = document.getElementById(isCoord ? 'cf-dataPedido' : 'f-dataPedido');
       const dataPedidoVal = dataPedidoEl ? dataPedidoEl.value : '';
       const dataBase = dataPedidoVal ? new Date(dataPedidoVal+'T12:00:00') : now;
       dataSolicitacao = dataBase.toISOString();
       prazo = addWorkdays(dataBase,5);
-      statusInicial = 'Aguardando';
     }
-    const {error}=await db.from('solicitacoes').insert([{professor,disciplina,titulo,tipo,modo:tipoModo,turmas,copias:parseInt(copias),laudas:parseInt(laudas),total_copias:totalCopias,obs:obs||null,arquivo:arquivoNome,arquivo_path:arquivoPath,arquivo_url:arquivoUrl,arquivo_path2:arquivoPath2||null,arquivo_url2:arquivoUrl2||null,drive_link1:driveLink1||null,drive_link2:driveLink2||null,data_solicitacao:dataSolicitacao,prazo_entrega:prazo.toISOString(),status:statusInicial,retroativo:retroativo}]);
+    const payload = {
+      professor, disciplina, titulo, tipo, modo:tipoModo, turmas,
+      copias:parseInt(copias), laudas:parseInt(laudas), total_copias:totalCopias,
+      obs:obs||null, arquivo:arquivoNome, arquivo_path:arquivoPath, arquivo_url:arquivoUrl,
+      arquivo_path2:arquivoPath2||null, arquivo_url2:arquivoUrl2||null,
+      drive_link1:driveLink1||null, drive_link2:driveLink2||null,
+      data_solicitacao:dataSolicitacao, prazo_entrega:prazo.toISOString(),
+      status:statusInicial, retroativo:retroativo,
+      parecer_pedagogico: comParecer || false,
+      indicacoes_sub: indicacoesSub || null,
+      encaminhamento_coord: null,
+      encaminhamento_data: null,
+      sub_nome: (perfilAtual==='coordenacaoSub') ? (document.getElementById('cf-professor')?.value || 'Sub Coordenação') : null
+    };
+    const {error}=await db.from('solicitacoes').insert([payload]);
     if(error)throw new Error(error.message);
     isCoord?clearCoordForm():clearProfForm();
+    _pendingSubmitData = null; _pendingSubmitModo = null;
     if (retroativo) {
       showToast('📋 Registro salvo como Entregue!');
+    } else if (comParecer) {
+      showToast('📚 Solicitação enviada para Parecer Pedagógico!');
+    } else if (statusInicial === 'Autorizado') {
+      showToast('✅ Solicitação autorizada e enviada para a Mecanografia!');
     } else {
       showToast('✅ Solicitação enviada! Prazo: '+fmtDate(prazo));
     }
@@ -3037,7 +3336,217 @@ async function submitForm(modo){
   }catch(err){console.error(err);showToast('❌ Erro: '+err.message,true);}
   finally{btn.disabled=false;btn.innerHTML='✔ Enviar Solicitação';}
 }
-// ── TOGGLE SENHA (visível / oculta) ──
+
+// ── PAINEL DE PARECER PEDAGÓGICO (Coordenador Master) ──
+async function renderPainelParecer() {
+  const container = document.getElementById('parecerContainer');
+  if (!container) return;
+  container.innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
+  const {data, error} = await db.from('solicitacoes')
+    .select('*')
+    .eq('parecer_pedagogico', true)
+    .eq('status', 'Aguardando')
+    .order('data_solicitacao', {ascending: false});
+  if (error) { container.innerHTML = '<div class="empty-state"><p>Erro ao carregar.</p></div>'; return; }
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="emoji">✅</div><p>Nenhuma solicitação aguardando parecer pedagógico.</p></div>';
+    return;
+  }
+  container.innerHTML = data.map(d => `
+    <div class="parecer-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem;">
+        <div>
+          <div class="parecer-card-title">${esc(d.titulo)}</div>
+          <div class="parecer-card-meta">
+            <span>👤 ${esc(d.professor)}</span>
+            <span>📚 ${esc(d.disciplina)}</span>
+            <span>👥 ${esc(d.turmas)}</span>
+            <span>📄 ${d.total_copias||d.copias} cópias</span>
+            <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
+            ${d.sub_nome?`<span>🗂️ Sub: ${esc(d.sub_nome)}</span>`:''}
+          </div>
+        </div>
+        <span class="badge badge-parecer">📚 Parecer Pendente</span>
+      </div>
+      <div class="parecer-indicacoes">
+        <div class="parecer-indicacoes-title">📝 Indicações do Sub Coordenador</div>
+        <p>${esc(d.indicacoes_sub || 'Nenhuma indicação registrada.')}</p>
+      </div>
+      ${d.encaminhamento_coord ? `
+        <div class="parecer-encaminhamento">
+          <div class="parecer-encaminhamento-title">✉️ Encaminhamento registrado em ${d.encaminhamento_data ? fmtDate(d.encaminhamento_data) : '—'}</div>
+          <p style="font-size:.84rem;color:var(--text);line-height:1.5;">${esc(d.encaminhamento_coord)}</p>
+        </div>
+      ` : ''}
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem;">
+        <button class="btn-action" style="font-size:.82rem;padding:.4rem .9rem;" onclick="abrirModalEncaminhamento(${d.id})">
+          ${d.encaminhamento_coord ? '✏️ Editar Encaminhamento' : '📨 Redigir Encaminhamento'}
+        </button>
+        ${d.arquivo_url?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url)}','Arquivo 1','${d.id}')" class="btn-secondary" style="font-size:.82rem;padding:.4rem .9rem;">📄 Ver Arquivo</a>`:''}
+        ${d.drive_link1?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link1)}','Drive','${d.id}')" class="btn-secondary" style="font-size:.82rem;padding:.4rem .9rem;background:#e8f0fb;color:#1a6ac7;border-color:#b8cef0;">🔗 Ver Drive</a>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// Modal de encaminhamento do coordenador
+let _encamSolicId = null;
+function abrirModalEncaminhamento(solicId) {
+  _encamSolicId = solicId;
+  const item = allSolic.find(d => d.id === solicId);
+  if (!item) return;
+  // Preenche info da solicitação
+  document.getElementById('encamInfoSolic').innerHTML =
+    `<strong>${esc(item.titulo)}</strong> · ${esc(item.professor)} · ${esc(item.turmas)} · ${item.total_copias||item.copias} cópias`;
+  // Preenche indicações
+  document.getElementById('encamIndicacoesBox').innerHTML = item.indicacoes_sub
+    ? `<div class="parecer-indicacoes"><div class="parecer-indicacoes-title">📝 Indicações do Sub Coordenador</div><p>${esc(item.indicacoes_sub)}</p></div>`
+    : '';
+  document.getElementById('encamTexto').value = item.encaminhamento_coord || '';
+  document.getElementById('encamDecisao').value = item.encaminhamento_coord ? item.status : 'Autorizado';
+  document.getElementById('modalEncaminhamentoOverlay').classList.add('open');
+}
+function fecharModalEncaminhamento() {
+  document.getElementById('modalEncaminhamentoOverlay').classList.remove('open');
+  _encamSolicId = null;
+}
+async function salvarEncaminhamento() {
+  const texto = document.getElementById('encamTexto').value.trim();
+  const decisao = document.getElementById('encamDecisao').value;
+  if (!texto) { showToast('⚠️ Redija o encaminhamento antes de salvar.', true); return; }
+  const btn = document.querySelector('#modalEncaminhamentoOverlay .btn-action');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Salvando…';
+  const {error} = await db.from('solicitacoes').update({
+    encaminhamento_coord: texto,
+    encaminhamento_data: new Date().toISOString(),
+    status: decisao,
+    parecer_pedagogico: decisao === 'Aguardando' // mantém flag se ainda aguardando
+  }).eq('id', _encamSolicId);
+  btn.disabled = false; btn.innerHTML = '💾 Salvar Encaminhamento';
+  if (error) { showToast('❌ Erro ao salvar.', true); return; }
+  const idx = allSolic.findIndex(d => d.id === _encamSolicId);
+  if (idx !== -1) {
+    allSolic[idx].encaminhamento_coord = texto;
+    allSolic[idx].encaminhamento_data = new Date().toISOString();
+    allSolic[idx].status = decisao;
+    allSolic[idx].parecer_pedagogico = decisao === 'Aguardando';
+  }
+  fecharModalEncaminhamento();
+  renderStats(); renderSolicitacoes();
+  await renderPainelParecer();
+  await renderEnviadosCoordSub();
+  showToast('✅ Encaminhamento salvo' + (decisao==='Autorizado' ? ' — solicitação enviada à Mecanografia!' : '!'));
+}
+
+// ── PAINEL SUBCOORDENADOR — ENVIADOS PARA COORD. PEDAGÓGICA ──
+async function renderEnviadosCoordSub() {
+  const container = document.getElementById('enviadosCoordContainer');
+  if (!container) return;
+  container.innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
+  // Busca solicitações enviadas por este subcoordenador com parecer pedagógico
+  const {data, error} = await db.from('solicitacoes')
+    .select('*')
+    .eq('parecer_pedagogico', true)
+    .order('data_solicitacao', {ascending: false});
+  if (error) { container.innerHTML = '<div class="empty-state"><p>Erro ao carregar.</p></div>'; return; }
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação enviada para Coord. Pedagógica ainda.</p></div>';
+    return;
+  }
+  container.innerHTML = data.map(d => `
+    <div class="enviados-coord-card ${d.encaminhamento_coord ? 'com-retorno' : ''}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:.4rem;">
+        <div>
+          <div class="ec-title">${esc(d.titulo)}</div>
+          <div class="ec-meta">
+            <span>👤 ${esc(d.professor)}</span>
+            <span>👥 ${esc(d.turmas)}</span>
+            <span>📄 ${d.total_copias||d.copias} cópias</span>
+            <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
+          </div>
+        </div>
+        <span class="badge ${d.encaminhamento_coord ? 'badge-encaminhado' : 'badge-parecer'}">
+          ${d.encaminhamento_coord ? '✉️ Retorno recebido' : '⏳ Aguardando parecer'}
+        </span>
+      </div>
+      <div class="ec-indicacoes">
+        <strong style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#8a4a00;">Suas indicações:</strong><br>
+        ${esc(d.indicacoes_sub || '—')}
+      </div>
+      ${d.encaminhamento_coord ? `
+        <div class="ec-retorno">
+          <div class="ec-retorno-label">✉️ Encaminhamento da Coord. Pedagógica — ${d.encaminhamento_data ? fmtDate(d.encaminhamento_data) : '—'}</div>
+          ${esc(d.encaminhamento_coord)}
+        </div>
+        <div style="margin-top:.5rem;font-size:.78rem;color:var(--muted);">
+          Decisão: <strong style="color:${d.status==='Autorizado'?'#1a6a3a':d.status==='Cancelado'?'#a02a10':'#8a6000'}">${d.status}</strong>
+        </div>
+      ` : '<div style="margin-top:.4rem;font-size:.78rem;color:var(--muted);">Aguardando análise e encaminhamento do Coordenador Pedagógico.</div>'}
+    </div>
+  `).join('');
+}
+// ── NAVEGAÇÃO "ENVIADOS PARA COORD" (subcoordenador) ──
+let _enviadosCoordPanel = null;
+
+async function mostrarEnviadosCoord(btnEl) {
+  // Cria ou mostra o painel flutuante dentro da page-coord
+  let panel = document.getElementById('painelEnviadosCoord');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'painelEnviadosCoord';
+    panel.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8000;display:flex;align-items:flex-start;justify-content:center;padding:1.5rem;overflow-y:auto;';
+    panel.innerHTML = `
+      <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:1.8rem;width:100%;max-width:680px;box-shadow:0 12px 48px rgba(0,0,0,.22);animation:fadeIn .25s ease;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem;">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);">📚 Enviados para Coord. Pedagógica</div>
+            <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem;">Suas solicitações com parecer pedagógico e retornos da Coordenação.</div>
+          </div>
+          <div style="display:flex;gap:.5rem;">
+            <button class="btn-secondary" onclick="renderEnviadosCoordSub()">↻ Atualizar</button>
+            <button class="btn-secondary" onclick="document.getElementById('painelEnviadosCoord').remove()">✕ Fechar</button>
+          </div>
+        </div>
+        <div id="enviadosCoordContainer"><div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div></div>
+      </div>`;
+    document.body.appendChild(panel);
+    // Fecha ao clicar no fundo
+    panel.addEventListener('click', e => { if (e.target === panel) panel.remove(); });
+  }
+  // Remove badge
+  const badge = document.getElementById('enviadosBadge');
+  if (badge) { badge.style.display = 'none'; }
+  await renderEnviadosCoordSub();
+}
+
+async function atualizarBadgeEnviados() {
+  const {data} = await db.from('solicitacoes')
+    .select('id, encaminhamento_coord')
+    .eq('parecer_pedagogico', true)
+    .not('encaminhamento_coord', 'is', null);
+  const badge = document.getElementById('enviadosBadge');
+  if (!badge || !data) return;
+  if (data.length > 0) {
+    badge.textContent = data.length;
+    badge.style.display = 'inline';
+  }
+}
+
+async function atualizarBadgeParecer() {
+  const {data} = await db.from('solicitacoes')
+    .select('id')
+    .eq('parecer_pedagogico', true)
+    .eq('status', 'Aguardando');
+  const badge = document.getElementById('parecerBadgeCount');
+  if (!badge || !data) return;
+  if (data.length > 0) {
+    badge.textContent = data.length;
+    badge.style.display = 'inline';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
 function avisoPeriodoTeste(){
   document.getElementById('modalTesteOverlay').classList.add('open');
 }
@@ -3575,10 +4084,15 @@ function renderSolicitacoes(){
   const st=document.getElementById('filterStatus').value;
   const prof=(document.getElementById('filterProfessor')||{}).value||'';
   const tipo=(document.getElementById('filterTipo')||{}).value||'';
+
+  // Filtro especial: Parecer Pedagógico
+  const filtroParecer = st === '__parecer__';
+
   const filtered=allSolic.filter(d=>{
     const mTxt=!txt||(d.professor||'').toLowerCase().includes(txt)||(d.disciplina||'').toLowerCase().includes(txt)||(d.titulo||'').toLowerCase().includes(txt);
     const mProf=!prof||d.professor===prof;
     const mTipo=!tipo||inferirTipo(d)===tipo;
+    if (filtroParecer) return mTxt && mProf && mTipo && d.parecer_pedagogico;
     return mTxt&&mProf&&mTipo&&(!st||d.status===st);
   });
   const container=document.getElementById('coordContainer');
@@ -5874,39 +6388,24 @@ function abrirViewer(url, titulo, solicId) {
   }
 
   // Painel inferior: coord/meca veem status+obs editáveis; professor vê apenas status (leitura)
-  const eCoordOuSub = perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub';
-  const podeEditar  = viewerSolicId && (eCoordOuSub || perfilAtual === 'mecanografia');
+  const podeEditar = viewerSolicId && (perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub' || perfilAtual === 'mecanografia');
   const eProfessor  = viewerSolicId && perfilAtual === 'professor';
-  // Coord/subcoordenador pré-visualizando arquivo em nova solicitação (ainda sem solicId)
-  const previewCoord = !viewerSolicId && eCoordOuSub;
 
   if (podeEditar) {
     bottomPanel.classList.add('visible');
     statusSelect.value = solic ? (solic.status || 'Aguardando') : 'Aguardando';
     statusSelect.disabled = false;
-    statusSelect.closest('.viewer-bottom-group').style.display = '';
-    obsExtra.style.display = '';
     obsExtra.value = solic ? (solic.obs_viewer || '') : '';
     document.getElementById('viewerSaveBtn').style.display = '';
-  } else if (previewCoord) {
-    // Mostra apenas obs (sem status/salvar — solicitação ainda não foi enviada)
-    bottomPanel.classList.add('visible');
-    statusSelect.closest('.viewer-bottom-group').style.display = 'none';
-    obsExtra.style.display = '';
-    const cfObs = document.getElementById('cf-obs');
-    obsExtra.value = cfObs ? cfObs.value : '';
-    document.getElementById('viewerSaveBtn').style.display = 'none';
   } else if (eProfessor && solic) {
     // Professor vê o status atual mas não pode editar
     bottomPanel.classList.add('visible');
     statusSelect.value = solic.status || 'Aguardando';
     statusSelect.disabled = true;
-    statusSelect.closest('.viewer-bottom-group').style.display = '';
     obsExtra.style.display = 'none';
     document.getElementById('viewerSaveBtn').style.display = 'none';
   } else {
     bottomPanel.classList.remove('visible');
-    statusSelect.closest('.viewer-bottom-group').style.display = '';
     obsExtra.style.display = '';
     statusSelect.disabled = false;
     document.getElementById('viewerSaveBtn').style.display = '';
@@ -5998,13 +6497,6 @@ async function salvarViewerStatus() {
 
 function fecharViewer() {
   const overlay = document.getElementById('viewerOverlay');
-  // Se estava no modo previewCoord, sincroniza obs de volta para o formulário
-  const eCoordOuSub = perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub';
-  if (!viewerSolicId && eCoordOuSub) {
-    const cfObs = document.getElementById('cf-obs');
-    const obsExtra = document.getElementById('viewerObsExtra');
-    if (cfObs && obsExtra) cfObs.value = obsExtra.value;
-  }
   overlay.classList.remove('open');
   document.body.style.overflow = '';
   setTimeout(() => { document.getElementById('viewerIframe').src = ''; }, 300);
