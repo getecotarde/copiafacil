@@ -2760,9 +2760,12 @@ function handleDriveLink(inputId, previewId) {
   const link = document.getElementById(previewId + '-link');
   if (val && (val.startsWith('https://drive.google.com') || val.startsWith('https://docs.google.com'))) {
     preview.style.display = 'flex';
-    link.href = val;
+    // Abre no viewer interno (não em nova guia)
+    link.href = 'javascript:void(0)';
+    link.onclick = function(e){ e.preventDefault(); abrirViewer(val, 'Pré-visualização'); };
   } else {
     preview.style.display = 'none';
+    if(link){ link.href='javascript:void(0)'; link.onclick=null; }
   }
 }
 function clearDriveLink(inputId, previewId) {
@@ -3263,7 +3266,7 @@ function profCardHtml(d) {
         <span>📄 ${d.copias} cóp. × ${d.laudas||1} laudas = <strong>${(d.total_copias||d.copias).toLocaleString('pt-BR')} total</strong></span>
         <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
         ${d.obs?`<span>💬 ${esc(d.obs)}</span>`:''}
-        ${d.obs_viewer?`<span style="color:#c94f2a;font-weight:700;text-transform:uppercase;letter-spacing:.03em;">⚠️ ${esc(d.obs_viewer)}</span>`:''}
+        ${d.obs_viewer?`<span style="color:#1a6ac7;font-weight:700;text-transform:uppercase;letter-spacing:.03em;">📝 ${esc(d.obs_viewer)}</span>`:''}
       </div>
       ${d.status!=='Entregue'?`<div class="mc-prazo">⏰ Prazo: ${fmtDate(d.prazo_entrega)}</div>`:''}
     </div>
@@ -3538,7 +3541,7 @@ async function togglePainelSenhas(){
 
 // ── COORD LOAD ──
 async function loadCoord(){
-  const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:false});
+  const {data:solic}=await db.from('solicitacoes').select('*').order('data_solicitacao',{ascending:true});
   allSolic=solic||[];renderStats();renderSolicitacoes();
   const {data:profs}=await db.from('professores').select('*').order('criado_em',{ascending:false});
   allProfs=profs||[];renderProfessores();populateSolicitante();populateFilterProfessor();
@@ -3978,6 +3981,35 @@ async function saveModalEdit(){
 async function updateStatus(){
   if(!currentSolicId)return;
   const newStatus=document.getElementById('modalStatus').value;
+  const item=allSolic.find(d=>d.id===currentSolicId);
+  const oldStatus=item?item.status:'';
+
+  // Monta mensagem de confirmação
+  let msg = `Confirma alterar o status para <strong>"${newStatus}"</strong>?`;
+  let alertExtra = '';
+
+  // Se está autorizando, verifica se há pedidos mais antigos aguardando
+  if(newStatus==='Autorizado' && oldStatus==='Aguardando'){
+    const maisAntigos = allSolic.filter(d =>
+      d.status==='Aguardando' &&
+      d.id !== currentSolicId &&
+      new Date(d.data_solicitacao) < new Date(item.data_solicitacao)
+    );
+    if(maisAntigos.length > 0){
+      alertExtra = `<div style="margin-top:.7rem;padding:.55rem .8rem;background:#fff8e8;border:1.5px solid #f0d8a0;border-radius:8px;color:#8a6000;font-size:.85rem;">
+        ⚠️ <strong>Atenção:</strong> há ${maisAntigos.length} pedido${maisAntigos.length>1?'s':''} mais antigo${maisAntigos.length>1?'s':''} na fila com prioridade. Você pode prosseguir, mas eles têm precedência.
+      </div>`;
+    }
+  }
+
+  // Abre confirmação customizada
+  const confirmado = await confirmarAcao(msg + alertExtra);
+  if(!confirmado){
+    // Reverte o select para o valor anterior
+    document.getElementById('modalStatus').value = oldStatus;
+    return;
+  }
+
   const {error}=await db.from('solicitacoes').update({status:newStatus}).eq('id',currentSolicId);
   if(error){showToast('❌ Erro ao atualizar.',true);return;}
   const idx=allSolic.findIndex(d=>d.id===currentSolicId);
@@ -3987,6 +4019,25 @@ async function updateStatus(){
   if(editSection) editSection.style.display=newStatus==='Aguardando'?'block':'none';
   renderStats();renderSolicitacoes();
   showToast('✔ Status atualizado para "'+newStatus+'"');
+}
+
+// Função auxiliar de confirmação com HTML customizado
+function confirmarAcao(htmlMsg){
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    overlay.innerHTML=`<div style="background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:1.8rem;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.18);">
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;color:var(--primary);margin-bottom:.7rem;">Confirmar alteração</div>
+      <div style="font-size:.92rem;color:var(--text);line-height:1.55;">${htmlMsg}</div>
+      <div style="display:flex;gap:.7rem;justify-content:flex-end;margin-top:1.2rem;">
+        <button id="_cBtn_no"  style="padding:.55rem 1.2rem;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:.9rem;cursor:pointer;">Cancelar</button>
+        <button id="_cBtn_yes" style="padding:.55rem 1.2rem;border-radius:8px;border:none;background:var(--primary);color:#fff;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;">Confirmar</button>
+      </div>
+    </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#_cBtn_yes').onclick=()=>{document.body.removeChild(overlay);resolve(true);};
+    overlay.querySelector('#_cBtn_no').onclick=()=>{document.body.removeChild(overlay);resolve(false);};
+  });
 }
 
 function confirmDelete(){
@@ -4276,7 +4327,7 @@ async function loadMeca(){
   // Mecanografia vê solicitações com status Autorizado, Pronto ou Entregue
   const {data:solic}=await db.from('solicitacoes').select('*')
     .in('status',['Autorizado','Pronto','Entregue'])
-    .order('data_solicitacao',{ascending:false});
+    .order('data_solicitacao',{ascending:true});
   allSolic=solic||[];
   renderMecaStats();populateMecaFilterProfessor();renderMeca();
 }
@@ -4429,11 +4480,44 @@ function toggleMecaDemais(){
 }
 
 async function mecaUpdateStatus(id,newStatus){
+  const item=allSolic.find(d=>d.id===id);
+  const oldStatus=item?item.status:'';
+
+  // Monta mensagem de confirmação
+  let msg = `Confirma alterar o status para <strong>"${newStatus}"</strong>?`;
+  let alertExtra = '';
+
+  // Alerta se há autorizados mais antigos na fila
+  if(newStatus==='Pronto' && oldStatus==='Autorizado'){
+    const maisAntigos = allSolic.filter(d =>
+      d.status==='Autorizado' &&
+      d.id !== id &&
+      new Date(d.data_solicitacao) < new Date(item.data_solicitacao)
+    );
+    if(maisAntigos.length > 0){
+      alertExtra = `<div style="margin-top:.7rem;padding:.55rem .8rem;background:#fff8e8;border:1.5px solid #f0d8a0;border-radius:8px;color:#8a6000;font-size:.85rem;">
+        ⚠️ <strong>Atenção:</strong> há ${maisAntigos.length} pedido${maisAntigos.length>1?'s':''} mais antigo${maisAntigos.length>1?'s':''} na fila com prioridade.
+      </div>`;
+    }
+  }
+
+  const confirmado = await confirmarAcao(msg + alertExtra);
+  if(!confirmado){
+    // Reverte select visualmente
+    const sels = document.querySelectorAll('.status-select');
+    sels.forEach(sel => {
+      const selId = parseInt(sel.getAttribute('onchange').match(/\d+/)?.[0]);
+      if(selId===id) sel.value = oldStatus;
+    });
+    return;
+  }
+
   const {error}=await db.from('solicitacoes').update({status:newStatus}).eq('id',id);
   if(error){showToast('❌ Erro ao atualizar.',true);return;}
   const idx=allSolic.findIndex(d=>d.id===id);
   if(idx!==-1)allSolic[idx].status=newStatus;
   renderMecaStats();
+  renderMeca();
   showToast('✔ Status atualizado para "'+newStatus+'"');
 }
 
@@ -5838,6 +5922,30 @@ async function salvarViewerStatus() {
   if (!viewerSolicId) return;
   const newStatus = document.getElementById('viewerStatusSelect').value;
   const obsViewer = document.getElementById('viewerObsExtra').value.trim();
+
+  // Item atual para verificar status anterior e fila
+  const item = (typeof allSolic !== 'undefined' ? allSolic : []).find(d => d.id === viewerSolicId || d.id === Number(viewerSolicId));
+  const oldStatus = item ? item.status : '';
+
+  let msg = `Confirma alterar o status para <strong>"${newStatus}"</strong>?`;
+  let alertExtra = '';
+
+  if(newStatus === 'Autorizado' && oldStatus === 'Aguardando'){
+    const maisAntigos = (typeof allSolic !== 'undefined' ? allSolic : []).filter(d =>
+      d.status==='Aguardando' &&
+      d.id !== viewerSolicId && d.id !== Number(viewerSolicId) &&
+      item && new Date(d.data_solicitacao) < new Date(item.data_solicitacao)
+    );
+    if(maisAntigos.length > 0){
+      alertExtra = `<div style="margin-top:.7rem;padding:.55rem .8rem;background:#fff8e8;border:1.5px solid #f0d8a0;border-radius:8px;color:#8a6000;font-size:.85rem;">
+        ⚠️ <strong>Atenção:</strong> há ${maisAntigos.length} pedido${maisAntigos.length>1?'s':''} mais antigo${maisAntigos.length>1?'s':''} na fila com prioridade. Você pode prosseguir, mas eles têm precedência.
+      </div>`;
+    }
+  }
+
+  const confirmado = await confirmarAcao(msg + alertExtra);
+  if(!confirmado) return;
+
   const btn = document.getElementById('viewerSaveBtn');
   btn.disabled = true; btn.textContent = 'Salvando…';
   const { error } = await db.from('solicitacoes').update({ status: newStatus, obs_viewer: obsViewer }).eq('id', viewerSolicId);
