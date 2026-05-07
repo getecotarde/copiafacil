@@ -2161,7 +2161,7 @@
 const SUPABASE_URL = 'https://uaedrqrnexcktjynecja.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZWRycXJuZXhja3RqeW5lY2phIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NDY1MTAsImV4cCI6MjA5MDIyMjUxMH0.uNS6boM5ksPEzThO0B8za4FvqsxCP2IEENFO_BGM7Dw';
 const BUCKET      = 'matrizes';
-const SENHA_COORD  = 'galodoido';
+// SENHA_COORD removida — autenticação feita via Supabase Auth
 const EMAIL_COORD_MASTER = 'everton.correa@edu.pbh.gov.br';
 
 const { createClient } = supabase;
@@ -2175,6 +2175,7 @@ let allProfs       = [];
 let currentSolicId = null;
 let editandoProfId = null; // id do professor sendo editado (null = novo)
 let coordIsMaster  = false; // true somente para everton.correa@edu.pbh.gov.br
+let coordSession   = null;  // sessão salva da coordenação (evita credenciais hardcoded)
 
 const disciplinaDisplay = {
   'portugues':'Português','matematica':'Matemática','ciencias':'Ciências',
@@ -2245,9 +2246,11 @@ async function fazerLogin() {
     const {data,error}=await db.auth.signInWithPassword({email,password:senha});
     if (error) throw error;
     currentUser=data.user;
-    if (senha===SENHA_COORD){
+    // Verifica coordenação master pelo e-mail (sem senha hardcoded)
+    if (email.toLowerCase()===EMAIL_COORD_MASTER.toLowerCase()){
       perfilAtual='coordenacao';
-      coordIsMaster = (email.toLowerCase()===EMAIL_COORD_MASTER.toLowerCase());
+      coordIsMaster = true;
+      coordSession  = data.session; // salva sessão para restaurar após criar usuários
       await iniciarApp();return;
     }
     // Verifica se é mecanografia
@@ -2855,6 +2858,10 @@ async function processarEmailIA(){
   const nomesProfessores=allProfs.filter(p=>p.aprovado).map(p=>p.nome).join(', ');
 
   try {
+    // SEGURANÇA: A chave da API Anthropic deve ficar em uma Supabase Edge Function.
+    // Configure a Edge Function 'extrair-email' no seu projeto Supabase e aponte para ela.
+    // Exemplo: const response = await fetch(`${SUPABASE_URL}/functions/v1/extrair-email`, {...})
+    // Por enquanto, chamando direto (requer proxy ou chave configurada no servidor):
     const response = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -3475,7 +3482,7 @@ async function importarProfessoresCSV(input){
     infoEl.innerHTML=`<span class="spinner"></span> Importando ${ok+erros.length} de ${rows.length}…`;
   }
 
-  await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+  await db.auth.setSession(coordSession); // restaura sessão da coordenação
   await loadCoord();
 
   // Popula tabela de senhas
@@ -3855,7 +3862,7 @@ async function salvarProfessor() {
       const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true,senha_inicial:senha}]);
       if (insertErr) throw insertErr;
       await db.auth.signOut();
-      const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+      const {data:sessao,error:loginErr}=await db.auth.setSession(coordSession); // restaura sessão da coordenação
       if (!loginErr) currentUser=sessao.user;
       showToast(`✅ Professor cadastrado! Senha: ${senha}`);
     } else {
@@ -4039,7 +4046,7 @@ async function salvarCoordSub(){
     const {error:insErr}=await db.from('coordenacao_sub').insert([{id:uid,email,nome,senha_inicial:senha}]);
     if(insErr)throw insErr;
     await db.auth.signOut();
-    const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+    const {data:sessao,error:loginErr}=await db.auth.setSession(coordSession); // restaura sessão da coordenação
     if(!loginErr)currentUser=sessao.user;
     closeModalCoordSub();
     await renderCoordSubGerenciar();
@@ -4236,7 +4243,7 @@ async function salvarMeca(){
     const {error:insErr}=await db.from('mecanografia').insert([{id:uid,email,senha_inicial:senha}]);
     if(insErr)throw insErr;
     await db.auth.signOut();
-    const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+    const {data:sessao,error:loginErr}=await db.auth.setSession(coordSession); // restaura sessão da coordenação
     if(!loginErr)currentUser=sessao.user;
     closeModalMeca();
     await renderMecaGerenciar();
@@ -4454,9 +4461,10 @@ async function fazerLogin() {
     const {data,error}=await db.auth.signInWithPassword({email,password:senha});
     if (error) throw error;
     currentUser=data.user;
-    if (senha===SENHA_COORD){
+    // Verifica coordenação master pelo e-mail (sem senha hardcoded)
+    if (email.toLowerCase()===EMAIL_COORD_MASTER.toLowerCase()){
       perfilAtual='coordenacao';
-      coordIsMaster = (email.toLowerCase()===EMAIL_COORD_MASTER.toLowerCase());
+      coordIsMaster = true;
       await iniciarApp();return;
     }
     // Verifica mecanografia
@@ -4532,7 +4540,7 @@ async function salvarAdm(){
     const {error:insErr}=await db.from('administrativo').insert([{id:uid,email,nome,tipo:_admTipoAtual,senha_inicial:senha}]);
     if(insErr)throw insErr;
     await db.auth.signOut();
-    const {data:sessao,error:loginErr}=await db.auth.signInWithPassword({email:'coordenacao@escola.com',password:SENHA_COORD});
+    const {data:sessao,error:loginErr}=await db.auth.setSession(coordSession); // restaura sessão da coordenação
     if(!loginErr)currentUser=sessao.user;
     closeModalAdm();
     await renderAdmGerenciar(_admTipoAtual);
