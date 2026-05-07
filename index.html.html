@@ -5874,24 +5874,39 @@ function abrirViewer(url, titulo, solicId) {
   }
 
   // Painel inferior: coord/meca veem status+obs editáveis; professor vê apenas status (leitura)
-  const podeEditar = viewerSolicId && (perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub' || perfilAtual === 'mecanografia');
+  const eCoordOuSub = perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub';
+  const podeEditar  = viewerSolicId && (eCoordOuSub || perfilAtual === 'mecanografia');
   const eProfessor  = viewerSolicId && perfilAtual === 'professor';
+  // Coord/subcoordenador pré-visualizando arquivo em nova solicitação (ainda sem solicId)
+  const previewCoord = !viewerSolicId && eCoordOuSub;
 
   if (podeEditar) {
     bottomPanel.classList.add('visible');
     statusSelect.value = solic ? (solic.status || 'Aguardando') : 'Aguardando';
     statusSelect.disabled = false;
+    statusSelect.closest('.viewer-bottom-group').style.display = '';
+    obsExtra.style.display = '';
     obsExtra.value = solic ? (solic.obs_viewer || '') : '';
     document.getElementById('viewerSaveBtn').style.display = '';
+  } else if (previewCoord) {
+    // Mostra apenas obs (sem status/salvar — solicitação ainda não foi enviada)
+    bottomPanel.classList.add('visible');
+    statusSelect.closest('.viewer-bottom-group').style.display = 'none';
+    obsExtra.style.display = '';
+    const cfObs = document.getElementById('cf-obs');
+    obsExtra.value = cfObs ? cfObs.value : '';
+    document.getElementById('viewerSaveBtn').style.display = 'none';
   } else if (eProfessor && solic) {
     // Professor vê o status atual mas não pode editar
     bottomPanel.classList.add('visible');
     statusSelect.value = solic.status || 'Aguardando';
     statusSelect.disabled = true;
+    statusSelect.closest('.viewer-bottom-group').style.display = '';
     obsExtra.style.display = 'none';
     document.getElementById('viewerSaveBtn').style.display = 'none';
   } else {
     bottomPanel.classList.remove('visible');
+    statusSelect.closest('.viewer-bottom-group').style.display = '';
     obsExtra.style.display = '';
     statusSelect.disabled = false;
     document.getElementById('viewerSaveBtn').style.display = '';
@@ -5983,6 +5998,13 @@ async function salvarViewerStatus() {
 
 function fecharViewer() {
   const overlay = document.getElementById('viewerOverlay');
+  // Se estava no modo previewCoord, sincroniza obs de volta para o formulário
+  const eCoordOuSub = perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub';
+  if (!viewerSolicId && eCoordOuSub) {
+    const cfObs = document.getElementById('cf-obs');
+    const obsExtra = document.getElementById('viewerObsExtra');
+    if (cfObs && obsExtra) cfObs.value = obsExtra.value;
+  }
   overlay.classList.remove('open');
   document.body.style.overflow = '';
   setTimeout(() => { document.getElementById('viewerIframe').src = ''; }, 300);
