@@ -3342,10 +3342,11 @@ async function renderPainelParecer() {
   const container = document.getElementById('parecerContainer');
   if (!container) return;
   container.innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
+  // Mostra apenas os que ainda não têm encaminhamento (parecer pendente)
   const {data, error} = await db.from('solicitacoes')
     .select('*')
     .eq('parecer_pedagogico', true)
-    .eq('status', 'Aguardando')
+    .is('encaminhamento_coord', null)
     .order('data_solicitacao', {ascending: false});
   if (error) { container.innerHTML = '<div class="empty-state"><p>Erro ao carregar.</p></div>'; return; }
   if (!data || data.length === 0) {
@@ -3419,8 +3420,9 @@ async function salvarEncaminhamento() {
   const {error} = await db.from('solicitacoes').update({
     encaminhamento_coord: texto,
     encaminhamento_data: new Date().toISOString(),
-    status: decisao,
-    parecer_pedagogico: decisao === 'Aguardando' // mantém flag se ainda aguardando
+    status: decisao
+    // parecer_pedagogico permanece TRUE no banco — histórico preservado
+    // a aba "Parecer Pendente" filtra por encaminhamento_coord IS NULL
   }).eq('id', _encamSolicId);
   btn.disabled = false; btn.innerHTML = '💾 Salvar Encaminhamento';
   if (error) { showToast('❌ Erro ao salvar.', true); return; }
@@ -3429,7 +3431,8 @@ async function salvarEncaminhamento() {
     allSolic[idx].encaminhamento_coord = texto;
     allSolic[idx].encaminhamento_data = new Date().toISOString();
     allSolic[idx].status = decisao;
-    allSolic[idx].parecer_pedagogico = decisao === 'Aguardando';
+    // Nunca zera parecer_pedagogico — mantém histórico visível ao subcoordenador
+    // parecer_pedagogico permanece true; a aba "Parecer Pendente" filtra por encaminhamento_coord IS NULL
   }
   fecharModalEncaminhamento();
   renderStats(); renderSolicitacoes();
@@ -3443,18 +3446,22 @@ async function renderEnviadosCoordSub() {
   const container = document.getElementById('enviadosCoordContainer');
   if (!container) return;
   container.innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
-  // Busca solicitações enviadas por este subcoordenador com parecer pedagógico
+  // Busca DIRETO do banco — usa indicacoes_sub como flag confiável (sempre preenchido quando há parecer)
+  // Isso garante que mesmo após encaminhamento (que pode mudar outros flags), o histórico persiste
   const {data, error} = await db.from('solicitacoes')
-    .select('*')
-    .eq('parecer_pedagogico', true)
+    .select('id, titulo, professor, turmas, total_copias, copias, data_solicitacao, status, indicacoes_sub, encaminhamento_coord, encaminhamento_data, parecer_pedagogico')
+    .not('indicacoes_sub', 'is', null)
     .order('data_solicitacao', {ascending: false});
   if (error) { container.innerHTML = '<div class="empty-state"><p>Erro ao carregar.</p></div>'; return; }
   if (!data || data.length === 0) {
     container.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação enviada para Coord. Pedagógica ainda.</p></div>';
     return;
   }
-  container.innerHTML = data.map(d => `
-    <div class="enviados-coord-card ${d.encaminhamento_coord ? 'com-retorno' : ''}">
+  container.innerHTML = data.map(d => {
+    const temRetorno = !!(d.encaminhamento_coord && d.encaminhamento_coord.trim());
+    const corDecisao = d.status==='Autorizado' ? '#1a6a3a' : d.status==='Cancelado' ? '#a02a10' : '#8a6000';
+    return `
+    <div class="enviados-coord-card ${temRetorno ? 'com-retorno' : ''}">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:.4rem;">
         <div>
           <div class="ec-title">${esc(d.titulo)}</div>
@@ -3465,25 +3472,25 @@ async function renderEnviadosCoordSub() {
             <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
           </div>
         </div>
-        <span class="badge ${d.encaminhamento_coord ? 'badge-encaminhado' : 'badge-parecer'}">
-          ${d.encaminhamento_coord ? '✉️ Retorno recebido' : '⏳ Aguardando parecer'}
+        <span class="badge ${temRetorno ? 'badge-encaminhado' : 'badge-parecer'}">
+          ${temRetorno ? '✉️ Retorno recebido' : '⏳ Aguardando parecer'}
         </span>
       </div>
       <div class="ec-indicacoes">
-        <strong style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#8a4a00;">Suas indicações:</strong><br>
+        <strong style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#8a4a00;">📝 Suas indicações:</strong><br>
         ${esc(d.indicacoes_sub || '—')}
       </div>
-      ${d.encaminhamento_coord ? `
+      ${temRetorno ? `
         <div class="ec-retorno">
           <div class="ec-retorno-label">✉️ Encaminhamento da Coord. Pedagógica — ${d.encaminhamento_data ? fmtDate(d.encaminhamento_data) : '—'}</div>
-          ${esc(d.encaminhamento_coord)}
+          <div style="margin-top:.3rem;line-height:1.6;">${esc(d.encaminhamento_coord)}</div>
         </div>
         <div style="margin-top:.5rem;font-size:.78rem;color:var(--muted);">
-          Decisão: <strong style="color:${d.status==='Autorizado'?'#1a6a3a':d.status==='Cancelado'?'#a02a10':'#8a6000'}">${d.status}</strong>
+          Decisão: <strong style="color:${corDecisao}">${d.status}</strong>
         </div>
-      ` : '<div style="margin-top:.4rem;font-size:.78rem;color:var(--muted);">Aguardando análise e encaminhamento do Coordenador Pedagógico.</div>'}
-    </div>
-  `).join('');
+      ` : `<div style="margin-top:.4rem;font-size:.78rem;color:var(--muted);">Aguardando análise e encaminhamento do Coordenador Pedagógico.</div>`}
+    </div>`;
+  }).join('');
 }
 // ── NAVEGAÇÃO "ENVIADOS PARA COORD" (subcoordenador) ──
 let _enviadosCoordPanel = null;
@@ -3536,7 +3543,7 @@ async function atualizarBadgeParecer() {
   const {data} = await db.from('solicitacoes')
     .select('id')
     .eq('parecer_pedagogico', true)
-    .eq('status', 'Aguardando');
+    .is('encaminhamento_coord', null);  // só os sem encaminhamento = realmente pendentes
   const badge = document.getElementById('parecerBadgeCount');
   if (!badge || !data) return;
   if (data.length > 0) {
