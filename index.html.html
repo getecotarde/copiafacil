@@ -934,6 +934,24 @@
     outline: none; transition: border-color .2s; flex: 1; cursor: pointer; }
   .pm-order-row select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,42,.1); }
   .pm-filter-note { font-size: .76rem; color: var(--muted); font-style: italic; margin-top: .3rem; }
+
+  /* ── MODAL UPLOAD INDISPONÍVEL ── */
+  #modalUploadIndisponivel { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem; }
+  .upload-unavail-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; padding: 2rem 2rem 1.6rem; width: 100%; max-width: 420px; box-shadow: 0 12px 40px rgba(0,0,0,.18); position: relative; }
+  .upload-unavail-icon { font-size: 2.4rem; text-align: center; margin-bottom: .6rem; }
+  .upload-unavail-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--primary); text-align: center; margin-bottom: .4rem; }
+  .upload-unavail-desc { font-size: .88rem; color: var(--muted); text-align: center; line-height: 1.55; margin-bottom: 1.2rem; }
+  .upload-unavail-badge { display: inline-flex; align-items: center; gap: .4rem; background: #fff3d6; color: #a06000; border: 1.5px solid #f0d090; border-radius: 8px; padding: .35rem .75rem; font-size: .78rem; font-weight: 700; margin: 0 auto .8rem; }
+  .upload-unavail-steps { background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 1.2rem; }
+  .upload-unavail-steps-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: .7rem; }
+  .upload-unavail-step { display: flex; gap: .7rem; align-items: flex-start; margin-bottom: .6rem; font-size: .84rem; color: var(--text); line-height: 1.45; }
+  .upload-unavail-step:last-child { margin-bottom: 0; }
+  .upload-unavail-step .unum { background: var(--primary); color: #fff; border-radius: 50%; width: 20px; height: 20px; font-size: .72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .1rem; }
+  .upload-unavail-step .utag { background: #e8f0fb; color: #1a6ac7; border: 1px solid #b8cef0; border-radius: 5px; padding: .05rem .45rem; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+  .upload-unavail-close { width: 100%; padding: .7rem; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600; cursor: pointer; transition: opacity .2s; }
+  .upload-unavail-close:hover { opacity: .88; }
+  [data-theme="dark"] .upload-unavail-steps { background: #1a2218; }
+  [data-theme="dark"] .upload-unavail-badge { background: #3a2a00; color: #f59e0b; border-color: #4a3a10; }
 </style>
 </head>
 <body>
@@ -2212,6 +2230,43 @@
 
 <div id="toast"></div>
 
+<!-- ═══════════════════════════════════════════════
+     MODAL — UPLOAD TEMPORARIAMENTE INDISPONÍVEL
+════════════════════════════════════════════════ -->
+<div id="modalUploadIndisponivel" onclick="if(event.target===this)closeUploadUnavailableModal()">
+  <div class="upload-unavail-box">
+    <div class="upload-unavail-icon">🔗</div>
+    <div class="upload-unavail-title">Upload temporariamente indisponível</div>
+    <div class="upload-unavail-desc">
+      No momento, o envio direto de arquivos está desativado enquanto ampliamos o armazenamento.<br>
+      Por favor, anexe seu arquivo via <strong>link do Google Drive</strong> — rápido e fácil!
+    </div>
+    <div style="text-align:center;">
+      <div class="upload-unavail-badge">⏳ Upload disponível em breve</div>
+    </div>
+    <div class="upload-unavail-steps">
+      <div class="upload-unavail-steps-title">📋 Como obter o link do Drive</div>
+      <div class="upload-unavail-step">
+        <div class="unum">1</div>
+        <div>Acesse <strong>drive.google.com</strong> e localize seu arquivo.</div>
+      </div>
+      <div class="upload-unavail-step">
+        <div class="unum">2</div>
+        <div>Clique com o <strong>botão direito</strong> no arquivo → <span class="utag">🔗 Copiar link</span>.</div>
+      </div>
+      <div class="upload-unavail-step">
+        <div class="unum">3</div>
+        <div>Certifique-se de que o arquivo está compartilhado como <span class="utag">Qualquer pessoa com o link</span>.</div>
+      </div>
+      <div class="upload-unavail-step">
+        <div class="unum">4</div>
+        <div>Cole o link (<strong>Ctrl+V</strong>) no campo <em>"Cole o link do Google Drive…"</em> abaixo da área de upload.</div>
+      </div>
+    </div>
+    <button class="upload-unavail-close" onclick="closeUploadUnavailableModal()">Entendido — usar link do Drive</button>
+  </div>
+</div>
+
 <!-- PROGRESS OVERLAY -->
 <div id="progressOverlay">
   <div id="progressBox">
@@ -2916,12 +2971,22 @@ function populateSolicitante() {
 
 // ── FILE ──
 function handleFile(input,fnId,dropId,btnId){
+  // Upload temporariamente desativado — mostra modal de link
+  input.value = '';
+  showUploadUnavailableModal();
+  return;
   if(input.files[0]){
     document.getElementById(fnId).textContent='✔ '+input.files[0].name;
     document.getElementById(fnId).style.display='block';
     if(btnId) document.getElementById(btnId).style.display='flex';
     if(dropId){const d=document.getElementById(dropId);d.style.borderColor='var(--success)';d.style.background='#f0faf4';}
   }
+}
+function showUploadUnavailableModal(){
+  document.getElementById('modalUploadIndisponivel').style.display='flex';
+}
+function closeUploadUnavailableModal(){
+  document.getElementById('modalUploadIndisponivel').style.display='none';
 }
 function removeFile(inputId,fnId,dropId,btnId){
   const input=document.getElementById(inputId);
@@ -2934,7 +2999,7 @@ function removeFile(inputId,fnId,dropId,btnId){
   const el=document.getElementById(id);if(!el)return;
   el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over');});
   el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
-  el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag-over');const fi=el.querySelector('input[type="file"]');if(e.dataTransfer.files[0]&&fi){fi.files=e.dataTransfer.files;fi.dispatchEvent(new Event('change'));}});
+  el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag-over');showUploadUnavailableModal();});
 });
 
 // ── UTILS ──
