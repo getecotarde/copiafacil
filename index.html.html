@@ -2540,12 +2540,13 @@ async function iniciarApp() {
     document.getElementById('cf-disciplina').value='Coordenação';
     const dpCoord=document.getElementById('cf-dataPedido');
     if(dpCoord&&!dpCoord.value) dpCoord.value=new Date().toISOString().slice(0,10);
-    await loadCoord();
-    // Exibe aba de Coordenação Sub e Parecer Pedagógico apenas para o e-mail master
+    // Exibe abas de Coord. Sub e Parecer ANTES do loadCoord (não depende de dados)
     const tabCoordSub = document.getElementById('coordSubTabBtn');
     if(tabCoordSub) tabCoordSub.style.display = coordIsMaster ? 'inline-block' : 'none';
     const tabParecer = document.getElementById('tabBtnParecer');
     if(tabParecer) tabParecer.style.display = coordIsMaster ? 'inline-block' : 'none';
+    await loadCoord();
+    // Atualiza badge após carregar dados
     if(coordIsMaster) atualizarBadgeParecer();
     showPage('coord');
   }
@@ -3446,8 +3447,6 @@ async function renderEnviadosCoordSub() {
   const container = document.getElementById('enviadosCoordContainer');
   if (!container) return;
   container.innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
-  // Busca DIRETO do banco — usa indicacoes_sub como flag confiável (sempre preenchido quando há parecer)
-  // Isso garante que mesmo após encaminhamento (que pode mudar outros flags), o histórico persiste
   const {data, error} = await db.from('solicitacoes')
     .select('id, titulo, professor, turmas, total_copias, copias, data_solicitacao, status, indicacoes_sub, encaminhamento_coord, encaminhamento_data, parecer_pedagogico')
     .not('indicacoes_sub', 'is', null)
@@ -3457,40 +3456,64 @@ async function renderEnviadosCoordSub() {
     container.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação enviada para Coord. Pedagógica ainda.</p></div>';
     return;
   }
-  container.innerHTML = data.map(d => {
+
+  const pendentes   = data.filter(d => !(d.encaminhamento_coord && d.encaminhamento_coord.trim()));
+  const encaminhados = data.filter(d =>  (d.encaminhamento_coord && d.encaminhamento_coord.trim())).slice(0, 5);
+
+  function cardHTML(d) {
     const temRetorno = !!(d.encaminhamento_coord && d.encaminhamento_coord.trim());
     const corDecisao = d.status==='Autorizado' ? '#1a6a3a' : d.status==='Cancelado' ? '#a02a10' : '#8a6000';
     return `
-    <div class="enviados-coord-card ${temRetorno ? 'com-retorno' : ''}">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:.4rem;">
-        <div>
-          <div class="ec-title">${esc(d.titulo)}</div>
-          <div class="ec-meta">
-            <span>👤 ${esc(d.professor)}</span>
-            <span>👥 ${esc(d.turmas)}</span>
-            <span>📄 ${d.total_copias||d.copias} cópias</span>
-            <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
+      <div class="enviados-coord-card ${temRetorno ? 'com-retorno' : ''}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:.4rem;">
+          <div>
+            <div class="ec-title">${esc(d.titulo)}</div>
+            <div class="ec-meta">
+              <span>👤 ${esc(d.professor)}</span>
+              <span>👥 ${esc(d.turmas)}</span>
+              <span>📄 ${d.total_copias||d.copias} cópias</span>
+              <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
+            </div>
           </div>
+          <span class="badge ${temRetorno ? 'badge-encaminhado' : 'badge-parecer'}">
+            ${temRetorno ? '✉️ Retorno recebido' : '⏳ Aguardando parecer'}
+          </span>
         </div>
-        <span class="badge ${temRetorno ? 'badge-encaminhado' : 'badge-parecer'}">
-          ${temRetorno ? '✉️ Retorno recebido' : '⏳ Aguardando parecer'}
-        </span>
-      </div>
-      <div class="ec-indicacoes">
-        <strong style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#8a4a00;">📝 Suas indicações:</strong><br>
-        ${esc(d.indicacoes_sub || '—')}
-      </div>
-      ${temRetorno ? `
-        <div class="ec-retorno">
-          <div class="ec-retorno-label">✉️ Encaminhamento da Coord. Pedagógica — ${d.encaminhamento_data ? fmtDate(d.encaminhamento_data) : '—'}</div>
-          <div style="margin-top:.3rem;line-height:1.6;">${esc(d.encaminhamento_coord)}</div>
+        <div class="ec-indicacoes">
+          <strong style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#8a4a00;">📝 Suas indicações:</strong><br>
+          ${esc(d.indicacoes_sub || '—')}
         </div>
-        <div style="margin-top:.5rem;font-size:.78rem;color:var(--muted);">
-          Decisão: <strong style="color:${corDecisao}">${d.status}</strong>
-        </div>
-      ` : `<div style="margin-top:.4rem;font-size:.78rem;color:var(--muted);">Aguardando análise e encaminhamento do Coordenador Pedagógico.</div>`}
-    </div>`;
-  }).join('');
+        ${temRetorno ? `
+          <div class="ec-retorno">
+            <div class="ec-retorno-label">✉️ Encaminhamento da Coord. Pedagógica — ${d.encaminhamento_data ? fmtDate(d.encaminhamento_data) : '—'}</div>
+            <div style="margin-top:.3rem;line-height:1.6;">${esc(d.encaminhamento_coord)}</div>
+          </div>
+          <div style="margin-top:.5rem;font-size:.78rem;color:var(--muted);">
+            Decisão: <strong style="color:${corDecisao}">${d.status}</strong>
+          </div>
+        ` : `<div style="margin-top:.4rem;font-size:.78rem;color:var(--muted);">Aguardando análise e encaminhamento do Coordenador Pedagógico.</div>`}
+      </div>`;
+  }
+
+  let html = '';
+
+  // Seção: Pendentes
+  if (pendentes.length > 0) {
+    html += `<div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8a4a00;margin-bottom:.5rem;padding:.4rem .7rem;background:#fff3d6;border-radius:7px;border-left:3px solid #c97020;">⏳ Aguardando Parecer (${pendentes.length})</div>`;
+    html += pendentes.map(cardHTML).join('');
+  }
+
+  // Seção: Últimos 5 encaminhados
+  if (encaminhados.length > 0) {
+    html += `<div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#1a5a2a;margin:${pendentes.length?'1.2rem':0} 0 .5rem;padding:.4rem .7rem;background:#e8f0eb;border-radius:7px;border-left:3px solid #2a8a5a;">✉️ Últimos ${encaminhados.length} Retorno${encaminhados.length>1?'s':''} Recebido${encaminhados.length>1?'s':''}</div>`;
+    html += encaminhados.map(cardHTML).join('');
+  }
+
+  if (!html) {
+    html = '<div class="empty-state"><div class="emoji">📭</div><p>Nenhuma solicitação enviada para Coord. Pedagógica ainda.</p></div>';
+  }
+
+  container.innerHTML = html;
 }
 // ── NAVEGAÇÃO "ENVIADOS PARA COORD" (subcoordenador) ──
 let _enviadosCoordPanel = null;
