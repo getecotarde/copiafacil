@@ -3357,11 +3357,15 @@ async function renderPainelParecer() {
   }
 
   const pendentes    = data.filter(d => !(d.encaminhamento_coord && d.encaminhamento_coord.trim()));
-  const encaminhados = data.filter(d =>   d.encaminhamento_coord && d.encaminhamento_coord.trim()).slice(0, 5);
+  const encaminhados = data
+    .filter(d => d.encaminhamento_coord && d.encaminhamento_coord.trim())
+    .sort((a, b) => new Date(b.encaminhamento_data || b.data_solicitacao) - new Date(a.encaminhamento_data || a.data_solicitacao))
+    .slice(0, 5);
 
   function cardCoord(d) {
     const temRetorno = !!(d.encaminhamento_coord && d.encaminhamento_coord.trim());
     const corDecisao = d.status==='Autorizado' ? '#1a6a3a' : d.status==='Cancelado' ? '#a02a10' : '#8a6000';
+    const bgDecisao  = d.status==='Autorizado' ? '#d6f0e0' : d.status==='Cancelado' ? '#fce4de' : '#fff3d6';
     return `
       <div class="parecer-card" style="${temRetorno ? 'border-color:#b8d4bf;background:#f0faf4;' : ''}">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem;">
@@ -3376,9 +3380,12 @@ async function renderPainelParecer() {
               ${d.sub_nome?`<span>🗂️ Sub: ${esc(d.sub_nome)}</span>`:''}
             </div>
           </div>
-          <span class="badge ${temRetorno ? 'badge-encaminhado' : 'badge-parecer'}">
-            ${temRetorno ? '✉️ Encaminhado' : '📋 Parecer Pendente'}
-          </span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;">
+            <span class="badge ${temRetorno ? 'badge-encaminhado' : 'badge-parecer'}">
+              ${temRetorno ? '✉️ Encaminhado' : '📋 Parecer Pendente'}
+            </span>
+            ${temRetorno && d.status ? `<span style="font-size:.72rem;font-weight:700;padding:.15rem .6rem;border-radius:99px;background:${bgDecisao};color:${corDecisao};border:1.5px solid ${corDecisao}40;">${d.status}</span>` : ''}
+          </div>
         </div>
         <div class="parecer-indicacoes">
           <div class="parecer-indicacoes-title">📝 Indicações do Sub Coordenador</div>
@@ -3386,11 +3393,11 @@ async function renderPainelParecer() {
         </div>
         ${temRetorno ? `
           <div class="parecer-encaminhamento">
-            <div class="parecer-encaminhamento-title">✉️ Seu encaminhamento — ${d.encaminhamento_data ? fmtDate(d.encaminhamento_data) : '—'}</div>
-            <p style="font-size:.84rem;color:var(--text);line-height:1.5;">${esc(d.encaminhamento_coord)}</p>
-            <div style="margin-top:.4rem;font-size:.78rem;color:var(--muted);">
-              Decisão: <strong style="color:${corDecisao}">${d.status}</strong>
+            <div class="parecer-encaminhamento-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.3rem;">
+              <span>✉️ Encaminhamento realizado</span>
+              ${d.encaminhamento_data ? `<span style="font-size:.72rem;font-weight:400;color:#2a6a3a;background:#c8ecd8;padding:.1rem .5rem;border-radius:5px;">📅 ${fmtDate(d.encaminhamento_data)}</span>` : ''}
             </div>
+            <p style="font-size:.84rem;color:var(--text);line-height:1.5;margin-top:.4rem;">${esc(d.encaminhamento_coord)}</p>
           </div>
         ` : ''}
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem;">
@@ -3413,8 +3420,13 @@ async function renderPainelParecer() {
   }
 
   if (encaminhados.length > 0) {
-    html += `<div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#1a5a2a;margin:${pendentes.length?'1.4rem':0} 0 .6rem;padding:.4rem .7rem;background:#e8f0eb;border-radius:7px;border-left:3px solid #2a8a5a;">✉️ Últimos ${encaminhados.length} Encaminhamento${encaminhados.length>1?'s':''} Realizados</div>`;
+    html += `<div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#1a5a2a;margin:${pendentes.length?'1.4rem':0} 0 .6rem;padding:.4rem .7rem;background:#e8f0eb;border-radius:7px;border-left:3px solid #2a8a5a;display:flex;align-items:center;justify-content:space-between;">
+      <span>✉️ Últimos ${encaminhados.length} Encaminhamento${encaminhados.length>1?'s':''} Realizados</span>
+      <span style="font-style:italic;text-transform:none;font-weight:400;font-size:.7rem;color:#2a6a3a;">mais recentes primeiro</span>
+    </div>`;
     html += encaminhados.map(cardCoord).join('');
+  } else if (pendentes.length === 0) {
+    html += `<div class="empty-state"><div class="emoji">✅</div><p>Nenhum parecer pedagógico encontrado.</p></div>`;
   }
 
   container.innerHTML = html;
