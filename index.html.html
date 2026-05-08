@@ -3343,52 +3343,81 @@ async function renderPainelParecer() {
   const container = document.getElementById('parecerContainer');
   if (!container) return;
   container.innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>Carregando…</p></div>';
-  // Mostra apenas os que ainda não têm encaminhamento (parecer pendente)
+
+  // Busca todos com parecer_pedagogico = true (pendentes e encaminhados)
   const {data, error} = await db.from('solicitacoes')
     .select('*')
     .eq('parecer_pedagogico', true)
-    .is('encaminhamento_coord', null)
     .order('data_solicitacao', {ascending: false});
+
   if (error) { container.innerHTML = '<div class="empty-state"><p>Erro ao carregar.</p></div>'; return; }
   if (!data || data.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="emoji">✅</div><p>Nenhuma solicitação aguardando parecer pedagógico.</p></div>';
+    container.innerHTML = '<div class="empty-state"><div class="emoji">✅</div><p>Nenhuma solicitação com parecer pedagógico.</p></div>';
     return;
   }
-  container.innerHTML = data.map(d => `
-    <div class="parecer-card">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem;">
-        <div>
-          <div class="parecer-card-title">${esc(d.titulo)}</div>
-          <div class="parecer-card-meta">
-            <span>👤 ${esc(d.professor)}</span>
-            <span>📚 ${esc(d.disciplina)}</span>
-            <span>👥 ${esc(d.turmas)}</span>
-            <span>📄 ${d.total_copias||d.copias} cópias</span>
-            <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
-            ${d.sub_nome?`<span>🗂️ Sub: ${esc(d.sub_nome)}</span>`:''}
+
+  const pendentes    = data.filter(d => !(d.encaminhamento_coord && d.encaminhamento_coord.trim()));
+  const encaminhados = data.filter(d =>   d.encaminhamento_coord && d.encaminhamento_coord.trim()).slice(0, 5);
+
+  function cardCoord(d) {
+    const temRetorno = !!(d.encaminhamento_coord && d.encaminhamento_coord.trim());
+    const corDecisao = d.status==='Autorizado' ? '#1a6a3a' : d.status==='Cancelado' ? '#a02a10' : '#8a6000';
+    return `
+      <div class="parecer-card" style="${temRetorno ? 'border-color:#b8d4bf;background:#f0faf4;' : ''}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem;">
+          <div>
+            <div class="parecer-card-title">${esc(d.titulo)}</div>
+            <div class="parecer-card-meta">
+              <span>👤 ${esc(d.professor)}</span>
+              <span>📚 ${esc(d.disciplina)}</span>
+              <span>👥 ${esc(d.turmas)}</span>
+              <span>📄 ${d.total_copias||d.copias} cópias</span>
+              <span>🗓 ${fmtDate(d.data_solicitacao)}</span>
+              ${d.sub_nome?`<span>🗂️ Sub: ${esc(d.sub_nome)}</span>`:''}
+            </div>
           </div>
+          <span class="badge ${temRetorno ? 'badge-encaminhado' : 'badge-parecer'}">
+            ${temRetorno ? '✉️ Encaminhado' : '📋 Parecer Pendente'}
+          </span>
         </div>
-        <span class="badge badge-parecer">📚 Parecer Pendente</span>
-      </div>
-      <div class="parecer-indicacoes">
-        <div class="parecer-indicacoes-title">📝 Indicações do Sub Coordenador</div>
-        <p>${esc(d.indicacoes_sub || 'Nenhuma indicação registrada.')}</p>
-      </div>
-      ${d.encaminhamento_coord ? `
-        <div class="parecer-encaminhamento">
-          <div class="parecer-encaminhamento-title">✉️ Encaminhamento registrado em ${d.encaminhamento_data ? fmtDate(d.encaminhamento_data) : '—'}</div>
-          <p style="font-size:.84rem;color:var(--text);line-height:1.5;">${esc(d.encaminhamento_coord)}</p>
+        <div class="parecer-indicacoes">
+          <div class="parecer-indicacoes-title">📝 Indicações do Sub Coordenador</div>
+          <p>${esc(d.indicacoes_sub || 'Nenhuma indicação registrada.')}</p>
         </div>
-      ` : ''}
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem;">
-        <button class="btn-action" style="font-size:.82rem;padding:.4rem .9rem;" onclick="abrirModalEncaminhamento(${d.id})">
-          ${d.encaminhamento_coord ? '✏️ Editar Encaminhamento' : '📨 Redigir Encaminhamento'}
-        </button>
-        ${d.arquivo_url?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url)}','Arquivo 1','${d.id}')" class="btn-secondary" style="font-size:.82rem;padding:.4rem .9rem;">📄 Ver Arquivo</a>`:''}
-        ${d.drive_link1?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link1)}','Drive','${d.id}')" class="btn-secondary" style="font-size:.82rem;padding:.4rem .9rem;background:#e8f0fb;color:#1a6ac7;border-color:#b8cef0;">🔗 Ver Drive</a>`:''}
-      </div>
-    </div>
-  `).join('');
+        ${temRetorno ? `
+          <div class="parecer-encaminhamento">
+            <div class="parecer-encaminhamento-title">✉️ Seu encaminhamento — ${d.encaminhamento_data ? fmtDate(d.encaminhamento_data) : '—'}</div>
+            <p style="font-size:.84rem;color:var(--text);line-height:1.5;">${esc(d.encaminhamento_coord)}</p>
+            <div style="margin-top:.4rem;font-size:.78rem;color:var(--muted);">
+              Decisão: <strong style="color:${corDecisao}">${d.status}</strong>
+            </div>
+          </div>
+        ` : ''}
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem;">
+          <button class="btn-action" style="font-size:.82rem;padding:.4rem .9rem;" onclick="abrirModalEncaminhamento(${d.id})">
+            ${temRetorno ? '✏️ Editar Encaminhamento' : '📨 Redigir Encaminhamento'}
+          </button>
+          ${d.arquivo_url?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.arquivo_url)}','Arquivo 1','${d.id}')" class="btn-secondary" style="font-size:.82rem;padding:.4rem .9rem;">📄 Ver Arquivo</a>`:''}
+          ${d.drive_link1?`<a href="javascript:void(0)" onclick="abrirViewer('${esc(d.drive_link1)}','Drive','${d.id}')" class="btn-secondary" style="font-size:.82rem;padding:.4rem .9rem;background:#e8f0fb;color:#1a6ac7;border-color:#b8cef0;">🔗 Ver Drive</a>`:''}
+        </div>
+      </div>`;
+  }
+
+  let html = '';
+
+  if (pendentes.length > 0) {
+    html += `<div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8a4a00;margin-bottom:.6rem;padding:.4rem .7rem;background:#fff3d6;border-radius:7px;border-left:3px solid #c97020;">⏳ Aguardando Encaminhamento (${pendentes.length})</div>`;
+    html += pendentes.map(cardCoord).join('');
+  } else {
+    html += `<div style="font-size:.82rem;color:var(--muted);padding:.6rem 0 1rem;font-style:italic;">✅ Nenhum parecer pendente no momento.</div>`;
+  }
+
+  if (encaminhados.length > 0) {
+    html += `<div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#1a5a2a;margin:${pendentes.length?'1.4rem':0} 0 .6rem;padding:.4rem .7rem;background:#e8f0eb;border-radius:7px;border-left:3px solid #2a8a5a;">✉️ Últimos ${encaminhados.length} Encaminhamento${encaminhados.length>1?'s':''} Realizados</div>`;
+    html += encaminhados.map(cardCoord).join('');
+  }
+
+  container.innerHTML = html;
 }
 
 // Modal de encaminhamento do coordenador
