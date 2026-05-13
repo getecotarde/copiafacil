@@ -1998,6 +1998,7 @@
         <textarea id="viewerObsExtra" placeholder="Anotações internas sobre este arquivo / pedido…"></textarea>
       </div>
       <button class="btn-viewer-save" id="viewerSaveBtn" onclick="salvarViewerStatus()">💾 Salvar</button>
+      <button class="btn-viewer-save" id="viewerUsarFormBtn" onclick="usarObsNoFormulario()" style="display:none;background:#1a3a2a;border-color:#1a3a2a;">↩ Usar no formulário</button>
     </div>
   </div>
 </div>
@@ -3965,8 +3966,7 @@ function renderMinhasFiltered() {
 
   let html = '';
   ORDER_PROF.forEach(st => {
-    let items = filtered.filter(d => d.status === st);
-    if (st === 'Entregue') items = items.slice().sort((a,b) => new Date(b.data_solicitacao) - new Date(a.data_solicitacao));
+    const items = filtered.filter(d => d.status === st);
     if (!items.length) return;
     const cfg = blockCfg[st];
     const blockId = 'minhas-block-' + st.toLowerCase();
@@ -4270,8 +4270,7 @@ function renderSolicitacoes(){
 
   let html = '';
   ORDER_COORD.forEach(s => {
-    let items = filtered.filter(d => d.status === s);
-    if (s === 'Entregue') items = items.slice().sort((a,b) => new Date(b.data_solicitacao) - new Date(a.data_solicitacao));
+    const items = filtered.filter(d => d.status === s);
     if (!items.length) return;
     const cfg = blockCfgCoord[s];
     const blockId = 'coord-block-' + s.toLowerCase();
@@ -5087,7 +5086,7 @@ function renderMeca(){
   // Demais perfis order: Entregue, Pronto, Autorizado, Aguardando (para meca: Autorizado primeiro, Pronto, Entregue)
   const autorizados=filtered.filter(d=>d.status==='Autorizado');
   const prontos=filtered.filter(d=>d.status==='Pronto');
-  const entregues=filtered.filter(d=>d.status==='Entregue').slice().sort((a,b)=>new Date(b.data_solicitacao)-new Date(a.data_solicitacao));
+  const entregues=filtered.filter(d=>d.status==='Entregue');
 
   const blockDefs = [
     { items: autorizados, st:'Autorizado', label:'🔵 Autorizados — aguardando produção', bg:'#e8f0fb', border:'#b8cef0', color:'#0055aa', showEnt:false },
@@ -6527,28 +6526,44 @@ function abrirViewer(url, titulo, solicId) {
   }
 
   // Painel inferior: coord/meca veem status+obs editáveis; professor vê apenas status (leitura)
-  const podeEditar = viewerSolicId && (perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub' || perfilAtual === 'mecanografia');
-  const eProfessor  = viewerSolicId && perfilAtual === 'professor';
+  const podeEditar      = viewerSolicId && (perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub' || perfilAtual === 'mecanografia');
+  const eProfessor      = viewerSolicId && perfilAtual === 'professor';
+  const eCoordNovaSolic = !viewerSolicId && (perfilAtual === 'coordenacao' || perfilAtual === 'coordenacaoSub');
+
+  const statusGroup = bottomPanel.querySelector('.viewer-bottom-group');
+  const saveBtn     = document.getElementById('viewerSaveBtn');
+  const usarBtn     = document.getElementById('viewerUsarFormBtn');
+
+  // Reset visibilidade padrão
+  if (statusGroup) statusGroup.style.display = '';
+  obsExtra.style.display = '';
+  saveBtn.style.display  = '';
+  usarBtn.style.display  = 'none';
 
   if (podeEditar) {
     bottomPanel.classList.add('visible');
-    statusSelect.value = solic ? (solic.status || 'Aguardando') : 'Aguardando';
+    statusSelect.value    = solic ? (solic.status || 'Aguardando') : 'Aguardando';
     statusSelect.disabled = false;
-    obsExtra.value = solic ? (solic.obs_viewer || '') : '';
-    obsExtra.style.display = '';
-    document.getElementById('viewerSaveBtn').style.display = '';
+    obsExtra.value        = solic ? (solic.obs_viewer || '') : '';
+    obsExtra.placeholder  = 'Anotações internas sobre este arquivo / pedido…';
+  } else if (eCoordNovaSolic) {
+    // Coord/subcoordenador pré-visualizando link numa nova solicitação ainda não salva
+    bottomPanel.classList.add('visible');
+    if (statusGroup) statusGroup.style.display = 'none'; // oculta seletor de status
+    obsExtra.value       = (document.getElementById('cf-obs') || {}).value || '';
+    obsExtra.placeholder = 'Observações para o pedido (frente e verso, tipo de papel…)';
+    saveBtn.style.display = 'none';
+    usarBtn.style.display = '';
   } else if (eProfessor && solic) {
     // Professor vê o status atual mas não pode editar
     bottomPanel.classList.add('visible');
-    statusSelect.value = solic.status || 'Aguardando';
+    statusSelect.value    = solic.status || 'Aguardando';
     statusSelect.disabled = true;
     obsExtra.style.display = 'none';
-    document.getElementById('viewerSaveBtn').style.display = 'none';
+    saveBtn.style.display  = 'none';
   } else {
     bottomPanel.classList.remove('visible');
-    obsExtra.style.display = '';
     statusSelect.disabled = false;
-    document.getElementById('viewerSaveBtn').style.display = '';
   }
 
   // Para PDFs do Supabase ou URLs diretas, usa o iframe nativo
@@ -6633,6 +6648,18 @@ async function salvarViewerStatus() {
   if (typeof renderSolicitacoes === 'function') renderSolicitacoes();
   if (typeof renderMinhasFiltered === 'function') renderMinhasFiltered();
   showToast('✔ Status e observações salvos!');
+}
+
+function usarObsNoFormulario() {
+  const texto = (document.getElementById('viewerObsExtra').value || '').trim();
+  const campoObs = document.getElementById('cf-obs');
+  if (campoObs) {
+    campoObs.value = texto;
+    // Dispara evento para que qualquer listener reativo seja notificado
+    campoObs.dispatchEvent(new Event('input'));
+  }
+  fecharViewer();
+  if (texto) showToast('📝 Observação transferida para o formulário!');
 }
 
 function fecharViewer() {
