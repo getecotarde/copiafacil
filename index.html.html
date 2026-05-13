@@ -3965,7 +3965,8 @@ function renderMinhasFiltered() {
 
   let html = '';
   ORDER_PROF.forEach(st => {
-    const items = filtered.filter(d => d.status === st);
+    let items = filtered.filter(d => d.status === st);
+    if (st === 'Entregue') items = items.slice().sort((a,b) => new Date(b.data_solicitacao) - new Date(a.data_solicitacao));
     if (!items.length) return;
     const cfg = blockCfg[st];
     const blockId = 'minhas-block-' + st.toLowerCase();
@@ -4269,7 +4270,8 @@ function renderSolicitacoes(){
 
   let html = '';
   ORDER_COORD.forEach(s => {
-    const items = filtered.filter(d => d.status === s);
+    let items = filtered.filter(d => d.status === s);
+    if (s === 'Entregue') items = items.slice().sort((a,b) => new Date(b.data_solicitacao) - new Date(a.data_solicitacao));
     if (!items.length) return;
     const cfg = blockCfgCoord[s];
     const blockId = 'coord-block-' + s.toLowerCase();
@@ -5085,7 +5087,7 @@ function renderMeca(){
   // Demais perfis order: Entregue, Pronto, Autorizado, Aguardando (para meca: Autorizado primeiro, Pronto, Entregue)
   const autorizados=filtered.filter(d=>d.status==='Autorizado');
   const prontos=filtered.filter(d=>d.status==='Pronto');
-  const entregues=filtered.filter(d=>d.status==='Entregue');
+  const entregues=filtered.filter(d=>d.status==='Entregue').slice().sort((a,b)=>new Date(b.data_solicitacao)-new Date(a.data_solicitacao));
 
   const blockDefs = [
     { items: autorizados, st:'Autorizado', label:'🔵 Autorizados — aguardando produção', bg:'#e8f0fb', border:'#b8cef0', color:'#0055aa', showEnt:false },
@@ -6533,6 +6535,7 @@ function abrirViewer(url, titulo, solicId) {
     statusSelect.value = solic ? (solic.status || 'Aguardando') : 'Aguardando';
     statusSelect.disabled = false;
     obsExtra.value = solic ? (solic.obs_viewer || '') : '';
+    obsExtra.style.display = '';
     document.getElementById('viewerSaveBtn').style.display = '';
   } else if (eProfessor && solic) {
     // Professor vê o status atual mas não pode editar
