@@ -5090,9 +5090,9 @@ function renderMeca(){
               d.drive_link2   ? {url:d.drive_link2,  label:'🔗 Drive 2'}   : null,
             ].filter(Boolean);
             if(links.length===0) return `<button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;opacity:.5;cursor:default;" disabled>Sem anexo</button>`;
-            if(links.length===1) return `<button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="window.open('${esc(links[0].url)}','_blank')">🖨️ Acessar/Imprimir</button>`;
+            if(links.length===1) return `<button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="window.open('${esc(links[0].url)}','_blank')">🖨️ Imprimir</button>`;
             return `<div style="display:flex;flex-direction:column;gap:.3rem;">
-              ${links.map(lk=>`<button class="btn-secondary" style="font-size:.75rem;padding:.28rem .6rem;white-space:nowrap;" onclick="window.open('${esc(lk.url)}','_blank')">${lk.label}</button>`).join('')}
+              ${links.map((lk,i)=>`<button class="btn-secondary" style="font-size:.75rem;padding:.28rem .6rem;white-space:nowrap;" onclick="window.open('${esc(lk.url)}','_blank')">🖨️ Imprimir ${i+1}/${links.length}</button>`).join('')}
             </div>`;
           })()}
           <div class="meca-obs-tip">${obsTooltip}</div>
