@@ -5081,8 +5081,20 @@ function renderMeca(){
       <td>${fmtDate(d.data_solicitacao)}</td>
       <td>${statusCell}</td>
       <td>
-        <div style="position:relative;display:inline-block;" class="meca-obs-wrap">
-          <button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="mecaPrint(${d.id})">🖨️ Acessar/Imprimir</button>
+        <div style="position:relative;" class="meca-obs-wrap">
+          ${(()=>{
+            const links=[
+              d.arquivo_url   ? {url:d.arquivo_url,  label:'🖨️ Arquivo 1'} : null,
+              d.drive_link1   ? {url:d.drive_link1,  label:'🔗 Drive 1'}   : null,
+              d.arquivo_url2  ? {url:d.arquivo_url2, label:'🖨️ Arquivo 2'} : null,
+              d.drive_link2   ? {url:d.drive_link2,  label:'🔗 Drive 2'}   : null,
+            ].filter(Boolean);
+            if(links.length===0) return `<button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;opacity:.5;cursor:default;" disabled>Sem anexo</button>`;
+            if(links.length===1) return `<button class="btn-secondary" style="font-size:.78rem;padding:.3rem .7rem;" onclick="window.open('${esc(links[0].url)}','_blank')">🖨️ Acessar/Imprimir</button>`;
+            return `<div style="display:flex;flex-direction:column;gap:.3rem;">
+              ${links.map(lk=>`<button class="btn-secondary" style="font-size:.75rem;padding:.28rem .6rem;white-space:nowrap;" onclick="window.open('${esc(lk.url)}','_blank')">${lk.label}</button>`).join('')}
+            </div>`;
+          })()}
           <div class="meca-obs-tip">${obsTooltip}</div>
         </div>
       </td>
