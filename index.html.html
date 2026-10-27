@@ -4026,7 +4026,8 @@ function renderMinhasFiltered() {
     let items = filtered.filter(d => d.status === st);
     if (!items.length) return;
     // Entregue: mais recentes primeiro (por prazo_entrega decrescente)
-    if (st === 'Entregue') {
+    if (st === 'Entregue' || st === 'Autorizado' || st === 'Pronto') {
+      // prazo mais atual no topo, mais antigo embaixo
       items = items.slice().sort((a, b) => new Date(b.prazo_entrega || b.data_solicitacao || 0) - new Date(a.prazo_entrega || a.data_solicitacao || 0));
     }
     const cfg = blockCfg[st];
@@ -4341,6 +4342,7 @@ function renderSolicitacoes(){
       items = items.slice().sort((a,b)=>{
         const ua=a.urgente?1:0, ub=b.urgente?1:0;
         if(ua!==ub) return ub-ua;
+        if(s==='Autorizado'||s==='Pronto') return new Date(b.prazo_entrega||b.data_solicitacao||0)-new Date(a.prazo_entrega||a.data_solicitacao||0);
         return new Date(a.data_solicitacao||0)-new Date(b.data_solicitacao||0);
       });
     }
@@ -5175,7 +5177,7 @@ function renderMeca(){
     return arr.slice().sort((a,b)=>{
       const ua=a.urgente?1:0, ub=b.urgente?1:0;
       if(ua!==ub) return ub-ua;
-      return new Date(a.data_solicitacao||0)-new Date(b.data_solicitacao||0);
+      return new Date(b.prazo_entrega||b.data_solicitacao||0)-new Date(a.prazo_entrega||a.data_solicitacao||0);
     });
   }
   const autorizados=ordenarComUrgentesPrimeiro(filtered.filter(d=>d.status==='Autorizado'));
