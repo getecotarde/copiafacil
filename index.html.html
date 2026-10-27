@@ -2453,6 +2453,14 @@ let editandoProfId = null; // id do professor sendo editado (null = novo)
 let coordIsMaster  = false; // true somente para everton.correa@edu.pbh.gov.br
 let coordSession   = null;  // sessão salva da coordenação (evita credenciais hardcoded)
 
+// Garante que a sessão da coordenação esteja guardada ANTES de criar outro usuário
+// (signUp troca a sessão ativa; sem isso, setSession(null) quebra com "reading 'access_token'")
+async function garantirCoordSession(){
+  if(coordSession) return;
+  const {data:{session}} = await db.auth.getSession();
+  coordSession = session;
+}
+
 const disciplinaDisplay = {
   'portugues':'Português','matematica':'Matemática','ciencias':'Ciências',
   'historia':'História','geografia':'Geografia','ingles':'Inglês',
@@ -4175,7 +4183,7 @@ async function importarProfessoresCSV(input){
     if(!disciplinasValidas.includes(disciplina)){erros.push(`Linha ${i+2} (${nome}): disciplina inválida "${disciplina}"`);continue;}
     const senha=gerarSenhaPorNome(nome);
     try{
-      const {data,error}=await db.auth.signUp({email,password:senha});
+      await garantirCoordSession(); const {data,error}=await db.auth.signUp({email,password:senha});
       if(error){erros.push(`Linha ${i+2} (${nome}): ${error.message}`);continue;}
       const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true,senha_inicial:senha}]);
       if(insertErr){erros.push(`Linha ${i+2} (${nome}): ${insertErr.message}`);continue;}
@@ -4576,7 +4584,7 @@ async function salvarProfessor() {
   try {
     if (!editandoProfId) {
       const senha=gerarSenhaPorNome(nome);
-      const {data,error}=await db.auth.signUp({email,password:senha});
+      await garantirCoordSession(); const {data,error}=await db.auth.signUp({email,password:senha});
       if (error) throw error;
       const {error:insertErr}=await db.from('professores').insert([{id:data.user.id,nome,email,disciplina,aprovado:true,senha_inicial:senha}]);
       if (insertErr) throw insertErr;
@@ -4807,7 +4815,7 @@ async function salvarCoordSub(){
   const senha=gerarSenhaPorNome(nome);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
   try{
-    const {data,error}=await db.auth.signUp({email,password:senha});
+    await garantirCoordSession(); const {data,error}=await db.auth.signUp({email,password:senha});
     if(error)throw error;
     const uid=data.user.id;
     const {error:insErr}=await db.from('coordenacao_sub').insert([{id:uid,email,nome,senha_inicial:senha}]);
@@ -5003,7 +5011,7 @@ async function salvarMeca(){
   const senha=gerarSenhaPorNome(nome);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
   try {
-    const {data,error}=await db.auth.signUp({email,password:senha});
+    await garantirCoordSession(); const {data,error}=await db.auth.signUp({email,password:senha});
     if(error)throw error;
     const uid=data.user.id;
     // Insere apenas colunas existentes (sem 'nome')
@@ -5364,7 +5372,7 @@ async function salvarAdm(){
   const senha=gerarSenhaPorNome(nome);
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
   try{
-    const {data,error}=await db.auth.signUp({email,password:senha});
+    await garantirCoordSession(); const {data,error}=await db.auth.signUp({email,password:senha});
     if(error)throw error;
     const uid=data.user.id;
     const {error:insErr}=await db.from('administrativo').insert([{id:uid,email,nome,tipo:_admTipoAtual,senha_inicial:senha}]);
@@ -5678,6 +5686,7 @@ function exportarAdm2(){
 // ── AUTO LOGIN ──
 db.auth.getSession().then(async({data:{session}})=>{
   if(!session)return;
+  coordSession=session; // permite restaurar a sessão após criar usuários
   currentUser=session.user;
   const {data:meca}=await db.from('mecanografia').select('id').eq('id',currentUser.id).maybeSingle();
   if(meca){perfilAtual='mecanografia';await iniciarApp();return;}
