@@ -4830,14 +4830,11 @@ async function salvarCoordSub(){
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Criando…';
   let uid=null;
   try{
-    await garantirCoordSession(); const {data,error}=await db.auth.signUp({email,password:senha});
+    // Cliente auxiliar SEM persistência: o signUp acontece nele e a sessão da coordenação (db) nunca é trocada
+    const dbAux=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+    const {data,error}=await dbAux.auth.signUp({email,password:senha});
     if(error)throw error;
     uid=data.user.id;
-    // Volta para a sessão da coordenação ANTES de gravar na tabela (a política RLS libera a coordenação)
-    await db.auth.signOut();
-    const {data:sessao,error:loginErr}=await db.auth.setSession(coordSession);
-    if(loginErr)throw loginErr;
-    currentUser=sessao.user;
     const {error:insErr}=await db.from('coordenacao_sub').insert([{id:uid,email,nome,senha_inicial:senha}]);
     if(insErr)throw insErr;
     closeModalCoordSub();
@@ -4846,11 +4843,7 @@ async function salvarCoordSub(){
   }catch(err){
     // Se o login foi criado mas a gravação falhou, desfaz para não deixar o e-mail "preso"
     if(uid){
-      try{
-        const {data:{session}}=await db.auth.getSession();
-        if(!session&&coordSession){const {data:r}=await db.auth.setSession(coordSession);if(r?.user)currentUser=r.user;}
-        await db.rpc('excluir_usuario_auth',{uid});
-      }catch(e){console.error('rollback:',e);}
+      try{await db.rpc('excluir_usuario_auth',{uid});}catch(e){console.error('rollback:',e);}
     }
     erroEl.textContent=err.message.includes('already registered')?'⚠️ Este e-mail já está cadastrado.':'❌ Erro: '+err.message;
     erroEl.style.display='block';
