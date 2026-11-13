@@ -994,6 +994,90 @@
   .upload-unavail-close:hover { opacity: .88; }
   [data-theme="dark"] .upload-unavail-steps { background: #1a2218; }
   [data-theme="dark"] .upload-unavail-badge { background: #3a2a00; color: #f59e0b; border-color: #4a3a10; }
+
+  /* ═════════ MELHORIAS DE USABILIDADE (somente visual — não altera funções nem acessos) ═════════
+     1) Contraste e leitura  2) Hierarquia de botões  3) Abas e tabelas mais claras
+     4) Campos maiores com foco visível  5) Cores de status mais reconhecíveis */
+  :root {
+    --bg: #f3f5f1; --surface: #ffffff; --border: #d3dad2; --muted: #556058;
+    --primary: #17402d; --accent: #f0a420; --accent2: #c0392b; --success: #1f7a45;
+    --on-primary: #ffffff; --focus: #1f6fd1; --hover-row: #eef5ef; --zebra: #f8faf7;
+  }
+  [data-theme="dark"] {
+    --bg: #0f1a14; --surface: #172319; --border: #2f4636; --muted: #9db5a4;
+    --on-primary: #0f1a14; --focus: #7db4ff; --hover-row: #1e2e22; --zebra: #14201a;
+  }
+  html { font-size: 16.5px; }
+  body { line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  main { padding: 1.6rem 1.5rem 3rem; }
+
+  /* Foco sempre visível (teclado) */
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  /* Títulos e textos de apoio */
+  .page-header h1 { font-size: 1.7rem; }
+  .page-header p { font-size: .95rem; color: var(--muted); }
+  .card { border-radius: 14px; box-shadow: 0 1px 3px rgba(20,40,28,.08); }
+
+  /* Rótulos de campos: frase normal, maior e mais escura (sem caixa-alta miúda) */
+  .fg label, .fg-grid label { font-size: .86rem; letter-spacing: 0; text-transform: none; font-weight: 700; color: var(--text); }
+  thead th { font-size: .8rem; letter-spacing: .02em; text-transform: none; font-weight: 700; color: var(--text); background: #e9eee8; }
+  [data-theme="dark"] thead th { background: #1c2c21; }
+  .stat-card .slabel { text-transform: none; letter-spacing: 0; font-size: .85rem; }
+
+  /* Campos: maiores, borda clara e foco evidente */
+  .fg input, .fg select, .fg textarea, .fg-grid input, .fg-grid select, .fg-grid textarea,
+  .drive-link-row input { font-size: 1rem; min-height: 44px; border: 1.5px solid #aab7ac; border-radius: 9px; background: var(--surface); color: var(--text); }
+  [data-theme="dark"] .fg input, [data-theme="dark"] .fg select, [data-theme="dark"] .fg textarea,
+  [data-theme="dark"] .fg-grid input, [data-theme="dark"] .fg-grid select, [data-theme="dark"] .fg-grid textarea { border-color: #3f5a47; }
+  .fg input:focus, .fg select:focus, .fg textarea:focus, .fg-grid input:focus, .fg-grid select:focus, .fg-grid textarea:focus,
+  .drive-link-row input:focus { border-color: var(--focus); box-shadow: 0 0 0 4px rgba(31,111,209,.18); outline: none; }
+
+  /* Botões: ação principal (âmbar) > secundária (contorno verde) > perigo (vermelho) */
+  .btn-primary, .btn-action { min-height: 44px; font-size: 1rem; padding: .65rem 1.5rem; border-radius: 10px; box-shadow: 0 2px 0 rgba(0,0,0,.18); }
+  .btn-secondary { min-height: 40px; font-size: .92rem; font-weight: 600; border: 2px solid var(--primary); color: var(--primary); border-radius: 10px; }
+  .btn-secondary:hover { background: var(--primary); color: var(--on-primary); }
+  .btn-danger, .btn-danger-sm { min-height: 36px; font-size: .88rem; font-weight: 600; border-width: 2px; border-radius: 8px; }
+  .btn-download { min-height: 36px; font-size: .86rem; border-radius: 8px; }
+
+  /* Abas da coordenação: a aba ativa vira um botão preenchido, fácil de achar */
+  .coord-tabs { gap: .35rem; border-bottom: 2px solid var(--border); padding-bottom: .5rem; }
+  .coord-tab { font-size: .92rem; padding: .55rem 1rem; border: 2px solid transparent; border-radius: 10px; margin-bottom: 0; color: var(--text); }
+  .coord-tab:hover { background: var(--hover-row); }
+  .coord-tab.active { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+
+  /* Menu do topo */
+  nav button { font-size: .9rem; padding: .45rem 1rem; border-width: 2px; }
+  .btn-sair { font-size: .85rem; padding: .4rem .9rem; border-color: rgba(255,255,255,.45); color: #fff; }
+  .perfil-badge { font-size: .82rem; }
+
+  /* Tabelas: linhas alternadas e destaque ao passar o mouse */
+  tbody td { padding: .75rem .9rem; font-size: .93rem; }
+  tbody tr:nth-child(even) { background: var(--zebra); }
+  tbody tr:hover { background: var(--hover-row) !important; }
+
+  /* Status: cores mais distintas, com ponto indicador (não dependem só da cor) */
+  .badge { font-size: .8rem; font-weight: 700; padding: .25rem .75rem .25rem .6rem; }
+  .badge::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; margin-right: .4rem; vertical-align: 1px; }
+  .badge-pending   { background: #fff0c2; color: #8a5200; }
+  .badge-progress  { background: #d6e8ff; color: #0b4a99; }
+  .badge-ready     { background: #d4efe0; color: #13603a; }
+  .badge-done      { background: #c6ecd5; color: #0d5a30; }
+  .badge-cancelled { background: #fcd9d2; color: #9a2410; }
+  .badge-waiting   { background: #ead9ff; color: #5a12a8; }
+
+  /* Cartões de solicitação e janelas */
+  .minha-card { border-radius: 12px; }
+  .minha-card:hover { border-color: var(--primary); box-shadow: 0 2px 10px rgba(20,40,28,.1); }
+  .modal { border-radius: 16px; box-shadow: 0 16px 48px rgba(0,0,0,.3); }
+
+  /* Celular: alvos de toque confortáveis */
+  @media (max-width: 700px) {
+    html { font-size: 16px; }
+    .coord-tab { font-size: .82rem; padding: .5rem .75rem; }
+    .btn-primary, .btn-action { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
