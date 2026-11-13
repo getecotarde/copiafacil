@@ -2461,6 +2461,17 @@ async function garantirCoordSession(){
   coordSession = session;
 }
 
+// Apaga também a conta de login (Supabase Auth) — sem isso o e-mail continua "já cadastrado"
+async function excluirContaAuth(uid){
+  const {error}=await db.rpc('excluir_usuario_auth',{uid});
+  if(error){
+    console.error('excluir_usuario_auth:',error);
+    showToast('⚠️ Registro removido, mas a conta de login não foi apagada: '+error.message,true);
+    return false;
+  }
+  return true;
+}
+
 const disciplinaDisplay = {
   'portugues':'Português','matematica':'Matemática','ciencias':'Ciências',
   'historia':'História','geografia':'Geografia','ingles':'Inglês',
@@ -4621,6 +4632,7 @@ async function excluirProfessor(id){
   if(!confirm('Excluir este professor? Ele perderá o acesso à plataforma.'))return;
   const {error}=await db.from('professores').delete().eq('id',id);
   if(error){showToast('❌ Erro ao excluir.',true);return;}
+  await excluirContaAuth(id);
   showToast('🗑 Professor removido.');
   await loadCoord();
 }
@@ -4837,6 +4849,7 @@ async function excluirCoordSub(id){
   if(!confirm('Remover este acesso de coordenação?'))return;
   const {error}=await db.from('coordenacao_sub').delete().eq('id',id);
   if(error){showToast('❌ Erro ao remover.',true);return;}
+  await excluirContaAuth(id);
   await renderCoordSubGerenciar();
   showToast('🗑 Acesso removido.');
 }
@@ -5035,6 +5048,7 @@ async function excluirMeca(id){
   if(!confirm('Remover o acesso da Mecanografia? O usuário perderá o acesso à plataforma.'))return;
   const {error}=await db.from('mecanografia').delete().eq('id',id);
   if(error){showToast('❌ Erro ao remover.',true);return;}
+  await excluirContaAuth(id);
   await renderMecaGerenciar();
   showToast('🗑 Acesso removido.');
 }
@@ -5431,6 +5445,7 @@ async function excluirAdm(id, tipo){
   if(!confirm('Remover este acesso? O usuário perderá o acesso à plataforma.'))return;
   const {error}=await db.from('administrativo').delete().eq('id',id);
   if(error){showToast('❌ Erro ao remover.',true);return;}
+  await excluirContaAuth(id);
   await renderAdmGerenciar(tipo);
   showToast('🗑 Acesso removido.');
 }
