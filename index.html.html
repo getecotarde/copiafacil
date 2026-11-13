@@ -117,6 +117,21 @@
   nav { display: flex; gap: .5rem; }
   nav button { background: transparent; border: 1.5px solid rgba(255,255,255,.25); color: #fff; font-family: 'DM Sans', sans-serif; font-size: .85rem; padding: .4rem 1rem; border-radius: 8px; cursor: pointer; transition: all .2s; }
   nav button:hover, nav button.active { background: var(--accent); border-color: var(--accent); color: var(--primary); font-weight: 600; }
+  /* ── BOTÃO PASTA: ACESSO MATRIZES ── */
+  .btn-pasta { display: none; position: relative; align-items: center; gap: .4rem; margin-top: 7px; background: var(--accent); color: var(--primary); font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 700; text-decoration: none; padding: .38rem .85rem; border-radius: 0 8px 8px 8px; transition: all .2s; white-space: nowrap; }
+  .btn-pasta::before { content: ''; position: absolute; left: 0; top: -7px; width: 46%; height: 8px; background: var(--accent); border-radius: 6px 6px 0 0; transition: all .2s; }
+  .btn-pasta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn-pasta:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  /* ── BOTÃO DÚVIDAS + MODAL PASSO A PASSO ── */
+  .btn-duvidas { display: none; align-items: center; gap: .35rem; background: transparent; border: 1.5px solid rgba(255,255,255,.35); color: #fff; font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 600; padding: .35rem .8rem; border-radius: 99px; cursor: pointer; transition: all .2s; white-space: nowrap; }
+  .btn-duvidas:hover { background: rgba(255,255,255,.15); border-color: #fff; }
+  .btn-duvidas:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  #modalDuvidasMatrizes { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem; }
+  #modalDuvidasMatrizes .upload-unavail-box { max-width: 460px; max-height: 90vh; overflow-y: auto; }
+  .duv-fechar { position: absolute; top: .7rem; right: .8rem; background: transparent; border: none; font-size: 1.1rem; color: var(--muted); cursor: pointer; padding: .2rem .4rem; border-radius: 6px; }
+  .duv-fechar:hover { color: var(--text); background: var(--bg); }
+  .duv-dica { display: flex; gap: .55rem; align-items: flex-start; background: #fff8e6; border: 1.5px solid #f0d090; color: #7a5200; border-radius: 10px; padding: .6rem .8rem; font-size: .8rem; line-height: 1.45; margin-bottom: 1.1rem; }
+  [data-theme="dark"] .duv-dica { background: #3a2a00; color: #f5c460; border-color: #4a3a10; }
   .btn-sair { background: transparent; border: 1.5px solid rgba(255,255,255,.2); color: rgba(255,255,255,.7); font-family: 'DM Sans', sans-serif; font-size: .8rem; padding: .35rem .8rem; border-radius: 8px; cursor: pointer; transition: all .2s; }
   .btn-sair:hover { border-color: var(--accent2); color: var(--accent2); }
 
@@ -1023,6 +1038,8 @@
     <div class="header-right">
       <span class="perfil-badge" id="perfilBadge"></span>
       <nav id="navBar"></nav>
+      <a class="btn-pasta" id="btnAcessoMatrizes" href="https://drive.google.com/drive/folders/1QkqKXPMcrG4rfieeFG7SnmgcOFanfFpe?usp=drive_link" target="_blank" rel="noopener noreferrer" title="Abrir a pasta de matrizes no Google Drive">📁 Acesso Matrizes</a>
+      <button type="button" class="btn-duvidas" id="btnDuvidasMatrizes" onclick="abrirDuvidasMatrizes()" title="Como inserir o link da matriz na solicitação">❓ Dúvidas</button>
       <button class="btn-theme" id="btnTema" onclick="toggleTema()" title="Alternar tema"><span class="t-sun">☀️</span><span class="t-moon">🌙</span></button>
       <button class="btn-sair" onclick="sair()">Sair</button>
     </div>
@@ -2303,6 +2320,45 @@
   </div>
 </div>
 
+<!-- ═══ MODAL — DÚVIDAS: COMO INSERIR O LINK DA MATRIZ ═══ -->
+<div id="modalDuvidasMatrizes" role="dialog" aria-modal="true" aria-labelledby="duvTitulo" onclick="if(event.target===this)fecharDuvidasMatrizes()">
+  <div class="upload-unavail-box">
+    <button type="button" class="duv-fechar" onclick="fecharDuvidasMatrizes()" aria-label="Fechar">✕</button>
+    <div class="upload-unavail-icon">📁</div>
+    <div class="upload-unavail-title" id="duvTitulo">Como inserir o link da matriz</div>
+    <div class="upload-unavail-desc">Siga os passos abaixo para copiar o link de uma matriz e anexá-lo na solicitação.</div>
+    <div class="upload-unavail-steps">
+      <div class="upload-unavail-steps-title">📋 Passo a passo</div>
+      <div class="upload-unavail-step">
+        <div class="unum">1</div>
+        <div>No topo da tela, clique em <span class="utag">📁 Acesso Matrizes</span>. A pasta abrirá em uma <strong>nova aba</strong>.</div>
+      </div>
+      <div class="upload-unavail-step">
+        <div class="unum">2</div>
+        <div>Na pasta, abra o <strong>documento</strong> da matriz que você precisa.</div>
+      </div>
+      <div class="upload-unavail-step">
+        <div class="unum">3</div>
+        <div>Localize o link dentro do documento, selecione-o e copie com <strong>Ctrl+C</strong>.</div>
+      </div>
+      <div class="upload-unavail-step">
+        <div class="unum">4</div>
+        <div>Volte para a aba do CópiaFácil e clique em <span class="utag">➕ Nova Solicitação</span>.</div>
+      </div>
+      <div class="upload-unavail-step">
+        <div class="unum">5</div>
+        <div>Na parte <strong>ANEXOS</strong>, clique no campo <em>"Cole o link do Google Drive…"</em> e cole com <strong>Ctrl+V</strong>.</div>
+      </div>
+      <div class="upload-unavail-step">
+        <div class="unum">6</div>
+        <div>Confira se apareceu <span class="utag">Ver arquivo</span> logo abaixo do campo. Se aparecer, o link está correto: preencha o restante e envie.</div>
+      </div>
+    </div>
+    <div class="duv-dica"><span>💡</span><div>Se o link não abrir, o arquivo pode não estar compartilhado como <strong>"Qualquer pessoa com o link"</strong>. Peça ao responsável pelo documento para ajustar o compartilhamento.</div></div>
+    <button type="button" class="upload-unavail-close" onclick="fecharDuvidasMatrizes()">Entendi</button>
+  </div>
+</div>
+
 <!-- PROGRESS OVERLAY -->
 <div id="progressOverlay">
   <div id="progressBox">
@@ -2617,6 +2673,7 @@ async function iniciarApp() {
     showPage('meca');
   } else if (perfilAtual==='coordenacaoSub') {
     badge.textContent='🗂️ Sub Coordenação';
+    document.getElementById('btnAcessoMatrizes').style.display='inline-flex';document.getElementById('btnDuvidasMatrizes').style.display='inline-flex';
     badge.className='perfil-badge coord';
     nav.innerHTML=`<button onclick="showPage('coord',this)" class="active" id="navBtnGestao">Painel de Gestão</button><button onclick="mostrarEnviadosCoord(this)" id="btnNavEnviadosCoord" style="position:relative;">📚 Enviados p/ Coord. Pedagógica <span id="enviadosBadge" style="display:none;background:#c97020;color:#fff;font-size:.62rem;font-weight:700;padding:.1rem .38rem;border-radius:99px;margin-left:.3rem;vertical-align:middle;"></span></button>`;
     document.getElementById('cf-professor').value='Coordenação';
@@ -2644,6 +2701,7 @@ async function iniciarApp() {
     showPage('coord');
   } else {
     badge.textContent='🗂️ Coordenação';
+    document.getElementById('btnAcessoMatrizes').style.display='inline-flex';document.getElementById('btnDuvidasMatrizes').style.display='inline-flex';
     badge.className='perfil-badge coord';
     nav.innerHTML=`<button onclick="showPage('coord',this)" class="active">Painel de Gestão</button>`;
     document.getElementById('cf-professor').value='Coordenação';
@@ -2666,6 +2724,9 @@ async function iniciarApp() {
 async function sair() {
   await db.auth.signOut().catch(()=>{});
   currentUser=null;perfilAtual=null;professorData=null;allSolic=[];allProfs=[];currentSolicId=null;
+  document.getElementById('btnAcessoMatrizes').style.display='none';
+  document.getElementById('btnDuvidasMatrizes').style.display='none';
+  fecharDuvidasMatrizes();
   document.getElementById('telaApp').style.display='none';
   document.getElementById('telaPendente').style.display='none';
   document.getElementById('telaAdminCopias').style.display='none';
@@ -3037,6 +3098,9 @@ function handleFile(input,fnId,dropId,btnId){
     if(dropId){const d=document.getElementById(dropId);d.style.borderColor='var(--success)';d.style.background='#f0faf4';}
   }
 }
+function abrirDuvidasMatrizes(){ document.getElementById('modalDuvidasMatrizes').style.display='flex'; }
+function fecharDuvidasMatrizes(){ document.getElementById('modalDuvidasMatrizes').style.display='none'; }
+document.addEventListener('keydown', e => { if(e.key==='Escape') fecharDuvidasMatrizes(); });
 function showUploadUnavailableModal(){
   document.getElementById('modalUploadIndisponivel').style.display='flex';
 }
